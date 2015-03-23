@@ -1,0 +1,11 @@
+**/target
+/target
+
+/.idea
+
+/*.iml
+
+database.properties
+
+/**/*.iml
+happy-student-model/src/main/resources/database.properties

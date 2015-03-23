@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        logicalFilePath="initial-schema.xml"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <property name="autoincrement" dbms="postgresql" value="serial"/>
+    <property name="autoincrement" dbms="h2" value="bigint auto_increment"/>
+
+
+    <property name="datetime" dbms="mssql" value="datetime"/>
+    <property name="datetime" dbms="postgresql" value="timestamp"/>
+    <property name="datetime" dbms="h2" value="timestamp"/>
+
+    <property name="uuid" dbms="mssql" value="uniqueidentifier"/>
+    <property name="uuid" dbms="postgresql" value="uuid"/>
+    <property name="uuid" dbms="h2" value="uuid"/>
+
+    <changeSet id="1" author="rplatonov">
+        <createTable tableName="ACCOUNT">
+            <column name="ACCOUNT_ID" type="${autoincrement}">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="LOGIN" type="varchar(64)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="PASSWORD" type="varchar(64)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ROLE" type="varchar(64)"/>
+            <column name="CREATE_TIME" type="${datetime}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CHANGE_TIME" type="${datetime}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="FINISH_TIME" type="${datetime}"/>
+        </createTable>
+        <createIndex indexName="IDX_AUTH" tableName="ACCOUNT">
+            <column name="LOGIN"/>
+            <column name="PASSWORD"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="2" author="rplatonov">
+        <createTable tableName="ACCOUNT_INFO">
+            <column name="ACCOUNT_INFO_ID" type="${autoincrement}">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="ACCOUNT_ID" type="integer">
+                <constraints foreignKeyName="AccountInfo_Account"
+                             references="ACCOUNT(ACCOUNT_ID)"/>
+            </column>
+            <column name="FIRST_NAME" type="varchar(64)"/>
+            <column name="MIDDLE_NAME" type="varchar(64)"/>
+            <column name="LAST_NAME" type="varchar(64)"/>
+            <column name="BIRTH_DATE" type="date"/>
+            <column name="PHONE_NUMBER" type="varchar(64)"/>
+            <column name="CREATE_TIME" type="${datetime}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CHANGE_TIME" type="${datetime}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="FINISH_TIME" type="${datetime}"/>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>
