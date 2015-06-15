@@ -2,72 +2,35 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
     <parent>
-        <artifactId>gamification</artifactId>
         <groupId>ru.kpfu.itis</groupId>
-        <version>1.0-SNAPSHOT</version>
+        <artifactId>gamification</artifactId>
+        <version>1.0.0</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
+
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>gamification-model</artifactId>
 
     <properties>
-        <hibernate.version>4.3.0.Final</hibernate.version>
-        <springdatajpa.version>1.4.2.RELEASE</springdatajpa.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <dependencies>
-
-        <!-- Hibernate ORM framework -->
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
         </dependency>
-
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-entitymanager</artifactId>
-            <version>${hibernate.version}</version>
-        </dependency>
-
         <dependency>
             <groupId>org.hibernate.javax.persistence</groupId>
             <artifactId>hibernate-jpa-2.1-api</artifactId>
-            <version>1.0.0.Final</version>
         </dependency>
 
         <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-validator</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-        </dependency>
-
-        <!-- Liquibase for running migrations at context startup -->
-        <dependency>
-            <groupId>org.liquibase</groupId>
-            <artifactId>liquibase-core</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-orm</artifactId>
-        </dependency>
-
-        <!-- Provides automatic implementation for repositories -->
-        <dependency>
-            <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-jpa</artifactId>
-            <version>${springdatajpa.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.mchange</groupId>
-            <artifactId>c3p0</artifactId>
-            <version>0.9.2.1</version>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
         </dependency>
 
         <dependency>
@@ -77,74 +40,15 @@
 
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-annotations</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+        </dependency>
+
     </dependencies>
-    <profiles>
-        <profile>
-            <id>database-changelog</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>properties-maven-plugin</artifactId>
-                        <version>1.0-alpha-2</version>
-                        <executions>
-                            <execution>
-                                <id>1</id>
-                                <phase>initialize</phase>
-                                <goals>
-                                    <goal>read-project-properties</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <files>
-                                <file>src/main/resources/database.properties</file>
-                            </files>
-                            <outputFile/>
-                            <properties/>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.liquibase</groupId>
-                        <artifactId>liquibase-maven-plugin</artifactId>
-                        <version>3.1.0</version>
-                        <executions>
-                            <execution>
-                                <id>default-cli</id>
-                                <phase>process-resources</phase>
-                                <configuration>
-                                    <changeLogFile>${basedir}/src/main/resources/db/changelog.xml</changeLogFile>
-                                    <propertyFileWillOverride>true</propertyFileWillOverride>
-                                    <propertyFile>${basedir}/src/main/resources/liquibase.properties
-                                    </propertyFile>
-                                </configuration>
-                                <goals>
-                                    <goal>update</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-            <properties>
-                <liquibase.url>${jdbc.url}</liquibase.url>
-                <liquibase.driver>${jdbc.driver}</liquibase.driver>
-                <liquibase.username>${jdbc.user}</liquibase.username>
-                <liquibase.password>${jdbc.password}</liquibase.password>
-            </properties>
-        </profile>
-    </profiles>
 
 
 </project>

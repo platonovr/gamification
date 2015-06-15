@@ -1,123 +1,241 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <parent>
-        <artifactId>gamification</artifactId>
-        <groupId>ru.kpfu.itis</groupId>
-        <version>1.0-SNAPSHOT</version>
-    </parent>
+
     <modelVersion>4.0.0</modelVersion>
 
+    <parent>
+        <groupId>ru.kpfu.itis</groupId>
+        <artifactId>gamification</artifactId>
+        <version>1.0.0</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
     <artifactId>gamification-web</artifactId>
-    <packaging>war</packaging>
 
     <properties>
-        <spring-security-crypto.version>3.2.3.RELEASE</spring-security-crypto.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
+    <packaging>war</packaging>
+
+    <build>
+        <plugins>
+
+        </plugins>
+
+        <finalName>gamification-web</finalName>
+
+    </build>
 
     <dependencies>
         <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-taglibs</artifactId>
+            <groupId>ru.kpfu.itis</groupId>
+            <artifactId>gamification-model</artifactId>
         </dependency>
+
         <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-config</artifactId>
+            <groupId>ru.kpfu.itis</groupId>
+            <artifactId>gamification-service</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jstl</artifactId>
+            <version>1.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <version>1.1.0.Final</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>5.1.2.Final</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework</groupId>
-            <artifactId>spring-expression</artifactId>
+            <artifactId>spring-tx</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-crypto</artifactId>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.springframework</groupId>
-            <artifactId>spring-webmvc</artifactId>
+            <artifactId>spring-orm</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>gamification-service</artifactId>
-            <version>${project.version}</version>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-websocket</artifactId>
         </dependency>
 
-        <!-- Apache Commons Upload -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-config</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-taglibs</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>1.3.2</version>
         </dependency>
 
-        <!-- Guava -->
+        <dependency>
+            <groupId>commons-fileupload</groupId>
+            <artifactId>commons-fileupload</artifactId>
+            <version>1.3.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.tiles</groupId>
+            <artifactId>tiles-jsp</artifactId>
+            <version>3.0.5</version>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.websocket</groupId>
+            <artifactId>javax.websocket-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>18.0</version>
         </dependency>
 
         <dependency>
-            <groupId>taglibs</groupId>
-            <artifactId>standard</artifactId>
-            <version>1.1.2</version>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>jsr305</artifactId>
         </dependency>
+
         <dependency>
-            <groupId>jstl</groupId>
-            <artifactId>jstl</artifactId>
-            <version>1.2</version>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.3.1</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>ru.kpfu.itis</groupId>
+            <artifactId>gamification-database</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>ma.glasnost.orika</groupId>
+            <artifactId>orika-core</artifactId>
         </dependency>
 
     </dependencies>
 
-    <build>
-        <plugins>
-            <plugin>
-                <artifactId>maven-war-plugin</artifactId>
-                <configuration>
-                    <warName>ROOT</warName>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.cargo</groupId>
-                <artifactId>cargo-maven2-plugin</artifactId>
-                <version>1.3.3</version>
-                <configuration>
-                    <!-- Container configuration -->
-                    <container>
-                        <containerId>tomcat7x</containerId>
-                        <home>${tomcat.home}</home>
-                        <type>installed</type>
-                    </container>
-                    <configuration>
-                        <type>existing</type>
-                        <home>${tomcat.home}</home>
-                    </configuration>
-                    <!--<deployables>-->
-                    <!--<deployable>-->
-                    <!--<properties>-->
-                    <!--<context>ROOT</context>-->
-                    <!--</properties>-->
-                    <!--</deployable>-->
-                    <!--</deployables>-->
-                    <skip>false</skip>
-                </configuration>
-
-            </plugin>
-        </plugins>
-    </build>
-
-
+    <profiles>
+        <profile>
+            <id>jslint</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>jslint-maven-plugin</artifactId>
+                        <version>1.0.1</version>
+                        <configuration>
+                            <sourceJsFolder>${basedir}/src/main/webapp/js/app</sourceJsFolder>
+                            <predefinedVars>angular, jQuery, L, Constants, console, alert, WebSocket, FormData, moment
+                            </predefinedVars>
+                            <failOnIssues>false</failOnIssues>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>jslint</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
+
