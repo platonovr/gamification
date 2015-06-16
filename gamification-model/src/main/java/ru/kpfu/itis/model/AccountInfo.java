@@ -24,7 +24,7 @@ public class AccountInfo extends BaseLongIdEntity {
     @Column(name = "LAST_NAME")
     private String lastName;
 
-    @Type(type = "LocalDate")
+    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
     @Column(name = "BIRTH_DATE")
     private LocalDate birthDate;
 
@@ -44,6 +44,9 @@ public class AccountInfo extends BaseLongIdEntity {
 
     @Column(name = "FINISH_TIME")
     private Date finishTime;
+
+    @OneToOne(optional = false)
+    private Account account;
 
     public String getFirstName() {
         return firstName;
@@ -115,5 +118,13 @@ public class AccountInfo extends BaseLongIdEntity {
 
     public void setFinishTime(Date finishTime) {
         this.finishTime = finishTime;
+    }
+
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
     }
 }
