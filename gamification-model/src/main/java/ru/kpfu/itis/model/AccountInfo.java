@@ -35,6 +35,12 @@ public class AccountInfo extends BaseLongIdEntity {
     @Column(name = "EMAIL")
     private String email;
 
+    @Column(name = "GROUP")
+    private String group;
+
+    @Column(name = "ENTRANCE_YEAR")
+    private Integer entranceYear;
+
     @Column(name = "CREATE_TIME", nullable = false)
     private Date createTime;
 
@@ -126,5 +132,21 @@ public class AccountInfo extends BaseLongIdEntity {
 
     public void setAccount(Account account) {
         this.account = account;
+    }
+
+    public String getGroup() {
+        return group;
+    }
+
+    public void setGroup(String group) {
+        this.group = group;
+    }
+
+    public Integer getEntranceYear() {
+        return entranceYear;
+    }
+
+    public void setEntranceYear(Integer entranceYear) {
+        this.entranceYear = entranceYear;
     }
 }

@@ -7,5 +7,5 @@ import java.io.Serializable;
  */
 public interface IdentifiedEntity extends Serializable {
 
-    public Serializable getId();
+    Serializable getId();
 }

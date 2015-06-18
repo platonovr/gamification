@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Создать таск</title>
+</head>
+<body>
+<form id="taskForm" method="post" action="/api/v1/tasks" enctype="application/x-www-form-urlencoded">
+    <label for="name">Название:<input id="name" name="name" type="text"></label>
+    <br/>
+    <label for="subject">Предмет:<input id="subject" name="subject" type="text"></label>
+    <br/>
+    <label for="category">Категория:<input id="category" name="category" type="text"></label>
+    <br/>
+    <label for="creator">Преподаватель:<input id="creator" name="creator" type="text"></label>
+    <br/>
+    <label for="coursesOrGroups">Курсы/Группы:<input id="coursesOrGroups" name="coursesOrGroups" type="text"></label>
+    <br/>
+    <label for="performers">Исполнитель:<input id="performers" name="performers" type="text"></label>
+    <br/>
+    <label for="maxMark">Оценка:<input id="maxMark" name="maxMark" type="number" min="1"></label>
+    <br/>
+    <label for="deadline">Заканчивается:<input id="deadline" name="deadline" type="date"></label>
+    <br/>
+    <label for="description">Исполнитель:<input id="description" name="description" type="text"></label>
+    <br/>
+    <label for="attachments">Прикрепления:<input id="attachments" name="attachments" type="file"></label>
+    <br/>
+    <button type="submit">Создать</button>
+</form>
+</body>
+</html>

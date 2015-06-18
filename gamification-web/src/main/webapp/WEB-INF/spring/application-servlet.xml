@@ -14,13 +14,15 @@
     <mvc:resources mapping="/bootstrap/**" location="/bootstrap/"/>
     <mvc:resources mapping="/images/**" location="/images/"/>
     <mvc:resources mapping="/js/**" location="/js/"/>
+    <mvc:resources mapping="/parts/**" location="/WEB-INF/parts/"/>
 
     <mvc:annotation-driven/>
 
     <context:component-scan base-package="ru.kpfu.itis.**.controller"/>
 
-    <bean id="md5passwordEncoder" class="org.springframework.security.authentication.encoding.Md5PasswordEncoder"/>
+    <bean id="bCryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
 
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
 
     <bean id="jacksonMessageConverter"
           class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"/>
