@@ -1,5 +1,7 @@
 package ru.kpfu.itis.model;
 
+import ru.kpfu.itis.model.enums.Role;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -17,7 +19,8 @@ public class Account extends BaseLongIdEntity {
     private String password;
 
     //TODO entity, which contains role and information about it
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     @OneToOne(mappedBy = "account", fetch = FetchType.LAZY)
     private AccountInfo accountInfo;
@@ -47,11 +50,11 @@ public class Account extends BaseLongIdEntity {
         this.accountInfo = accountInfo;
     }
 
-    public String getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 }

@@ -21,10 +21,9 @@ public class Task extends BaseLongIdEntity {
     @Enumerated(EnumType.STRING)
     private TaskType type;
 
-
-    @Column(name = "CATEGORY", nullable = false)
-    @Enumerated(EnumType.STRING)
-    private TaskCategory category;
+    @ManyToOne
+    @JoinColumn(name = "CATEGORY_ID",nullable = false)
+    private Category category;
 
     @Column(name = "PARTICIPANTS_COUNT", nullable = false)
     private Integer participantsCount;
@@ -60,14 +59,6 @@ public class Task extends BaseLongIdEntity {
         this.type = type;
     }
 
-    public TaskCategory getCategory() {
-        return category;
-    }
-
-    public void setCategory(TaskCategory category) {
-        this.category = category;
-    }
-
     public Integer getParticipantsCount() {
         return participantsCount;
     }
@@ -90,6 +81,14 @@ public class Task extends BaseLongIdEntity {
 
     public void setAvailability(Boolean availability) {
         this.availability = availability;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
     public enum TaskType implements EnumedDictionary {
@@ -116,31 +115,5 @@ public class Task extends BaseLongIdEntity {
             this.caption = caption;
         }
     }
-
-    public enum TaskCategory implements EnumedDictionary {
-        COOL("крутое"),
-        BULLSHIT("не очень");
-
-        private String caption;
-
-        TaskCategory(String caption) {
-            this.caption = caption;
-        }
-
-        @Override
-        public String getName() {
-            return name();
-        }
-
-        @Override
-        public String getCaption() {
-            return caption;
-        }
-
-        public void setCaption(String caption) {
-            this.caption = caption;
-        }
-    }
-
 
 }
