@@ -1,32 +1,37 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="gamificationApp">
 <head lang="en">
     <meta charset="UTF-8">
     <title>Создать таск</title>
+    <script src="/lib/angular.min.js"></script>
+    <script src="/js/app.js"></script>
+    <script src="/js/services/taskService.js"></script>
+    <script src="/js/controllers/taskController.js"></script>
 </head>
-<body>
-<form id="taskForm" method="post" action="/api/v1/tasks" enctype="application/x-www-form-urlencoded">
-    <label for="name">Название:<input id="name" name="name" type="text"></label>
+<body ng-controller="TaskController">
+<form id="taskForm">
+    <label for="name">Название:<input id="name" ng-model="task.name"></label>
     <br/>
-    <label for="subject">Предмет:<input id="subject" name="subject" type="text"></label>
+    <label for="subject">Предмет:<input id="subject" ng-model="task.subject"></label>
     <br/>
-    <label for="category">Категория:<input id="category" name="category" type="text"></label>
+    <label for="category">Категория:<input id="category" ng-model="task.category"></label>
     <br/>
-    <label for="creator">Преподаватель:<input id="creator" name="creator" type="text"></label>
+    <label for="creator">Преподаватель:<input id="creator" ng-model="task.creator"></label>
     <br/>
-    <label for="coursesOrGroups">Курсы/Группы:<input id="coursesOrGroups" name="coursesOrGroups" type="text"></label>
+    <label for="coursesOrGroups">Курсы/Группы:<input id="coursesOrGroups" ng-model="task.coursesOrGroups"
+                                                     ng-list></label>
     <br/>
-    <label for="performers">Исполнитель:<input id="performers" name="performers" type="text"></label>
+    <label for="performers">Исполнитель:<input id="performers" ng-model="task.performers" ng-list></label>
     <br/>
-    <label for="maxMark">Оценка:<input id="maxMark" name="maxMark" type="number" min="1"></label>
+    <label for="maxMark">Оценка:<input id="maxMark" ng-model="task.maxMark" type="number" min="1"></label>
     <br/>
-    <label for="deadline">Заканчивается:<input id="deadline" name="deadline" type="date"></label>
+    <label for="deadline">Заканчивается:<input id="deadline" ng-model="task.deadline" type="date"></label>
     <br/>
-    <label for="description">Исполнитель:<input id="description" name="description" type="text"></label>
+    <label for="description">Исполнитель:<input id="description" ng-model="task.description"></label>
     <br/>
-    <label for="attachments">Прикрепления:<input id="attachments" name="attachments" type="file"></label>
-    <br/>
-    <button type="submit">Создать</button>
+    <!--<label for="attachments">Прикрепления:<input id="attachments" ng-model="files" type="file" multiple></label>-->
+    <!--<br/>-->
+    <button ng-click="createTask()">Создать</button>
 </form>
 </body>
 </html>

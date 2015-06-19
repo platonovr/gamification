@@ -1,7 +1,5 @@
 package ru.kpfu.itis.dto;
 
-import org.springframework.web.multipart.MultipartFile;
-
 import java.util.Date;
 import java.util.List;
 
@@ -27,8 +25,6 @@ public class TaskDTO {
     private Date deadline;
 
     private String description;
-
-    private List<MultipartFile> attachments;
 
     public String getName() {
         return name;
@@ -100,13 +96,5 @@ public class TaskDTO {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public List<MultipartFile> getAttachments() {
-        return attachments;
-    }
-
-    public void setAttachments(List<MultipartFile> attachments) {
-        this.attachments = attachments;
     }
 }
