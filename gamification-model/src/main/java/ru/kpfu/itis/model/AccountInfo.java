@@ -40,17 +40,7 @@ public class AccountInfo extends BaseLongIdEntity {
 
     @Column(name = "ENTRANCE_YEAR")
     private Integer entranceYear;
-
-    @Column(name = "CREATE_TIME", nullable = false)
-    private Date createTime;
-
-    @Version
-    @Column(name = "CHANGE_TIME", nullable = false)
-    private Date changeTime;
-
-    @Column(name = "FINISH_TIME")
-    private Date finishTime;
-
+    
     @OneToOne(optional = false)
     private Account account;
 
@@ -100,30 +90,6 @@ public class AccountInfo extends BaseLongIdEntity {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Date getChangeTime() {
-        return changeTime;
-    }
-
-    public void setChangeTime(Date changeTime) {
-        this.changeTime = changeTime;
-    }
-
-    public Date getFinishTime() {
-        return finishTime;
-    }
-
-    public void setFinishTime(Date finishTime) {
-        this.finishTime = finishTime;
     }
 
     public Account getAccount() {
