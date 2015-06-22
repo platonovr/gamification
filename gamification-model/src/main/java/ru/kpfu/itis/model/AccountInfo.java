@@ -31,7 +31,6 @@ public class AccountInfo extends BaseLongIdEntity {
     @Column(name = "PHONE_NUMBER")
     private String phoneNumber;
 
-
     @Column(name = "EMAIL")
     private String email;
 
@@ -40,9 +39,20 @@ public class AccountInfo extends BaseLongIdEntity {
 
     @Column(name = "ENTRANCE_YEAR")
     private Integer entranceYear;
-    
+
+    @Column(name = "POINT")
+    private Double point;
+
     @OneToOne(optional = false)
     private Account account;
+
+    public Double getPoint() {
+        return point;
+    }
+
+    public void setPoint(Double point) {
+        this.point = point;
+    }
 
     public String getFirstName() {
         return firstName;
