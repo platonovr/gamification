@@ -7,7 +7,7 @@ import java.util.Date;
 
 @MappedSuperclass
 @Access(AccessType.FIELD)
-public abstract class BaseLongIdEntity implements Serializable {
+public abstract class BaseLongIdEntity implements Serializable, IdentifiedEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

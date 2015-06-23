@@ -6,6 +6,7 @@
 /*.iml
 
 database.properties
+config.properties
 
 /**/*.iml
 happy-student-model/src/main/resources/database.properties
