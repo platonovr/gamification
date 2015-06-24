@@ -164,4 +164,52 @@
         <!--tableName="person"/>-->
     </changeSet>
 
+    <changeSet id="6" author="rfatkhullin">
+        <createTable tableName="ACCOUNT_TASK">
+            <column name="ACCOUNT_TASK_ID" type="${autoincrement}">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="ACCOUNT_ID" type="integer">
+                <constraints foreignKeyName="AccountTask_Account_fk"
+                             references="ACCOUNT(ACCOUNT_ID)"/>
+            </column>
+            <column name="TASK_ID" type="integer">
+                <constraints foreignKeyName="AccountTask_Task_fk"
+                             references="TASK(TASK_ID)"/>
+            </column>
+            <column name="AVAILABILITY" type="boolean"/>
+            <column name="TASK_STATUS" type="varchar(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="STARTED_AT" type="${datetime}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CHANGE_TIME" type="${datetime}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="FINISHED_AT" type="${datetime}"/>
+        </createTable>
+
+        <createTable tableName="ACCOUNT_BADGE">
+            <column name="ACCOUNT_BADGE_ID" type="${autoincrement}">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="ACCOUNT_ID" type="integer">
+                <constraints foreignKeyName="AccountBadge_Account_fk"
+                             references="ACCOUNT(ACCOUNT_ID)"/>
+            </column>
+            <column name="BADGE_ID" type="integer">
+                <constraints foreignKeyName="AccountBadge_Task_fk"
+                             references="BADGE(BADGE_ID)"/>
+            </column>
+            <column name="CREATE_TIME" type="${datetime}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CHANGE_TIME" type="${datetime}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="FINISHED_AT" type="${datetime}"/>
+        </createTable>
+    </changeSet>
+
 </databaseChangeLog>

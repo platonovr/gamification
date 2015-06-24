@@ -4,10 +4,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.kpfu.itis.dto.AccountProfileDTO;
 import ru.kpfu.itis.model.Account;
+import ru.kpfu.itis.model.AccountBadge;
 import ru.kpfu.itis.model.AccountInfo;
+import ru.kpfu.itis.model.AccountTask;
+import ru.kpfu.itis.service.AccountBadgeService;
 import ru.kpfu.itis.service.AccountInfoService;
 import ru.kpfu.itis.service.AccountService;
+import ru.kpfu.itis.service.AccountTaskService;
 import ru.kpfu.itis.util.Constant;
+
+import java.util.ArrayList;
 
 /**
  * Created by Rigen on 22.06.15.
@@ -21,6 +27,10 @@ public class AccountController {
     AccountService accountService;
     @Autowired
     AccountInfoService accountInfoService;
+    @Autowired
+    AccountTaskService accountTaskService;
+    @Autowired
+    AccountBadgeService accountBadgeService;
 
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
@@ -28,13 +38,10 @@ public class AccountController {
     public AccountProfileDTO getProfile(@PathVariable Long id) {
         Account account = accountService.findById(id);
         AccountInfo accountInfo = accountInfoService.findByAccount(account);
+        ArrayList<AccountTask> tasks = (ArrayList<AccountTask>) accountTaskService.findCompleteTasksByAccount(account);
+        ArrayList<AccountBadge> badges = (ArrayList<AccountBadge>) accountBadgeService.findAllBadgesByAccount(account);
 
-        //todo get a done tasks
-        //todo calculate sum of points from list of tasks ???
-        //todo get account's badges from list of tasks
         //todo to pack all information on DTO
-        //???
-        //PROFIT
 
         AccountProfileDTO profileDTO = packAccountProfileDto(account, accountInfo);
         return profileDTO;
