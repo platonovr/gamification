@@ -1,5 +1,7 @@
 package ru.kpfu.itis.model;
 
+import ru.kpfu.itis.model.enums.Role;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -17,21 +19,11 @@ public class Account extends BaseLongIdEntity {
     private String password;
 
     //TODO entity, which contains role and information about it
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     @OneToOne(mappedBy = "account", fetch = FetchType.LAZY)
     private AccountInfo accountInfo;
-
-
-    @Column(name = "CREATE_TIME", nullable = false)
-    private Date createTime;
-
-    @Version
-    @Column(name = "CHANGE_TIME", nullable = false)
-    private Date changeTime;
-
-    @Column(name = "FINISH_TIME")
-    private Date finishTime;
 
 
     public String getLogin() {
@@ -50,30 +42,6 @@ public class Account extends BaseLongIdEntity {
         this.password = password;
     }
 
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Date getChangeTime() {
-        return changeTime;
-    }
-
-    protected void setChangeTime(Date changeTime) {
-        this.changeTime = changeTime;
-    }
-
-    public Date getFinishTime() {
-        return finishTime;
-    }
-
-    public void setFinishTime(Date finishTime) {
-        this.finishTime = finishTime;
-    }
-
     public AccountInfo getAccountInfo() {
         return accountInfo;
     }
@@ -82,11 +50,11 @@ public class Account extends BaseLongIdEntity {
         this.accountInfo = accountInfo;
     }
 
-    public String getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 }

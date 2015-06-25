@@ -35,16 +35,12 @@ public class AccountInfo extends BaseLongIdEntity {
     @Column(name = "EMAIL")
     private String email;
 
-    @Column(name = "CREATE_TIME", nullable = false)
-    private Date createTime;
+    @Column(name = "GROUP")
+    private String group;
 
-    @Version
-    @Column(name = "CHANGE_TIME", nullable = false)
-    private Date changeTime;
-
-    @Column(name = "FINISH_TIME")
-    private Date finishTime;
-
+    @Column(name = "ENTRANCE_YEAR")
+    private Integer entranceYear;
+    
     @OneToOne(optional = false)
     private Account account;
 
@@ -96,35 +92,27 @@ public class AccountInfo extends BaseLongIdEntity {
         this.email = email;
     }
 
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Date getChangeTime() {
-        return changeTime;
-    }
-
-    public void setChangeTime(Date changeTime) {
-        this.changeTime = changeTime;
-    }
-
-    public Date getFinishTime() {
-        return finishTime;
-    }
-
-    public void setFinishTime(Date finishTime) {
-        this.finishTime = finishTime;
-    }
-
     public Account getAccount() {
         return account;
     }
 
     public void setAccount(Account account) {
         this.account = account;
+    }
+
+    public String getGroup() {
+        return group;
+    }
+
+    public void setGroup(String group) {
+        this.group = group;
+    }
+
+    public Integer getEntranceYear() {
+        return entranceYear;
+    }
+
+    public void setEntranceYear(Integer entranceYear) {
+        this.entranceYear = entranceYear;
     }
 }
