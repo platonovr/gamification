@@ -19,9 +19,12 @@
     <mvc:resources mapping="/parts/**" location="/WEB-INF/parts/"/>
     <mvc:resources mapping="/files/**" location="file:///${image.upload.path}" cache-period="86400"/>
 
+    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource"
+          p:basename="messages" p:defaultEncoding="UTF-8"/>
+
     <mvc:annotation-driven/>
 
-    <context:component-scan base-package="ru.kpfu.itis.**.controller"/>
+    <context:component-scan base-package="ru.kpfu.itis.**.controller,ru.kpfu.itis.validator"/>
 
     <import resource="classpath:spring/serviceContext.xml"/>
 

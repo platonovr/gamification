@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
  * Created by timur on 17.06.15.
  */
 @Controller
-@RequestMapping("/tasks")
+@RequestMapping("/challenge")
 public class TaskController {
 
     @RequestMapping(value = "/create", method = RequestMethod.GET)

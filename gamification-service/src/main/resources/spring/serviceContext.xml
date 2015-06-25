@@ -5,8 +5,8 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-       <context:component-scan base-package="ru.kpfu.itis.service"/>
+    <context:component-scan base-package="ru.kpfu.itis.service,ru.kpfu.itis.dao"/>
 
-       <import resource="securityContext.xml"/>
+    <import resource="securityContext.xml"/>
 
 </beans>

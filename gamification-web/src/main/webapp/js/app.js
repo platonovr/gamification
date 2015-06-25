@@ -9,4 +9,7 @@ Array.prototype.remove = function (from, to) {
 
 angular
     .module('gamificationApp', ['ngFileUpload'])
-    .constant('API_URI_PREFIX', "/api/v1");
+    .constant('CONSTANTS', {
+        API_URI_PREFIX: "/api/v1",
+        TASK_URI: "/challenge"
+    });

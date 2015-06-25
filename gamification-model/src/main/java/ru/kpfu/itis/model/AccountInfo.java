@@ -4,7 +4,6 @@ import org.hibernate.annotations.Type;
 import org.joda.time.LocalDate;
 
 import javax.persistence.*;
-import java.util.Date;
 
 /**
  * Created by Roman on 22.03.2015.
@@ -35,13 +34,14 @@ public class AccountInfo extends BaseLongIdEntity {
     @Column(name = "EMAIL")
     private String email;
 
-    @Column(name = "GROUP")
+    @Column(name = "ACCOUNT_GROUP")
     private String group;
 
     @Column(name = "ENTRANCE_YEAR")
     private Integer entranceYear;
-    
+
     @OneToOne(optional = false)
+    @JoinColumn(name = "account_id")
     private Account account;
 
     public String getFirstName() {

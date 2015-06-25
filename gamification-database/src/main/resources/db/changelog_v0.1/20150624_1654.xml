@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="
+                       http://www.liquibase.org/xml/ns/dbchangelog
+                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd"
+                   logicalFilePath="20150624_1654.xml">
+
+    <property name="acc_inf" value="ACCOUNT_INFO"/>
+
+    <changeSet id="account_info_adding_email_column" author="tkasatkin">
+        <preConditions onFail="MARK_RAN" onError="MARK_RAN">
+            <not>
+                <columnExists tableName="${acc_inf}" columnName="EMAIL"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="${acc_inf}">
+            <column name="EMAIL" type="varchar(100)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="account_info_adding_group_column" author="tkasatkin">
+        <preConditions onError="MARK_RAN" onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="${acc_inf}" columnName="account_group"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="${acc_inf}">
+            <column name="ACCOUNT_GROUP" type="varchar(30)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="account_info_adding_entrance_year_column" author="tkasatkin">
+        <preConditions onError="MARK_RAN" onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="${acc_inf}" columnName="ENTRANCE_YEAR"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="${acc_inf}">
+            <column name="ENTRANCE_YEAR" type="int"/>
+        </addColumn>
+    </changeSet>
+
+</databaseChangeLog>

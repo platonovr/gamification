@@ -1,15 +1,12 @@
-package ru.kpfu.itis.impl;
+package ru.kpfu.itis.dao.impl;
 
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
-import org.springframework.orm.hibernate4.HibernateCallback;
 import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import ru.kpfu.itis.SimpleDao;
+import ru.kpfu.itis.dao.SimpleDao;
 import ru.kpfu.itis.model.IdentifiedEntity;
 
 import javax.annotation.Resource;
@@ -27,12 +24,7 @@ public class SimpleDaoImpl extends HibernateDaoSupport implements SimpleDao {
 
     @Override
     public <D> List<D> fetchAll(final Class<D> aClass) {
-        return getHibernateTemplate().execute(new HibernateCallback<List<D>>() {
-            @Override
-            public List<D> doInHibernate(Session aSession) throws HibernateException {
-                return aSession.createCriteria(aClass).list();
-            }
-        });
+        return getHibernateTemplate().execute(aSession -> aSession.createCriteria(aClass).list());
     }
 
     @Override
@@ -47,22 +39,12 @@ public class SimpleDaoImpl extends HibernateDaoSupport implements SimpleDao {
 
     @Override
     public <D> D findByField(Class<D> aClass, String aFieldName, Object aValue) {
-        return getHibernateTemplate().execute(new HibernateCallback<D>() {
-            @Override
-            public D doInHibernate(Session aSession) throws HibernateException {
-                return (D) aSession.createCriteria(aClass).add(Restrictions.eq(aFieldName, aValue)).uniqueResult();
-            }
-        });
+        return getHibernateTemplate().execute(aSession -> (D) aSession.createCriteria(aClass).add(Restrictions.eq(aFieldName, aValue)).uniqueResult());
     }
 
     @Override
     public <D> List<D> fetchByField(Class<D> aClass, String aFieldName, Object aValue) {
-        return getHibernateTemplate().execute(new HibernateCallback<List<D>>() {
-            @Override
-            public List<D> doInHibernate(Session aSession) throws HibernateException {
-                return (List<D>) aSession.createCriteria(aClass).add(Restrictions.eq(aFieldName, aValue)).list();
-            }
-        });
+        return getHibernateTemplate().execute(aSession -> (List<D>) aSession.createCriteria(aClass).add(Restrictions.eq(aFieldName, aValue)).list());
     }
 
     @Override

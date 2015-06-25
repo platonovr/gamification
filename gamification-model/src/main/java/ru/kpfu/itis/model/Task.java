@@ -1,11 +1,13 @@
 package ru.kpfu.itis.model;
 
 import javax.persistence.*;
-import java.util.Date;
 
 @Entity
 @Table(name = "TASK")
-@AttributeOverride(name = "id", column = @Column(name = "TASK_ID"))
+@AttributeOverrides({
+        @AttributeOverride(name = "id", column = @Column(name = "TASK_ID")),
+        @AttributeOverride(name = "finishTime", column = @Column(name = "FINISH_TIME", nullable = false))
+})
 public class Task extends BaseLongIdEntity {
 
 
@@ -19,21 +21,21 @@ public class Task extends BaseLongIdEntity {
 
     @Column(name = "TYPE", nullable = false)
     @Enumerated(EnumType.STRING)
-    private TaskType type;
+    //default value for now
+    private TaskType type = TaskType.PERSONAL;
 
     @ManyToOne
-    @JoinColumn(name = "CATEGORY_ID",nullable = false)
-    private Category category;
+    @JoinColumn(name = "CATEGORY_ID", nullable = false)
+    private TaskCategory category;
 
-    @Column(name = "PARTICIPANTS_COUNT", nullable = false)
+    @Column(name = "PARTICIPANTS_COUNT")
     private Integer participantsCount;
 
-    //todo://время завершения. Как лучше считать?
-    @Column(name = "FINISH_DATE", nullable = false)
-    private Date finishDate;
+    @Column(name = "MAX_MARK", nullable = false)
+    private Byte maxMark;
 
-    @Column(name = "AVAILABILITY")
-    private Boolean availability;
+    @Column(name = "DESRIPTION")
+    private String description;
 
     public Account getAuthor() {
         return author;
@@ -67,28 +69,28 @@ public class Task extends BaseLongIdEntity {
         this.participantsCount = participantsCount;
     }
 
-    public Date getFinishDate() {
-        return finishDate;
+    public Byte getMaxMark() {
+        return maxMark;
     }
 
-    public void setFinishDate(Date finishDate) {
-        this.finishDate = finishDate;
+    public void setMaxMark(Byte maxMark) {
+        this.maxMark = maxMark;
     }
 
-    public Boolean getAvailability() {
-        return availability;
-    }
-
-    public void setAvailability(Boolean availability) {
-        this.availability = availability;
-    }
-
-    public Category getCategory() {
+    public TaskCategory getCategory() {
         return category;
     }
 
-    public void setCategory(Category category) {
+    public void setCategory(TaskCategory category) {
         this.category = category;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public enum TaskType implements EnumedDictionary {
