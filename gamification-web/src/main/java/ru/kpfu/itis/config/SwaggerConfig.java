@@ -7,6 +7,7 @@ import com.mangofactory.swagger.plugin.SwaggerSpringMvcPlugin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import ru.kpfu.itis.util.Constant;
 
 /**
  * Created by timur on 25.06.15.
@@ -27,7 +28,8 @@ public class SwaggerConfig {
                         "Terms..",
                         "JetBrains email here",
                         "please read the license terms...",
-                        "jetBrains.kpfu.ru"));
+                        "jetBrains.kpfu.ru"))
+                .includePatterns(Constant.API_URI_PREFIX + "/.*", "/api-docs/.*");
     }
 
 }

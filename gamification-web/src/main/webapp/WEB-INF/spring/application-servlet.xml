@@ -17,10 +17,10 @@
     <mvc:resources mapping="/lib/**" location="/lib/"/>
     <mvc:resources mapping="/parts/**" location="/WEB-INF/parts/"/>
     <!-- Swagger resources-->
-    <mvc:resources mapping="index.html" location="/"/>
     <mvc:resources mapping="/swagger/css/**" location="/swagger/css/"/>
     <mvc:resources mapping="/swagger/images/**" location="/swagger/images/"/>
     <mvc:resources mapping="/swagger/lib/**" location="/swagger/lib/"/>
+    <mvc:resources mapping="/index.html" location="/swagger/"/>
 
     <mvc:annotation-driven/>
 
