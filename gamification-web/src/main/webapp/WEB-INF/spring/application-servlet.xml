@@ -29,7 +29,7 @@
 
     <mvc:annotation-driven/>
 
-    <context:component-scan base-package="ru.kpfu.itis.**.controller,ru.kpfu.itis.config"/>
+    <context:component-scan base-package="ru.kpfu.itis.**.controller,ru.kpfu.itis.config,ru.kpfu.itis.validator"/>
 
     <import resource="classpath:spring/serviceContext.xml"/>
 
