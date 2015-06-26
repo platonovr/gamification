@@ -1,5 +1,6 @@
 package ru.kpfu.itis.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import ru.kpfu.itis.model.enums.Type;
 
 import javax.persistence.*;
@@ -11,7 +12,7 @@ import java.util.Set;
 @Entity
 @Table(name = "CATEGORY")
 @AttributeOverride(name = "id", column = @Column(name = "CATEGORY_ID"))
-public class Category extends BaseLongIdEntity {
+public class TaskCategory extends BaseLongIdEntity {
 
     @Column(unique = true, nullable = false)
     private String name;
@@ -20,6 +21,7 @@ public class Category extends BaseLongIdEntity {
     @Enumerated(EnumType.STRING)
     private Type type;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "category")
     private Set<Task> tasks;
 

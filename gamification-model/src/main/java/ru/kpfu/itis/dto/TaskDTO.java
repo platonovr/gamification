@@ -8,6 +8,8 @@ import java.util.List;
  */
 public class TaskDTO {
 
+    private Long id;
+
     private String name;
 
     private String subject;
@@ -96,5 +98,13 @@ public class TaskDTO {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

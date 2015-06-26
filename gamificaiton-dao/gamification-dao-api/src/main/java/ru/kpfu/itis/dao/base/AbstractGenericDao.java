@@ -1,4 +1,4 @@
-package ru.kpfu.itis.base;
+package ru.kpfu.itis.dao.base;
 
 import org.hibernate.SessionFactory;
 import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
@@ -9,9 +9,10 @@ import javax.annotation.Resource;
 import java.io.Serializable;
 
 /**
- * Created by romanplatonov on 16.06.15.
+ * @date 20.05.14
  */
-public class AbstractBaseDao<T extends IdentifiedEntity> extends HibernateDaoSupport implements GenericDao<T> {
+public abstract class AbstractGenericDao<T extends IdentifiedEntity> extends HibernateDaoSupport
+        implements GenericDao<T> {
 
     @Resource(name = "sessionFactory")
     protected void configure(SessionFactory sessionFactory) {
@@ -29,5 +30,4 @@ public class AbstractBaseDao<T extends IdentifiedEntity> extends HibernateDaoSup
         getHibernateTemplate().saveOrUpdate(entity);
         return entity;
     }
-
 }

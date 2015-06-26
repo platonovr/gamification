@@ -1,13 +1,12 @@
 package ru.kpfu.itis.model;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.Date;
 
 
 @MappedSuperclass
 @Access(AccessType.FIELD)
-public abstract class BaseLongIdEntity implements Serializable {
+public abstract class BaseLongIdEntity implements IdentifiedEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -87,39 +87,45 @@
             <column name="FINISH_TIME" type="${datetime}"/>
         </createTable>
     </changeSet>
-    
-    <!--<changeSet id="4" author="tkasatkin">-->
-        <!--<createTable tableName="TASK">-->
-            <!--<column name="TASK_ID" type="${autoincrement}">-->
-                <!--<constraints primaryKey="true"/>-->
-            <!--</column>-->
-            <!--<column name="NAME" type="varchar(64)">-->
-                <!--<constraints nullable="false" unique="true"/>-->
-            <!--</column>-->
-            <!--<column name="AUTHOR_ID" type="bigint">-->
-                <!--<constraints nullable="false"-->
-                             <!--foreignKeyName="Task_Account"-->
-                             <!--references="ACCOUNT(ACCOUNT_ID)"-->
-                             <!--deleteCascade="true"/>-->
-            <!--</column>-->
-            <!--<column name="CATEGORY_ID" type="bigint">-->
-                <!--<constraints nullable="false"-->
-                             <!--foreignKeyName="Task_Category"-->
-                             <!--references="CATEGORY(CATEGORY_ID)"-->
-                             <!--deleteCascade="true"/>-->
-            <!--</column>-->
-            <!--<column name="MAX_MARK" type="smallint">-->
-                <!--<constraints nullable="false"/>-->
-            <!--</column>-->
-            <!--<column name="PARTICIPANTS_COUNT" type="int"/>-->
-            <!--<column name="CREATE_TIME" type="${datetime}">-->
-                <!--<constraints nullable="false"/>-->
-            <!--</column>-->
-            <!--<column name="CHANGE_TIME" type="${datetime}">-->
-                <!--<constraints nullable="false"/>-->
-            <!--</column>-->
-            <!--<column name="FINISH_TIME" type="${datetime}"/>-->
-        <!--</createTable>-->
-    <!--</changeSet>-->
+
+    <changeSet id="4" author="tkasatkin">
+        <createTable tableName="TASK">
+            <column name="TASK_ID" type="${autoincrement}">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="NAME" type="varchar(64)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="TYPE" type="varchar(15)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="AUTHOR_ID" type="bigint">
+                <constraints nullable="false"
+                             foreignKeyName="Task_Account"
+                             references="ACCOUNT(ACCOUNT_ID)"
+                             deleteCascade="true"/>
+            </column>
+            <column name="CATEGORY_ID" type="bigint">
+                <constraints nullable="false"
+                             foreignKeyName="Task_Category"
+                             references="CATEGORY(CATEGORY_ID)"
+                             deleteCascade="true"/>
+            </column>
+            <column name="MAX_MARK" type="smallint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DESRIPTION" type="text"/>
+            <column name="PARTICIPANTS_COUNT" type="int"/>
+            <column name="CREATE_TIME" type="${datetime}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CHANGE_TIME" type="${datetime}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="FINISH_TIME" type="${datetime}">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
 
 </databaseChangeLog>
