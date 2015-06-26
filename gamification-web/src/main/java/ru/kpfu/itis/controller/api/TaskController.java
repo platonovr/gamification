@@ -1,5 +1,7 @@
 package ru.kpfu.itis.controller.api;
 
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +27,7 @@ import static org.springframework.http.HttpStatus.*;
 /**
  * Created by timur on 17.06.15.
  */
+@Api(value = "challenge", description = "operation with challenges")
 @RequestMapping(Constant.API_URI_PREFIX + "/challenge")
 @RestController("apiTaskController")
 public class TaskController {
@@ -43,6 +46,7 @@ public class TaskController {
         binder.setValidator(taskValidator);
     }
 
+    @ApiOperation(value = "create challenge", httpMethod = "POST")
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<TaskDTO> createTask(@Valid @RequestBody TaskDTO taskDTO, BindingResult bindingResult) throws BindException {
         if (bindingResult.hasErrors()) throw new BindException(bindingResult);

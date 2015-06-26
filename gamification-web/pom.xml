@@ -208,6 +208,11 @@
             <artifactId>orika-core</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.mangofactory</groupId>
+            <artifactId>swagger-springmvc</artifactId>
+        </dependency>
+
     </dependencies>
 
     <profiles>

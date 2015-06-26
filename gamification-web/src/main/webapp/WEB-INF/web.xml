@@ -75,9 +75,9 @@
     </listener>
 
 
-    <welcome-file-list>
-        <welcome-file>index.html</welcome-file>
-    </welcome-file-list>
+    <!--<welcome-file-list>-->
+    <!--<welcome-file>index.html</welcome-file>-->
+    <!--</welcome-file-list>-->
 
 
     <session-config>
