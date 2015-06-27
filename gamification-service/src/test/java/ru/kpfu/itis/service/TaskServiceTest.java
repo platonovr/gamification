@@ -6,14 +6,14 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import ru.kpfu.itis.model.Account;
-import ru.kpfu.itis.model.Task;
-import ru.kpfu.itis.model.TaskCategory;
+import ru.kpfu.itis.model.*;
 import ru.kpfu.itis.processing.SimpleService;
 import ru.kpfu.itis.security.SecurityService;
 
 import java.util.Date;
+import java.util.List;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 /**
@@ -69,6 +69,24 @@ public class TaskServiceTest {
         Task submittedTask = simpleService.findById(Task.class, task.getId());
 
         assertNotNull(submittedTask);
+
+        AccountTask accountTask = new AccountTask();
+        TaskStatus taskStatus = new TaskStatus();
+        taskStatus.setAccountTask(accountTask);
+        taskStatus.setCreateTime(new Date());
+        taskStatus.setType(TaskStatus.TaskStatusType.ASSIGNED);
+
+        accountTask.setCreateTime(new Date());
+        accountTask.setAccount(testAccount);
+        accountTask.setTask(task);
+        accountTask.setAttemptsCount(1);
+        accountTask.setAvailability(false);
+        accountTask.setNewStatus(taskStatus);
+
+        simpleService.save(accountTask);
+
+        List<Task> tasks = taskService.getTasksByUser(testAccount.getId());
+        assertEquals(tasks.size(), 1);
 
 
     }

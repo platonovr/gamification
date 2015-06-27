@@ -13,6 +13,7 @@ import ru.kpfu.itis.service.TaskService;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by timur on 17.06.15.
@@ -66,6 +67,16 @@ public class TaskServiceImpl implements TaskService {
     @Transactional
     public TaskCategory save(TaskCategory taskCategory) {
         return taskCategoryDao.save(taskCategory);
+    }
+
+    @Override
+    public List<Task> getActualTasks() {
+        return taskDao.getActualTasks();
+    }
+
+    @Override
+    public List<Task> getTasksByUser(Long userId) {
+        return taskDao.getTasksByUser(userId);
     }
 
 

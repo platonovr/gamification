@@ -150,6 +150,14 @@
                 <constraints nullable="false"/>
             </column>
             <column name="ATTEMPTS_COUNT" type="int" defaultValue="1"/>
+            <column name="CREATE_TIME" type="${datetime}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CHANGE_TIME" type="${datetime}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="FINISH_TIME" type="${datetime}">
+            </column>
         </createTable>
     </changeSet>
 
@@ -172,6 +180,14 @@
             </column>
             <column name="TASK_STATUS_TYPE" type="varchar(64)">
                 <constraints nullable="false"/>
+            </column>
+            <column name="CREATE_TIME" type="${datetime}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CHANGE_TIME" type="${datetime}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="FINISH_TIME" type="${datetime}">
             </column>
         </createTable>
     </changeSet>
