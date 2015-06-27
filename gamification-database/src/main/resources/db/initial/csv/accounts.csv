@@ -1,0 +1,2 @@
+account_id,login,password,role,create_time,change_time
+1,admin,$2a$10$CIAIGeYIATEkiilT.twG2.Cf3AVCTsxaIgt0rMJY60JXr0pAzWzTq,ADMIN,'2015-01-01','2015-01-01'

@@ -1,11 +1,17 @@
 package ru.kpfu.itis.model;
 
+import org.hibernate.annotations.Cascade;
+
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "TASK")
-@AttributeOverride(name = "id", column = @Column(name = "TASK_ID"))
+@AttributeOverrides({
+        @AttributeOverride(name = "id", column = @Column(name = "TASK_ID"))
+})
 public class Task extends BaseLongIdEntity {
 
 
@@ -19,21 +25,31 @@ public class Task extends BaseLongIdEntity {
 
     @Column(name = "TYPE", nullable = false)
     @Enumerated(EnumType.STRING)
-    private TaskType type;
+    private TaskType type = TaskType.PERSONAL;
 
     @ManyToOne
-    @JoinColumn(name = "CATEGORY_ID",nullable = false)
-    private Category category;
+    @JoinColumn(name = "TASK_CATEGORY_ID", nullable = false)
+    private TaskCategory category;
 
-    @Column(name = "PARTICIPANTS_COUNT", nullable = false)
+    @Column(name = "PARTICIPANTS_COUNT")
     private Integer participantsCount;
 
-    //todo://время завершения. Как лучше считать?
-    @Column(name = "FINISH_DATE", nullable = false)
-    private Date finishDate;
+    @Column(name = "MAX_MARK", nullable = false)
+    private Byte maxMark;
 
-    @Column(name = "AVAILABILITY")
-    private Boolean availability;
+    @Column(name = "DESCRIPTION")
+    private String description;
+
+    @OneToMany(mappedBy = "task", fetch = FetchType.LAZY)
+    @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
+    private List<AccountTask> taskAccounts = new ArrayList<>();
+
+    @Column(name = "START_DATE", nullable = false)
+    private Date startDate;
+
+    @Column(name = "END_DATE", nullable = false)
+    private Date endDate;
+
 
     public Account getAuthor() {
         return author;
@@ -67,28 +83,28 @@ public class Task extends BaseLongIdEntity {
         this.participantsCount = participantsCount;
     }
 
-    public Date getFinishDate() {
-        return finishDate;
+    public Byte getMaxMark() {
+        return maxMark;
     }
 
-    public void setFinishDate(Date finishDate) {
-        this.finishDate = finishDate;
+    public void setMaxMark(Byte maxMark) {
+        this.maxMark = maxMark;
     }
 
-    public Boolean getAvailability() {
-        return availability;
-    }
-
-    public void setAvailability(Boolean availability) {
-        this.availability = availability;
-    }
-
-    public Category getCategory() {
+    public TaskCategory getCategory() {
         return category;
     }
 
-    public void setCategory(Category category) {
+    public void setCategory(TaskCategory category) {
         this.category = category;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public enum TaskType implements EnumedDictionary {
@@ -116,4 +132,27 @@ public class Task extends BaseLongIdEntity {
         }
     }
 
+    public List<AccountTask> getTaskAccounts() {
+        return taskAccounts;
+    }
+
+    public void setTaskAccounts(List<AccountTask> taskAccounts) {
+        this.taskAccounts = taskAccounts;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
 }

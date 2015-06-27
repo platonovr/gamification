@@ -1,7 +1,7 @@
 package ru.kpfu.itis.model;
 
 
-import ru.kpfu.itis.model.enums.Type;
+import ru.kpfu.itis.model.enums.BadgeCategory;
 
 import javax.persistence.*;
 import java.util.List;
@@ -17,7 +17,7 @@ import java.util.List;
 public class Badge extends BaseLongIdEntity {
 
     @Enumerated(EnumType.STRING)
-    private Type type;
+    private BadgeCategory type;
 
     private String description;
 
@@ -36,11 +36,11 @@ public class Badge extends BaseLongIdEntity {
         this.description = description;
     }
 
-    public Type getType() {
+    public BadgeCategory getType() {
         return type;
     }
 
-    public void setType(Type type) {
+    public void setType(BadgeCategory type) {
         this.type = type;
     }
 

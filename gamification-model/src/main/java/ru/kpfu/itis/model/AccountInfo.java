@@ -4,7 +4,6 @@ import org.hibernate.annotations.Type;
 import org.joda.time.LocalDate;
 
 import javax.persistence.*;
-import java.util.Date;
 
 /**
  * Created by Roman on 22.03.2015.
@@ -47,6 +46,7 @@ public class AccountInfo extends BaseLongIdEntity {
     private Double point;
 
     @OneToOne(optional = false)
+    @JoinColumn(name = "ACCOUNT_ID")
     private Account account;
 
     public void setPhoto(String photo) {

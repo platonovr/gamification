@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+        logicalFilePath="initial-data.xml">
+
+    <changeSet id="1.1" author="tkasatkin" runOnChange="true">
+        <loadUpdateData tableName="ACCOUNT" primaryKey="account_id"
+                        file="db/initial/csv/accounts.csv"/>
+    </changeSet>
+
+    <changeSet id="1.2" author="tkasatkin" runOnChange="true">
+        <loadUpdateData tableName="TASK_CATEGORY" primaryKey="TASK_CATEGORY_ID"
+                        file="db/initial/csv/categories.csv"/>
+    </changeSet>
+
+</databaseChangeLog>

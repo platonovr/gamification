@@ -2,14 +2,13 @@ package ru.kpfu.itis.controller.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.kpfu.itis.dto.AccountProfileDTO;
-import ru.kpfu.itis.dto.BadgeDTO;
-import ru.kpfu.itis.dto.TaskDTO;
+import ru.kpfu.itis.dto.AccountProfileDto;
+import ru.kpfu.itis.dto.BadgeDto;
+import ru.kpfu.itis.dto.TaskDto;
 import ru.kpfu.itis.model.*;
 import ru.kpfu.itis.service.AccountBadgeService;
 import ru.kpfu.itis.service.AccountInfoService;
 import ru.kpfu.itis.service.AccountService;
-import ru.kpfu.itis.service.AccountTaskService;
 import ru.kpfu.itis.util.Constant;
 
 import java.util.ArrayList;
@@ -27,71 +26,74 @@ public class AccountController {
     @Autowired
     AccountInfoService accountInfoService;
     @Autowired
-    AccountTaskService accountTaskService;
-    @Autowired
     AccountBadgeService accountBadgeService;
+    @Autowired
+    RatingController ratingController;
 
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseBody
-    public AccountProfileDTO getProfile(@PathVariable Long id) {
+    public AccountProfileDto getProfile(@PathVariable Long id) {
         Account account = accountService.findById(id);
         AccountInfo accountInfo = accountInfoService.findByAccount(account);
-        ArrayList<AccountTask> tasks = (ArrayList<AccountTask>) accountTaskService.findCompleteTasksByAccount(account);
+        ArrayList<Task> tasks = new ArrayList<>();
+        for (AccountTask accountTask : account.getAccountTasks()) {
+            if(accountTask.getTaskStatus().getType().equals(TaskStatus.TaskStatusType.COMPLETED))
+                tasks.add(accountTask.getTask());
+        }
         ArrayList<AccountBadge> badges = (ArrayList<AccountBadge>) accountBadgeService.findAllBadgesByAccount(account);
 
-        //todo rating_position
         //todo to pack all information on DTO
 
-        AccountProfileDTO profileDTO = packAccountProfileDto(account, accountInfo, tasks, badges);
+        AccountProfileDto profileDTO = packAccountProfileDto(account, accountInfo, tasks, badges);
+        profileDTO.setRating_position(ratingController.getUserRating());
         return profileDTO;
     }
 
     @RequestMapping(value = "/current", method = RequestMethod.GET)
     @ResponseBody
-    public AccountProfileDTO getMyProfile() {
+    public AccountProfileDto getMyProfile() {
         return getProfile(0L); //todo
     }
 
 
-    private AccountProfileDTO packAccountProfileDto(Account account, AccountInfo accountInfo,
-                                                    ArrayList<AccountTask> tasks, ArrayList<AccountBadge> badges) {
-        AccountProfileDTO profileDTO = new AccountProfileDTO();
-        profileDTO.setId(account.getId());
-        profileDTO.setLogin(account.getLogin());
-        profileDTO.setFirst_name(accountInfo.getFirstName());
-        profileDTO.setLast_name(accountInfo.getLastName());
-        profileDTO.setRating(accountInfo.getPoint());
+    private AccountProfileDto packAccountProfileDto(Account account, AccountInfo accountInfo,
+                                                    ArrayList<Task> tasks, ArrayList<AccountBadge> badges) {
+        AccountProfileDto profileDto = new AccountProfileDto();
+        profileDto.setId(account.getId());
+        profileDto.setLogin(account.getLogin());
+        profileDto.setFirst_name(accountInfo.getFirstName());
+        profileDto.setLast_name(accountInfo.getLastName());
+        profileDto.setRating(accountInfo.getPoint());
 
-        ArrayList<TaskDTO> challengesDto = new ArrayList<>();
-        for (AccountTask accountTask : tasks) {
-            TaskDTO task = taskToDto(accountTask.getTask());
+        ArrayList<TaskDto> challengesDto = new ArrayList<>();
+        for (Task accountTask : tasks) {
+            TaskDto task = taskToDto(accountTask);
             challengesDto.add(task);
         }
-        profileDTO.setChallenges(challengesDto);
+        profileDto.setChallenges(challengesDto);
         challengesDto.clear();
 
-        ArrayList<BadgeDTO> badgesDto = new ArrayList<>();
-        BadgeDTO badge = new BadgeDTO();
+        ArrayList<BadgeDto> badgesDto = new ArrayList<>();
+        BadgeDto badge = new BadgeDto();
         for (AccountBadge accountBadge : badges) {
             badge.setName(accountBadge.getBadge().getName());
             badge.setDescription(accountBadge.getBadge().getDescription());
             badge.setImage(accountBadge.getBadge().getImage());
-            badge.setType(accountBadge.getBadge().getType().name());
-            badge.setType(accountBadge.getBadge().getType().name());
+            badge.setType(accountBadge.getBadge().getType().name()); //todo
             for (Task task : accountBadge.getBadge().getTasks()) {
-                TaskDTO taskDTO = taskToDto(task);
-                challengesDto.add(taskDTO);
+                TaskDto taskDto = taskToDto(task);
+                challengesDto.add(taskDto);
             }
             badge.setChallenges(challengesDto);
         }
-        profileDTO.setBadges(badgesDto);
-        return profileDTO;
+        profileDto.setBadges(badgesDto);
+        return profileDto;
     }
 
-    private TaskDTO taskToDto(Task task) {
-        TaskDTO taskDTO = new TaskDTO();
+    private TaskDto taskToDto(Task task) {
+        TaskDto taskDto = new TaskDto();
         //todo
-        return taskDTO;
+        return taskDto;
     }
 }

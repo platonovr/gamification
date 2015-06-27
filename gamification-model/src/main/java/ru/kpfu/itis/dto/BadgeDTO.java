@@ -8,12 +8,12 @@ import java.util.List;
  * Created by Rigen on 26.06.15.
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class BadgeDTO {
+public class BadgeDto {
     private String name;
     private String image;
     private String type;
     private String description;
-    private List<TaskDTO> challenges;
+    private List<TaskDto> challenges;
 
     public String getName() {
         return name;
@@ -47,11 +47,11 @@ public class BadgeDTO {
         this.description = description;
     }
 
-    public List<TaskDTO> getChallenges() {
+    public List<TaskDto> getChallenges() {
         return challenges;
     }
 
-    public void setChallenges(List<TaskDTO> challenges) {
+    public void setChallenges(List<TaskDto> challenges) {
         this.challenges = challenges;
     }
 }

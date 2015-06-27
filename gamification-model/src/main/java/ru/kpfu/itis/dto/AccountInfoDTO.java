@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
  * Created by Rigen on 26.06.15.
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class AccountInfoDTO {
+public class AccountInfoDto {
     private Long id;
     private String first_name;
     private String last_name;

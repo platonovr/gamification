@@ -1,0 +1,12 @@
+ru\kpfu\itis\base\AbstractBaseDao.class
+ru\kpfu\itis\SimpleDao.class
+ru\kpfu\itis\base\GenericDao.class
+ru\kpfu\itis\base\AbstractGenericDao.class
+ru\kpfu\itis\SecurityDao.class
+ru\kpfu\itis\SimpleDaoImpl.class
+ru\kpfu\itis\AbstractSecurityDao.class
+ru\kpfu\itis\SimpleDaoImpl$2.class
+ru\kpfu\itis\TaskDao.class
+ru\kpfu\itis\SimpleDaoImpl$1.class
+ru\kpfu\itis\SimpleDaoImpl$3.class
+ru\kpfu\itis\TaskDaoImpl.class

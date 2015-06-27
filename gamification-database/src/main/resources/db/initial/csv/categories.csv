@@ -1,0 +1,4 @@
+task_category_id,name,task_category_type,create_time,change_time
+100,категория №100,NONSTUDY,'2015-01-01','2015-01-01'
+101,категория №101,NONSTUDY,'2015-01-01','2015-01-01'
+102,категория №102,STUDY,'2015-01-01','2015-01-01'

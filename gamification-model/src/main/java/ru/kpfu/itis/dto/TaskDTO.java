@@ -6,7 +6,9 @@ import java.util.List;
 /**
  * Created by timur on 17.06.15.
  */
-public class TaskDTO {
+public class TaskDto {
+
+    private Long id;
 
     private String name;
 
@@ -96,5 +98,13 @@ public class TaskDTO {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

@@ -8,21 +8,21 @@ import java.util.List;
  * Created by Rigen on 22.06.15.
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class AccountProfileDTO {
+public class AccountProfileDto {
     private Long id;
     private String login;
     private String first_name;
     private String last_name;
-    private List<TaskDTO> challenges;
-    private List<BadgeDTO> badges;
+    private List<TaskDto> challenges;
+    private List<BadgeDto> badges;
     private Double rating;
     private Integer rating_position;
 
-    public List<BadgeDTO> getBadges() {
+    public List<BadgeDto> getBadges() {
         return badges;
     }
 
-    public void setBadges(List<BadgeDTO> badges) {
+    public void setBadges(List<BadgeDto> badges) {
         this.badges = badges;
     }
 
@@ -74,11 +74,11 @@ public class AccountProfileDTO {
         this.rating_position = rating_position;
     }
 
-    public List<TaskDTO> getChallenges() {
+    public List<TaskDto> getChallenges() {
         return challenges;
     }
 
-    public void setChallenges(List<TaskDTO> challenges) {
+    public void setChallenges(List<TaskDto> challenges) {
         this.challenges = challenges;
     }
 }
