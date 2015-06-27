@@ -11,12 +11,20 @@ import java.util.List;
 public class AccountProfileDTO {
     private Long id;
     private String login;
-    private String firstName;
-    private String middleName;
-    private String lastName;
-    private Double point;
-    private Integer rating;
-    private List<TaskDTO> tasks;
+    private String first_name;
+    private String last_name;
+    private List<TaskDTO> challenges;
+    private List<BadgeDTO> badges;
+    private Double rating;
+    private Integer rating_position;
+
+    public List<BadgeDTO> getBadges() {
+        return badges;
+    }
+
+    public void setBadges(List<BadgeDTO> badges) {
+        this.badges = badges;
+    }
 
     public Long getId() {
         return id;
@@ -34,51 +42,43 @@ public class AccountProfileDTO {
         this.login = login;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getFirst_name() {
+        return first_name;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setFirst_name(String first_name) {
+        this.first_name = first_name;
     }
 
-    public String getMiddleName() {
-        return middleName;
+    public String getLast_name() {
+        return last_name;
     }
 
-    public void setMiddleName(String middleName) {
-        this.middleName = middleName;
+    public void setLast_name(String last_name) {
+        this.last_name = last_name;
     }
 
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public Double getPoint() {
-        return point;
-    }
-
-    public void setPoint(Double point) {
-        this.point = point;
-    }
-
-    public Integer getRating() {
+    public Double getRating() {
         return rating;
     }
 
-    public void setRating(Integer rating) {
+    public void setRating(Double rating) {
         this.rating = rating;
     }
 
-    public List<TaskDTO> getTasks() {
-        return tasks;
+    public Integer getRating_position() {
+        return rating_position;
     }
 
-    public void setTasks(List<TaskDTO> tasks) {
-        this.tasks = tasks;
+    public void setRating_position(Integer rating_position) {
+        this.rating_position = rating_position;
+    }
+
+    public List<TaskDTO> getChallenges() {
+        return challenges;
+    }
+
+    public void setChallenges(List<TaskDTO> challenges) {
+        this.challenges = challenges;
     }
 }
