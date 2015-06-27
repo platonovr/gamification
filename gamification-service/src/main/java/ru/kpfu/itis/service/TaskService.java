@@ -1,6 +1,6 @@
 package ru.kpfu.itis.service;
 
-import ru.kpfu.itis.dto.TaskDTO;
+import ru.kpfu.itis.dto.TaskDto;
 import ru.kpfu.itis.model.Task;
 import ru.kpfu.itis.model.TaskCategory;
 
@@ -11,9 +11,13 @@ import java.util.Collection;
  */
 public interface TaskService {
 
-    Task save(TaskDTO taskDTO);
+    Task submitTask(Task task);
+
+    Task save(TaskDto taskDto);
 
     Task findByName(String name);
 
     Collection<TaskCategory> getAllCategories();
+
+    TaskCategory save(TaskCategory taskCategory);
 }

@@ -2,10 +2,11 @@ package ru.kpfu.itis.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.kpfu.itis.dao.AccountDao;
 import ru.kpfu.itis.dao.TaskCategoryDao;
 import ru.kpfu.itis.dao.TaskDao;
-import ru.kpfu.itis.dto.TaskDTO;
+import ru.kpfu.itis.dto.TaskDto;
 import ru.kpfu.itis.model.Task;
 import ru.kpfu.itis.model.TaskCategory;
 import ru.kpfu.itis.service.TaskService;
@@ -28,17 +29,24 @@ public class TaskServiceImpl implements TaskService {
     @Autowired
     private AccountDao accountDao;
 
+    @Override
+    @Transactional
+    public Task submitTask(Task task) {
+        return taskDao.submitTask(task);
+    }
+
     //    @RolesAllowed({"ADMIN", "TEACHER"})
     @Override
-    public Task save(TaskDTO taskDTO) {
+    @Transactional
+    public Task save(TaskDto taskDto) {
         Task task = new Task();
-        task.setCategory(taskCategoryDao.findByName(taskDTO.getCategory()));
+        task.setCategory(taskCategoryDao.findByName(taskDto.getCategory()));
         //TODO replace with getAuthUser() when we will make authentication
         task.setAuthor(accountDao.findByLogin("admin"));
-        task.setName(taskDTO.getName());
-        task.setMaxMark(taskDTO.getMaxMark());
-        task.setFinishTime(taskDTO.getDeadline());
-        task.setDescription(taskDTO.getDescription());
+        task.setName(taskDto.getName());
+        task.setMaxMark(taskDto.getMaxMark());
+        task.setFinishTime(taskDto.getDeadline());
+        task.setDescription(taskDto.getDescription());
         task.setCreateTime(new Date());
         taskDao.save(task);
         return task;
@@ -53,5 +61,12 @@ public class TaskServiceImpl implements TaskService {
     public Collection<TaskCategory> getAllCategories() {
         return taskCategoryDao.fetchAll(TaskCategory.class);
     }
+
+    @Override
+    @Transactional
+    public TaskCategory save(TaskCategory taskCategory) {
+        return taskCategoryDao.save(taskCategory);
+    }
+
 
 }

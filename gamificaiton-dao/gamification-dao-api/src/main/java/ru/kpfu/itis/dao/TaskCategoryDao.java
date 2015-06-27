@@ -8,4 +8,6 @@ import ru.kpfu.itis.model.TaskCategory;
 public interface TaskCategoryDao extends SimpleDao {
 
     TaskCategory findByName(String name);
+
+    TaskCategory save(TaskCategory taskCategory);
 }

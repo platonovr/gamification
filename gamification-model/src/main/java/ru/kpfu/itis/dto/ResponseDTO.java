@@ -3,7 +3,7 @@ package ru.kpfu.itis.dto;
 /**
  * Created by timur on 23.06.15.
  */
-public class ResponseDTO<T> {
+public class ResponseDto<T> {
 
     private String message;
 
@@ -11,16 +11,16 @@ public class ResponseDTO<T> {
 
     private int statusCode;
 
-    public ResponseDTO(String message) {
+    public ResponseDto(String message) {
         this.message = message;
     }
 
-    public ResponseDTO(String message, int statusCode) {
+    public ResponseDto(String message, int statusCode) {
         this.message = message;
         this.statusCode = statusCode;
     }
 
-    public ResponseDTO(String message, T value, int statusCode) {
+    public ResponseDto(String message, T value, int statusCode) {
         this.message = message;
         this.value = value;
         this.statusCode = statusCode;

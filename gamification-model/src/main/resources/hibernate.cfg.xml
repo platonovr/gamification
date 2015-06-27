@@ -8,7 +8,9 @@
         <mapping class="ru.kpfu.itis.model.Account"/>
         <mapping class="ru.kpfu.itis.model.AccountInfo"/>
         <mapping class="ru.kpfu.itis.model.Task"/>
+        <mapping class="ru.kpfu.itis.model.TaskStatus"/>
         <mapping class="ru.kpfu.itis.model.TaskCategory"/>
+        <mapping class="ru.kpfu.itis.model.AccountTask"/>
     </session-factory>
 
 </hibernate-configuration>

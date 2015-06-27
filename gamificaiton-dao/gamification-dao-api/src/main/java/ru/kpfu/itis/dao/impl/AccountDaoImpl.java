@@ -7,7 +7,7 @@ import ru.kpfu.itis.model.Account;
 /**
  * Created by timur on 24.06.15.
  */
-@Repository
+@Repository("accountDao")
 public class AccountDaoImpl extends SimpleDaoImpl implements AccountDao {
     @Override
     public Account findByLogin(String login) {

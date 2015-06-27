@@ -11,7 +11,7 @@
     </changeSet>
 
     <changeSet id="1.2" author="tkasatkin" runOnChange="true">
-        <loadUpdateData tableName="CATEGORY" primaryKey="category_id"
+        <loadUpdateData tableName="TASK_CATEGORY" primaryKey="TASK_CATEGORY_ID"
                         file="db/initial/csv/categories.csv"/>
     </changeSet>
 

@@ -7,10 +7,16 @@ import ru.kpfu.itis.model.TaskCategory;
 /**
  * Created by timur on 24.06.15.
  */
-@Repository
+@Repository("taskCategoryDao")
 public class TaskCategoryDaoImpl extends SimpleDaoImpl implements TaskCategoryDao {
     @Override
     public TaskCategory findByName(String name) {
         return findByField(TaskCategory.class, "name", name);
+    }
+
+    @Override
+    public TaskCategory save(TaskCategory taskCategory) {
+        getHibernateTemplate().saveOrUpdate(taskCategory);
+        return taskCategory;
     }
 }

@@ -1,29 +1,30 @@
 package ru.kpfu.itis.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import ru.kpfu.itis.model.enums.Type;
+import ru.kpfu.itis.model.enums.TaskCategoryType;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
  * Created by timur on 15.06.15.
  */
 @Entity
-@Table(name = "CATEGORY")
-@AttributeOverride(name = "id", column = @Column(name = "CATEGORY_ID"))
+@Table(name = "TASK_CATEGORY")
+@AttributeOverride(name = "id", column = @Column(name = "TASK_CATEGORY_ID"))
 public class TaskCategory extends BaseLongIdEntity {
 
     @Column(unique = true, nullable = false)
     private String name;
 
-    @Column(nullable = false)
+    @Column(name = "TASK_CATEGORY_TYPE", nullable = false)
     @Enumerated(EnumType.STRING)
-    private Type type;
+    private TaskCategoryType taskCategoryType;
 
     @JsonIgnore
     @OneToMany(mappedBy = "category")
-    private Set<Task> tasks;
+    private Set<Task> tasks = new HashSet<>();
 
     public String getName() {
         return name;
@@ -33,12 +34,12 @@ public class TaskCategory extends BaseLongIdEntity {
         this.name = name;
     }
 
-    public Type getType() {
-        return type;
+    public TaskCategoryType getTaskCategoryType() {
+        return taskCategoryType;
     }
 
-    public void setType(Type type) {
-        this.type = type;
+    public void setTaskCategoryType(TaskCategoryType taskCategoryType) {
+        this.taskCategoryType = taskCategoryType;
     }
 
     public Set<Task> getTasks() {

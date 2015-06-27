@@ -13,7 +13,7 @@ import javax.annotation.Resource;
 import java.io.Serializable;
 import java.util.List;
 
-@Repository
+@Repository("simpleDao")
 public class SimpleDaoImpl extends HibernateDaoSupport implements SimpleDao {
 
     @Resource(name = "sessionFactory")

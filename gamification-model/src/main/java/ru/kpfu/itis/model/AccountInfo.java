@@ -30,7 +30,6 @@ public class AccountInfo extends BaseLongIdEntity {
     @Column(name = "PHONE_NUMBER")
     private String phoneNumber;
 
-
     @Column(name = "EMAIL")
     private String email;
 
@@ -41,7 +40,7 @@ public class AccountInfo extends BaseLongIdEntity {
     private Integer entranceYear;
 
     @OneToOne(optional = false)
-    @JoinColumn(name = "account_id")
+    @JoinColumn(name = "ACCOUNT_ID")
     private Account account;
 
     public String getFirstName() {

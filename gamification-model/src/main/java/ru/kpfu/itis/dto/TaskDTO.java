@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Created by timur on 17.06.15.
  */
-public class TaskDTO {
+public class TaskDto {
 
     private Long id;
 
