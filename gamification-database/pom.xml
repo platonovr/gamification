@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
@@ -53,7 +53,7 @@
                         </executions>
                         <configuration>
                             <files>
-                                <file>${basedir}/src/resources/db/database.properties</file>
+                                <file>${basedir}/src/main/resources/db/database.properties</file>
                             </files>
                             <outputFile/>
                             <properties/>
@@ -62,14 +62,14 @@
                     <plugin>
                         <groupId>org.liquibase</groupId>
                         <artifactId>liquibase-maven-plugin</artifactId>
-                        <version>3.1.0</version>
                         <executions>
                             <execution>
+                                <id>default-cli</id>
                                 <phase>process-resources</phase>
                                 <configuration>
-                                    <changeLogFile>${basedir}/src/resources/db/changelog.xml</changeLogFile>
+                                    <changeLogFile>${basedir}/src/main/resources/db/changelog.xml</changeLogFile>
                                     <propertyFileWillOverride>true</propertyFileWillOverride>
-                                    <propertyFile>${basedir}/src/resources/db/liquibase.properties</propertyFile>
+                                    <propertyFile>${basedir}/src/main/resources/db/liquibase.properties</propertyFile>
                                 </configuration>
                                 <goals>
                                     <goal>update</goal>

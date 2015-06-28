@@ -1,18 +1,20 @@
 package ru.kpfu.itis.model;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.Date;
 
 
 @MappedSuperclass
 @Access(AccessType.FIELD)
-public abstract class BaseLongIdEntity implements Serializable {
+public abstract class BaseLongIdEntity implements IdentifiedEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @CreationTimestamp
     @Column(name = "CREATE_TIME", nullable = false)
     private Date createTime;
 

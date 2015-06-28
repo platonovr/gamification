@@ -1,27 +1,34 @@
 package ru.kpfu.itis.dto;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
+import java.util.Date;
+import java.util.List;
 
 /**
- * Created by Rigen on 17.06.15.
+ * Created by timur on 17.06.15.
  */
-
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class TaskDto {
 
-    private Integer id;
+    private Long id;
+
     private String name;
-    private String type;
+
+    private String subject;
+
     private String category;
-    private int point;
 
-    public Integer getId() {
-        return id;
-    }
+    private String creator;
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    private List<String> coursesOrGroups;
+
+    private List<String> performers;
+
+    private Byte maxMark;
+
+    private Date startDate;
+
+    private Date deadline;
+
+    private String description;
 
     public String getName() {
         return name;
@@ -31,12 +38,12 @@ public class TaskDto {
         this.name = name;
     }
 
-    public String getType() {
-        return type;
+    public String getSubject() {
+        return subject;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setSubject(String subject) {
+        this.subject = subject;
     }
 
     public String getCategory() {
@@ -47,11 +54,67 @@ public class TaskDto {
         this.category = category;
     }
 
-    public int getPoint() {
-        return point;
+    public String getCreator() {
+        return creator;
     }
 
-    public void setPoint(int point) {
-        this.point = point;
+    public void setCreator(String creator) {
+        this.creator = creator;
+    }
+
+    public List<String> getCoursesOrGroups() {
+        return coursesOrGroups;
+    }
+
+    public void setCoursesOrGroups(List<String> coursesOrGroups) {
+        this.coursesOrGroups = coursesOrGroups;
+    }
+
+    public List<String> getPerformers() {
+        return performers;
+    }
+
+    public void setPerformers(List<String> performers) {
+        this.performers = performers;
+    }
+
+    public Byte getMaxMark() {
+        return maxMark;
+    }
+
+    public void setMaxMark(Byte maxMark) {
+        this.maxMark = maxMark;
+    }
+
+    public Date getDeadline() {
+        return deadline;
+    }
+
+    public void setDeadline(Date deadline) {
+        this.deadline = deadline;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
     }
 }

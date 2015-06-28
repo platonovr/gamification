@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+                           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <context:annotation-config/>
+    <context:component-scan base-package="ru.kpfu.itis.dao"/>
+    <context:component-scan base-package="ru.kpfu.itis.processing.**"/>
+    <context:component-scan base-package="ru.kpfu.itis.h2"/>
+    <context:component-scan base-package="ru.kpfu.itis.service"/>
+    <context:component-scan base-package="ru.kpfu.itis.security"/>
+
+    <import resource="classpath*:META-INF/spring/*-beans.xml"/>
+
+
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>application.properties</value>
+                <value>database.properties</value>
+            </list>
+        </property>
+        <property name="properties">
+            <props>
+            </props>
+        </property>
+        <property name="systemPropertiesMode">
+            <util:constant
+                    static-field="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer.SYSTEM_PROPERTIES_MODE_OVERRIDE"/>
+        </property>
+    </bean>
+
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName">
+            <value>${database.driverClass}</value>
+        </property>
+        <property name="url">
+            <value>${database.url}</value>
+        </property>
+        <property name="username">
+            <value>${database.username}</value>
+        </property>
+        <property name="password">
+            <value>${database.password}</value>
+        </property>
+    </bean>
+
+    <bean id="liquibase" class="liquibase.integration.spring.SpringLiquibase">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="changeLog">
+            <value>classpath:/db/test-changelog.xml</value>
+        </property>
+        <property name="dropFirst" value="true"/>
+    </bean>
+
+    <tx:annotation-driven transaction-manager="hibernateTransactionManager"/>
+
+    <!--<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">-->
+    <!--<property name="dataSource" ref="dataSource"/>-->
+    <!--</bean>-->
+
+    <bean id="hibernateTransactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean"
+          depends-on="liquibase">
+        <property name="dataSource" ref="dataSource"/>
+
+
+        <property name="configLocations">
+            <list>
+                <value>classpath:hibernate.cfg.xml</value>
+            </list>
+        </property>
+
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">
+                    ${hibernate.dialect}
+                </prop>
+
+                <prop key="hibernate.cache.use_second_level_cache">
+                    false
+                </prop>
+                <prop key="hibernate.cache.use_query_cache">
+                    false
+                </prop>
+                <prop key="hibernate.show_sql">
+                    ${hibernate.showSql}
+                </prop>
+                <prop key="hibernate.format_sql">
+                    ${hibernate.formatSql}
+                </prop>
+            </props>
+        </property>
+    </bean>
+
+
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <bean id="namedJdbcTemplate" class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">
+        <constructor-arg type="javax.sql.DataSource" ref="dataSource"/>
+    </bean>
+
+    <alias name="dataSource" alias="firstLevelDS"/>
+
+
+    <bean class="ru.kpfu.itis.h2.H2DatabasePostProcessor">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+
+</beans>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns="http://java.sun.com/xml/ns/javaee"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://java.sun.com/xml/ns/javaee"
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
          version="3.0">
 
@@ -10,6 +10,7 @@
             /WEB-INF/spring/applicationContext.xml
             /WEB-INF/spring/application-ds.xml
             /WEB-INF/spring/db-beans.xml
+            /WEB-INF/spring/application-servlet.xml
         </param-value>
     </context-param>
 
@@ -18,7 +19,7 @@
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
         <init-param>
             <param-name>contextConfigLocation</param-name>
-            <param-value>/WEB-INF/spring/application-servlet.xml</param-value>
+            <param-value></param-value>
         </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
@@ -65,9 +66,9 @@
     </listener>
 
 
-    <welcome-file-list>
-        <welcome-file>index.html</welcome-file>
-    </welcome-file-list>
+    <!--<welcome-file-list>-->
+    <!--<welcome-file>index.html</welcome-file>-->
+    <!--</welcome-file-list>-->
 
 
     <session-config>

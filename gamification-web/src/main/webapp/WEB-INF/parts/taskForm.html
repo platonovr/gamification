@@ -3,35 +3,57 @@
 <head lang="en">
     <meta charset="UTF-8">
     <title>Создать таск</title>
-    <script src="/lib/angular.min.js"></script>
+    <script src="/lib/angular.js"></script>
+    <!--<script src="/lib/angular-file-upload.js"></script>-->
+    <script src="/lib/ng-file-upload-shim.js"></script>
+    <script src="/lib/ng-file-upload.js"></script>
     <script src="/js/app.js"></script>
     <script src="/js/services/taskService.js"></script>
     <script src="/js/controllers/taskController.js"></script>
 </head>
 <body ng-controller="TaskController">
 <form id="taskForm">
-    <label for="name">Название:<input id="name" ng-model="task.name"></label>
+    <label>Название*:<input name="name" ng-model="task.name" ng-change="errors=null"></label>
+    <label style="color: red" ng-show="errors.name!=null">{{errors.name}}</label>
     <br/>
-    <label for="subject">Предмет:<input id="subject" ng-model="task.subject"></label>
+    <label>Предмет:<input name="subject" ng-model="task.subject"></label>
     <br/>
-    <label for="category">Категория:<input id="category" ng-model="task.category"></label>
+    <label>Категория*:
+        <select ng-model="task.category"
+                ng-options="category.name as category.name for category in categories" ng-change="errors=null"></select>
+    </label>
+    <label style="color: red" ng-show="errors.category!=null">{{errors.category}}</label>
     <br/>
-    <label for="creator">Преподаватель:<input id="creator" ng-model="task.creator"></label>
+    <label>Преподаватель:<input name="creator" ng-model="task.creator"></label>
     <br/>
-    <label for="coursesOrGroups">Курсы/Группы:<input id="coursesOrGroups" ng-model="task.coursesOrGroups"
-                                                     ng-list></label>
+    <label>Курсы/Группы:<input name="coursesOrGroups" ng-model="task.coursesOrGroups"
+                               ng-list></label>
     <br/>
-    <label for="performers">Исполнитель:<input id="performers" ng-model="task.performers" ng-list></label>
+    <label>Исполнитель:<input name="performers" ng-model="task.performers" ng-list></label>
     <br/>
-    <label for="maxMark">Оценка:<input id="maxMark" ng-model="task.maxMark" type="number" min="1"></label>
+    <label>Оценка*:<input name="maxMark" ng-model="task.maxMark" type="number" min="1" ng-change="errors=null"></label>
+    <label style="color: red" ng-show="errors.maxMark!=null">{{errors.maxMark}}</label>
     <br/>
-    <label for="deadline">Заканчивается:<input id="deadline" ng-model="task.deadline" type="date"></label>
+    <label>Начинается*:<input name="startDate" ng-model="task.startDate" type="date" ng-change="errors=null"></label>
+    <label style="color: red" ng-show="errors.startDate!=null">{{errors.startDate}}</label>
     <br/>
-    <label for="description">Исполнитель:<input id="description" ng-model="task.description"></label>
+    <label>Заканчивается*:<input name="deadline" ng-model="task.deadline" type="date" ng-change="errors=null"></label>
+    <label style="color: red" ng-show="errors.deadline!=null">{{errors.deadline}}</label>
     <br/>
-    <!--<label for="attachments">Прикрепления:<input id="attachments" ng-model="files" type="file" multiple></label>-->
-    <!--<br/>-->
-    <button ng-click="createTask()">Создать</button>
+    <label>Описание:<textarea name="description" ng-model="task.description"></textarea></label>
+    <br/>
+    <label>Прикрепления:<input name="attachments" type="file"
+                               ng-model="attachments" ngf-select="true"
+                               ngf-multiple="true" ngf-keep="true" ngf-keep-distinct="true"></label>
+    <ul>
+        <li ng-repeat="file in attachments">
+            <div>{{file.name}}</div>
+            <button ng-click="attachments.remove($index)">X</button>
+        </li>
+    </ul>
+    <br/>
+    <button ng-if="!created" type="submit" ng-click="createTask()">Создать</button>
+    <label style="color: lawngreen" ng-if="created">Создан</label>
 </form>
 </body>
 </html>
