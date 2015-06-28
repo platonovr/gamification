@@ -24,6 +24,8 @@ public class TaskDto {
 
     private Byte maxMark;
 
+    private Date startDate;
+
     private Date deadline;
 
     private String description;
@@ -106,5 +108,13 @@ public class TaskDto {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
     }
 }
