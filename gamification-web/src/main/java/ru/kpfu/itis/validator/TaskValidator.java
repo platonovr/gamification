@@ -8,6 +8,7 @@ import org.springframework.validation.Validator;
 import ru.kpfu.itis.dto.TaskDto;
 import ru.kpfu.itis.service.TaskService;
 
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -33,9 +34,27 @@ public class TaskValidator implements Validator {
             errors.rejectValue("name", "task.name.exist");
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "category", "task.category.empty");
         ValidationUtils.rejectIfEmpty(errors, "maxMark", "task.maxMark.empty");
+        ValidationUtils.rejectIfEmpty(errors, "startDate", "task.startDate.empty");
         ValidationUtils.rejectIfEmpty(errors, "deadline", "task.deadline.empty");
+        Date startDate = taskDto.getStartDate();
         Date deadline = taskDto.getDeadline();
-        if (deadline != null && deadline.compareTo(new Date()) <= 0)
-            errors.rejectValue("deadline", "task.deadline.past");
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        calendar.getTime();
+        Date currentDateWithoutHours = calendar.getTime();
+        if (startDate != null | deadline != null) {
+            if (deadline != null) {
+                if (startDate != null && startDate.compareTo(deadline) >= 0)
+                    errors.rejectValue("startDate", "task.startDate.bigger");
+                if (deadline.compareTo(currentDateWithoutHours) <= 0)
+                    errors.rejectValue("deadline", "task.deadline.past");
+            }
+            if (startDate != null && startDate.compareTo(currentDateWithoutHours) < 0)
+                errors.rejectValue("startDate", "task.startDate.past");
+        }
     }
 }

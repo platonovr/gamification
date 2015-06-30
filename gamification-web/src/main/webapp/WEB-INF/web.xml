@@ -10,6 +10,7 @@
             /WEB-INF/spring/applicationContext.xml
             /WEB-INF/spring/application-ds.xml
             /WEB-INF/spring/db-beans.xml
+            /WEB-INF/spring/application-servlet.xml
         </param-value>
     </context-param>
 
@@ -18,7 +19,7 @@
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
         <init-param>
             <param-name>contextConfigLocation</param-name>
-            <param-value>/WEB-INF/spring/application-servlet.xml</param-value>
+            <param-value></param-value>
         </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
@@ -43,16 +44,6 @@
 
     <filter-mapping>
         <filter-name>characterEncodingFilter</filter-name>
-        <url-pattern>/*</url-pattern>
-    </filter-mapping>
-
-    <filter>
-        <filter-name>openSessionInViewFilter</filter-name>
-        <filter-class>ru.kpfu.itis.filter.AutoFlushOpenSessionInViewFilter</filter-class>
-    </filter>
-
-    <filter-mapping>
-        <filter-name>openSessionInViewFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
