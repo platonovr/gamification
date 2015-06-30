@@ -192,4 +192,64 @@
         </createTable>
     </changeSet>
 
+    <changeSet id="7" author="rfatkhullin">
+        <createTable tableName="BADGE">
+            <column name="BADGE_ID" type="${autoincrement}">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="NAME" type="varchar(64)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="DESCRIPTION" type="varchar(4000)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="IMAGE" type="varchar(128)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TYPE" type="varchar(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATE_TIME" type="${datetime}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CHANGE_TIME" type="${datetime}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="FINISH_TIME" type="${datetime}"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="8" author="rfatkhullin">
+        <createTable tableName="ACCOUNT_BADGE">
+            <column name="ACCOUNT_BADGE_ID" type="${autoincrement}">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="ACCOUNT_ID" type="integer">
+                <constraints foreignKeyName="AccountBadge_Account_fk"
+                             references="ACCOUNT(ACCOUNT_ID)"/>
+            </column>
+            <column name="BADGE_ID" type="integer">
+                <constraints foreignKeyName="AccountBadge_Task_fk"
+                             references="BADGE(BADGE_ID)"/>
+            </column>
+            <column name="CREATE_TIME" type="${datetime}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CHANGE_TIME" type="${datetime}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="FINISH_TIME" type="${datetime}"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="9" author="rfatkhullin">
+        <addColumn tableName="ACCOUNT_INFO">
+            <column name="PHOTO" type="varchar(128)">
+            </column>
+            <column name="POINT" type="float"/>
+            <column name="ACCOUNT_GROUP" type="varchar(32)"/>
+            <column name="EMAIL" type="varchar(64)"/>
+            <column name="ENTRANCE_YEAR" type="integer"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

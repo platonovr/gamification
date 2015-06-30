@@ -33,7 +33,7 @@ public class AccountInfo extends BaseLongIdEntity {
     @Column(name = "EMAIL")
     private String email;
 
-    @Column(name = "GROUP")
+    @Column(name = "ACCOUNT_GROUP")
     private String group;
 
     @Column(name = "ENTRANCE_YEAR")

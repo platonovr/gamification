@@ -2,7 +2,6 @@ package ru.kpfu.itis.model;
 
 
 import org.hibernate.annotations.CreationTimestamp;
-import ru.kpfu.itis.model.enums.TaskStatus;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -17,10 +16,11 @@ import java.util.Date;
 public class AccountBadge extends BaseLongIdEntity {
 
     @ManyToOne
-    @Column(nullable = false)
+    @JoinColumn(name = "ACCOUNT_ID", nullable = false)
     private Account account;
 
-    @OneToOne
+    @ManyToOne
+    @JoinColumn(name = "BADGE_ID", nullable = false)
     private Badge badge;
 
     @Override

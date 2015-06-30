@@ -13,7 +13,6 @@ public class AccountProfileDto {
     private String login;
     private String first_name;
     private String last_name;
-    private List<TaskDto> challenges;
     private List<BadgeDto> badges;
     private Double rating;
     private Integer rating_position;
@@ -72,13 +71,5 @@ public class AccountProfileDto {
 
     public void setRating_position(Integer rating_position) {
         this.rating_position = rating_position;
-    }
-
-    public List<TaskDto> getChallenges() {
-        return challenges;
-    }
-
-    public void setChallenges(List<TaskDto> challenges) {
-        this.challenges = challenges;
     }
 }

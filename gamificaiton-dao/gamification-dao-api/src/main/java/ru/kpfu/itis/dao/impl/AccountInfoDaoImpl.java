@@ -20,8 +20,11 @@ public class AccountInfoDaoImpl extends SimpleDaoImpl implements AccountInfoDao 
     }
 
     @Override
-    public AccountInfo findById(Long id) {
-        return findByField(AccountInfo.class, "account.id", id);
+    public AccountInfo findByAccountId(Long id) {
+        return getHibernateTemplate().execute((aSession) ->
+                (AccountInfo) aSession.createCriteria(AccountInfo.class)
+                        .add(Restrictions.eq("account.id", id))
+                        .add(Restrictions.isNull("finishTime")).uniqueResult());
     }
 
     @Override
@@ -29,6 +32,7 @@ public class AccountInfoDaoImpl extends SimpleDaoImpl implements AccountInfoDao 
         return getHibernateTemplate().execute((aSession) ->
                 (List<AccountInfo>) aSession.createCriteria(AccountInfo.class)
                         .add(Restrictions.eq("entranceYear", accountInfo.getEntranceYear()))
+                        .add(Restrictions.isNull("finishTime"))
                         .addOrder(Order.asc("point")).list());
     }
 }

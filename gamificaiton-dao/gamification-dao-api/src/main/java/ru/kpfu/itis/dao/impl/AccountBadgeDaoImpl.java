@@ -3,7 +3,8 @@ package ru.kpfu.itis.dao.impl;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import ru.kpfu.itis.dao.AccountBadgeDao;
-import ru.kpfu.itis.model.*;
+import ru.kpfu.itis.model.Account;
+import ru.kpfu.itis.model.AccountBadge;
 
 import java.util.List;
 
@@ -16,6 +17,7 @@ public class AccountBadgeDaoImpl extends SimpleDaoImpl implements AccountBadgeDa
     public List<AccountBadge> findAllBadgesByAccount(Account account) {
         return getHibernateTemplate().execute((aSession) ->
                 (List<AccountBadge>) aSession.createCriteria(AccountBadge.class)
-                        .add(Restrictions.eq("account", account)).list());
+                        .add(Restrictions.eq("account.id", account.getId()))
+                        .add(Restrictions.isNull("finishTime")).list());
     }
 }

@@ -11,7 +11,7 @@ import java.util.List;
 public interface AccountInfoService {
     AccountInfo findByAccount(Account account);
 
-    AccountInfo findById(Long id);
+    AccountInfo findByAccountId(Long id);
 
     List<AccountInfo> getAllAndSort(AccountInfo accountInfo);
 }

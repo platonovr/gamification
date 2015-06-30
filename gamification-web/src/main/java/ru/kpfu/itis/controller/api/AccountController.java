@@ -1,11 +1,16 @@
 package ru.kpfu.itis.controller.api;
 
+import com.wordnik.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.kpfu.itis.dto.AccountProfileDto;
 import ru.kpfu.itis.dto.BadgeDto;
-import ru.kpfu.itis.dto.TaskDto;
-import ru.kpfu.itis.model.*;
+import ru.kpfu.itis.dto.ResponseDto;
+import ru.kpfu.itis.model.Account;
+import ru.kpfu.itis.model.AccountBadge;
+import ru.kpfu.itis.model.AccountInfo;
 import ru.kpfu.itis.service.AccountBadgeService;
 import ru.kpfu.itis.service.AccountInfoService;
 import ru.kpfu.itis.service.AccountService;
@@ -16,7 +21,7 @@ import java.util.ArrayList;
 /**
  * Created by Rigen on 22.06.15.
  */
-
+@Api(value = "user", description = "operation with users")
 @RequestMapping(Constant.API_URI_PREFIX + "/user")
 @RestController("apiAccountController")
 public class AccountController {
@@ -33,67 +38,53 @@ public class AccountController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseBody
-    public AccountProfileDto getProfile(@PathVariable Long id) {
+    public ResponseEntity<ResponseDto<AccountProfileDto>> getProfile(@PathVariable Long id) {
         Account account = accountService.findById(id);
+        if (account == null) {
+            return new ResponseEntity<>(new ResponseDto<>("User with requested id not found.",
+                    HttpStatus.NOT_FOUND.value()), HttpStatus.NOT_FOUND);
+        }
         AccountInfo accountInfo = accountInfoService.findByAccount(account);
-        ArrayList<Task> tasks = new ArrayList<>();
-        for (AccountTask accountTask : account.getAccountTasks()) {
-            if(accountTask.getTaskStatus().getType().equals(TaskStatus.TaskStatusType.COMPLETED))
-                tasks.add(accountTask.getTask());
+
+        if (accountInfo == null) {
+            return new ResponseEntity<>(new ResponseDto<>("Information for user with requested id not found.",
+                    HttpStatus.NOT_FOUND.value()), HttpStatus.NOT_FOUND);
         }
         ArrayList<AccountBadge> badges = (ArrayList<AccountBadge>) accountBadgeService.findAllBadgesByAccount(account);
-
-        //todo to pack all information on DTO
-
-        AccountProfileDto profileDTO = packAccountProfileDto(account, accountInfo, tasks, badges);
-        profileDTO.setRating_position(ratingController.getUserRating());
-        return profileDTO;
+        AccountProfileDto profileDTO = packAccountProfileDto(account, accountInfo, badges);
+        profileDTO.setRating_position(ratingController.getUserRating(id));
+        return new ResponseEntity<>(new ResponseDto<>("", profileDTO, HttpStatus.OK.value()), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/current", method = RequestMethod.GET)
     @ResponseBody
-    public AccountProfileDto getMyProfile() {
-        return getProfile(0L); //todo
+    public ResponseEntity<ResponseDto<AccountProfileDto>> getMyProfile() {
+        return getProfile(1L); //todo
     }
 
 
     private AccountProfileDto packAccountProfileDto(Account account, AccountInfo accountInfo,
-                                                    ArrayList<Task> tasks, ArrayList<AccountBadge> badges) {
+                                                    ArrayList<AccountBadge> badges) {
         AccountProfileDto profileDto = new AccountProfileDto();
         profileDto.setId(account.getId());
         profileDto.setLogin(account.getLogin());
         profileDto.setFirst_name(accountInfo.getFirstName());
         profileDto.setLast_name(accountInfo.getLastName());
         profileDto.setRating(accountInfo.getPoint());
-
-        ArrayList<TaskDto> challengesDto = new ArrayList<>();
-        for (Task accountTask : tasks) {
-            TaskDto task = taskToDto(accountTask);
-            challengesDto.add(task);
-        }
-        profileDto.setChallenges(challengesDto);
-        challengesDto.clear();
-
         ArrayList<BadgeDto> badgesDto = new ArrayList<>();
-        BadgeDto badge = new BadgeDto();
-        for (AccountBadge accountBadge : badges) {
-            badge.setName(accountBadge.getBadge().getName());
-            badge.setDescription(accountBadge.getBadge().getDescription());
-            badge.setImage(accountBadge.getBadge().getImage());
-            badge.setType(accountBadge.getBadge().getType().name()); //todo
-            for (Task task : accountBadge.getBadge().getTasks()) {
-                TaskDto taskDto = taskToDto(task);
-                challengesDto.add(taskDto);
+        BadgeDto badge;
+        if (badges != null) {
+            for (AccountBadge accountBadge : badges) {
+                badge = new BadgeDto();
+                badge.setId(accountBadge.getBadge().getId());
+                badge.setName(accountBadge.getBadge().getName());
+                badge.setDescription(accountBadge.getBadge().getDescription());
+                badge.setImage(accountBadge.getBadge().getImage());
+                badge.setType(accountBadge.getBadge().getType().name());
+                badgesDto.add(badge);
             }
-            badge.setChallenges(challengesDto);
         }
         profileDto.setBadges(badgesDto);
         return profileDto;
-    }
-
-    private TaskDto taskToDto(Task task) {
-        TaskDto taskDto = new TaskDto();
-        //todo
-        return taskDto;
     }
 }

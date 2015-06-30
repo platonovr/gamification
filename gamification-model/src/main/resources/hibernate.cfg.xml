@@ -11,6 +11,8 @@
         <mapping class="ru.kpfu.itis.model.TaskStatus"/>
         <mapping class="ru.kpfu.itis.model.TaskCategory"/>
         <mapping class="ru.kpfu.itis.model.AccountTask"/>
+        <mapping class="ru.kpfu.itis.model.AccountBadge"/>
+        <mapping class="ru.kpfu.itis.model.Badge"/>
     </session-factory>
 
 </hibernate-configuration>
