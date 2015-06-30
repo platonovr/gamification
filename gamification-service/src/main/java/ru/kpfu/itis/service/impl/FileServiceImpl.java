@@ -21,7 +21,7 @@ import static java.io.File.separator;
 /**
  * Created by timur on 21.06.15.
  */
-@Service
+@Service("fileService")
 @PropertySource("classpath:config.properties")
 public class FileServiceImpl implements FileService {
 

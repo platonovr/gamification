@@ -12,13 +12,12 @@ import ru.kpfu.itis.model.TaskCategory;
 import ru.kpfu.itis.service.TaskService;
 
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
 /**
  * Created by timur on 17.06.15.
  */
-@Service
+@Service("taskService")
 public class TaskServiceImpl implements TaskService {
 
     @Autowired
@@ -46,9 +45,9 @@ public class TaskServiceImpl implements TaskService {
         task.setAuthor(accountDao.findByLogin("admin"));
         task.setName(taskDto.getName());
         task.setMaxMark(taskDto.getMaxMark());
-        task.setFinishTime(taskDto.getDeadline());
         task.setDescription(taskDto.getDescription());
-        task.setCreateTime(new Date());
+        task.setStartDate(taskDto.getStartDate());
+        task.setEndDate(taskDto.getDeadline());
         taskDao.save(task);
         return task;
     }

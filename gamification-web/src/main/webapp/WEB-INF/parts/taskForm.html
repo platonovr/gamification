@@ -34,6 +34,9 @@
     <label>Оценка*:<input name="maxMark" ng-model="task.maxMark" type="number" min="1" ng-change="errors=null"></label>
     <label style="color: red" ng-show="errors.maxMark!=null">{{errors.maxMark}}</label>
     <br/>
+    <label>Начинается*:<input name="startDate" ng-model="task.startDate" type="date" ng-change="errors=null"></label>
+    <label style="color: red" ng-show="errors.startDate!=null">{{errors.startDate}}</label>
+    <br/>
     <label>Заканчивается*:<input name="deadline" ng-model="task.deadline" type="date" ng-change="errors=null"></label>
     <label style="color: red" ng-show="errors.deadline!=null">{{errors.deadline}}</label>
     <br/>
