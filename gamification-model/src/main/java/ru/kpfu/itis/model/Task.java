@@ -6,6 +6,7 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "TASK")
@@ -50,6 +51,11 @@ public class Task extends BaseLongIdEntity {
     @Column(name = "END_DATE", nullable = false)
     private Date endDate;
 
+    @ManyToMany
+    @JoinTable(name = "task_constraint",
+            joinColumns = @JoinColumn(name = "task_id", nullable = false),
+            inverseJoinColumns = @JoinColumn(name = "academic_group_id", nullable = false))
+    private Set<AcademicGroup> academicGroups;
 
     public Account getAuthor() {
         return author;
@@ -107,29 +113,12 @@ public class Task extends BaseLongIdEntity {
         this.description = description;
     }
 
-    public enum TaskType implements EnumedDictionary {
-        PERSONAL("Личное"),
-        TEAM("Командое");
+    public Set<AcademicGroup> getAcademicGroups() {
+        return academicGroups;
+    }
 
-        private String caption;
-
-        TaskType(String caption) {
-            this.caption = caption;
-        }
-
-        @Override
-        public String getName() {
-            return name();
-        }
-
-        @Override
-        public String getCaption() {
-            return caption;
-        }
-
-        public void setCaption(String caption) {
-            this.caption = caption;
-        }
+    public void setAcademicGroups(Set<AcademicGroup> academicGroups) {
+        this.academicGroups = academicGroups;
     }
 
     public List<AccountTask> getTaskAccounts() {
@@ -154,5 +143,30 @@ public class Task extends BaseLongIdEntity {
 
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
+    }
+
+    public enum TaskType implements EnumedDictionary {
+        PERSONAL("Личное"),
+        TEAM("Командое");
+
+        private String caption;
+
+        TaskType(String caption) {
+            this.caption = caption;
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+
+        @Override
+        public String getCaption() {
+            return caption;
+        }
+
+        public void setCaption(String caption) {
+            this.caption = caption;
+        }
     }
 }

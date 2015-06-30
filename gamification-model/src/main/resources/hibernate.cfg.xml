@@ -11,6 +11,7 @@
         <mapping class="ru.kpfu.itis.model.TaskStatus"/>
         <mapping class="ru.kpfu.itis.model.TaskCategory"/>
         <mapping class="ru.kpfu.itis.model.AccountTask"/>
+        <mapping class="ru.kpfu.itis.model.AcademicGroup"/>
     </session-factory>
 
 </hibernate-configuration>

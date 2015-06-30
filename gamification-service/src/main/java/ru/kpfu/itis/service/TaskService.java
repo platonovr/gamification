@@ -25,4 +25,6 @@ public interface TaskService {
     List<Task> getActualTasks();
 
     List<Task> getTasksByUser(Long userId);
+
+    List<TaskDto> getAvailableTasksByUser(Long userId, Integer offset, Integer maxResult);
 }

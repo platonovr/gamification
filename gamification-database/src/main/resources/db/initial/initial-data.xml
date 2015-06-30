@@ -15,4 +15,19 @@
                         file="db/initial/csv/categories.csv"/>
     </changeSet>
 
+    <changeSet id="1.3" author="tkasatkin">
+        <loadUpdateData tableName="ACADEMIC_GROUP" primaryKey="GROUP_ID"
+                        file="db/initial/csv/academic_groups.csv"/>
+    </changeSet>
+
+    <changeSet id="1.4" author="tkasatkin">
+        <loadUpdateData tableName="TASK" primaryKey="TASK_ID"
+                        file="db/initial/csv/tasks.csv"/>
+    </changeSet>
+
+    <changeSet id="1.5" author="tkasatkin">
+        <loadUpdateData tableName="TASK_CONSTRAINT" primaryKey="task_id,academic_group_id"
+                        file="db/initial/csv/task_contraints.csv"/>
+    </changeSet>
+
 </databaseChangeLog>

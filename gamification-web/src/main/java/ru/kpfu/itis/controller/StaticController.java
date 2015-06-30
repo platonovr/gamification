@@ -9,9 +9,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class StaticController {
 
+    @RequestMapping("/")
+    public String indexPage() {
+        return "forward:/index.html";
+    }
+
     @RequestMapping("/api")
     public String swaggerPage() {
-        return "forward:/index.html";
+        return "forward:/swagger.html";
     }
 
 }

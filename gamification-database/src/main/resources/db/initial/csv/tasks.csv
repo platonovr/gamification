@@ -1,0 +1,21 @@
+task_id,name,type,author_id,task_category_id,max_mark,description,create_time,change_time,start_date,end_date
+100,task #100,PERSONAL,1,102,12,sed augue aliquam erat volutpat in congue etiam justo etiam,2014-12-04,2014-08-06,2014-12-16,2015-07-08
+101,task #101,PERSONAL,1,102,13,posuere felis sed lacus morbi sem mauris,2015-01-20,2014-09-25,2014-08-03,2014-08-31
+102,task #102,PERSONAL,1,101,10,elementum pellentesque quisque porta volutpat erat,2015-03-06,2015-05-07,2014-10-15,2014-09-17
+103,task #103,PERSONAL,1,101,11,nisl nunc rhoncus dui vel sem sed sagittis nam congue,2015-02-03,2015-05-16,2015-02-26,2014-07-20
+104,task #104,PERSONAL,1,100,14,vel augue vestibulum ante ipsum primis,2015-06-06,2015-06-06,2015-05-07,2015-06-01
+105,task #105,PERSONAL,1,100,13,condimentum neque sapien placerat ante nulla,2015-04-30,2015-05-10,2015-05-29,2015-07-01
+106,task #106,PERSONAL,1,101,10,ut dolor morbi vel lectus in quam fringilla rhoncus,2015-06-01,2014-07-29,2015-01-06,2015-04-02
+107,task #107,PERSONAL,1,101,14,at velit vivamus vel nulla eget eros,2014-12-27,2014-08-02,2014-10-05,2015-02-22
+108,task #108,PERSONAL,1,101,10,ac tellus semper interdum mauris,2014-10-10,2015-03-22,2015-01-03,2015-05-15
+109,task #109,PERSONAL,1,102,10,id ligula suspendisse ornare consequat lectus,2014-09-09,2015-02-07,2015-04-28,2014-09-29
+110,task #110,PERSONAL,1,100,10,sapien sapien non mi integer ac neque duis bibendum morbi,2014-10-22,2014-11-01,2015-06-19,2015-03-19
+111,task #111,PERSONAL,1,100,11,orci luctus et ultrices posuere cubilia curae mauris viverra diam,2015-02-05,2014-11-21,2014-11-11,2015-06-10
+112,task #112,PERSONAL,1,100,11,donec vitae nisi nam ultrices,2014-12-25,2014-09-15,2015-04-21,2014-10-09
+113,task #113,PERSONAL,1,100,10,sem sed sagittis nam congue,2015-07-07,2015-03-19,2014-10-12,2015-01-10
+114,task #114,PERSONAL,1,101,15,lacus at velit vivamus vel nulla eget eros elementum pellentesque,2015-07-06,2014-11-26,2015-01-06,2015-04-08
+115,task #115,PERSONAL,1,101,14,lobortis sapien sapien non mi,2014-12-09,2014-08-18,2014-12-13,2015-04-30
+116,task #116,PERSONAL,1,102,14,at turpis a pede posuere nonummy integer non velit,2014-10-10,2014-07-08,2015-02-25,2014-09-01
+117,task #117,PERSONAL,1,100,10,ipsum dolor sit amet consectetuer,2014-08-20,2014-07-29,2014-08-12,2014-07-21
+118,task #118,PERSONAL,1,102,15,nulla facilisi cras non velit nec nisi vulputate,2014-10-05,2014-07-22,2015-06-16,2015-04-10
+119,task #119,PERSONAL,1,100,12,quam nec dui luctus rutrum nulla,2014-12-20,2015-04-16,2014-10-01,2015-02-16

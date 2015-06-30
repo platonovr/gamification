@@ -1,34 +1,65 @@
 package ru.kpfu.itis.dto;
 
+import com.wordnik.swagger.annotations.ApiModel;
+import com.wordnik.swagger.annotations.ApiModelProperty;
+
 import java.util.Date;
 import java.util.List;
 
 /**
  * Created by timur on 17.06.15.
  */
+@ApiModel("Challenge")
 public class TaskDto {
 
     private Long id;
 
+    @ApiModelProperty(required = true)
     private String name;
+
+    private String description;
 
     private String subject;
 
+    private Integer maxPerformers;
+
+    @ApiModelProperty(required = true)
     private String category;
 
     private String creator;
 
-    private List<String> coursesOrGroups;
+    private List<String> groups;
 
     private List<String> performers;
 
+    @ApiModelProperty(required = true)
     private Byte maxMark;
 
+    @ApiModelProperty(required = true)
     private Date startDate;
 
+    @ApiModelProperty(required = true)
     private Date deadline;
 
-    private String description;
+    private Date createTime;
+
+    private Date changeTime;
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getChangeTime() {
+        return changeTime;
+    }
+
+    public void setChangeTime(Date changeTime) {
+        this.changeTime = changeTime;
+    }
 
     public String getName() {
         return name;
@@ -62,12 +93,12 @@ public class TaskDto {
         this.creator = creator;
     }
 
-    public List<String> getCoursesOrGroups() {
-        return coursesOrGroups;
+    public List<String> getGroups() {
+        return groups;
     }
 
-    public void setCoursesOrGroups(List<String> coursesOrGroups) {
-        this.coursesOrGroups = coursesOrGroups;
+    public void setGroups(List<String> groups) {
+        this.groups = groups;
     }
 
     public List<String> getPerformers() {
@@ -116,5 +147,13 @@ public class TaskDto {
 
     public void setStartDate(Date startDate) {
         this.startDate = startDate;
+    }
+
+    public Integer getMaxPerformers() {
+        return maxPerformers;
+    }
+
+    public void setMaxPerformers(Integer maxPerformers) {
+        this.maxPerformers = maxPerformers;
     }
 }
