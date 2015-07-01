@@ -40,9 +40,31 @@ public class AccountInfo extends BaseLongIdEntity {
     @Column(name = "ENTRANCE_YEAR")
     private Integer entranceYear;
 
+    @Column(name = "PHOTO")
+    private String photo;
+
+    @Column(name = "POINT")
+    private Double point;
+
     @OneToOne(optional = false)
     @JoinColumn(name = "ACCOUNT_ID")
     private Account account;
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
+    }
+
+    public String getPhoto() {
+        return photo;
+    }
+
+    public Double getPoint() {
+        return point;
+    }
+
+    public void setPoint(Double point) {
+        this.point = point;
+    }
 
     public String getFirstName() {
         return firstName;

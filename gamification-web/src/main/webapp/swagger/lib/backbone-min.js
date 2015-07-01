@@ -709,7 +709,7 @@
                 this.route(t, this.routes[t])
             }
         }, _routeToRegExp: function (t) {
-            t = t.replace(I, "\\$&").replace(S, "(?:$1)?").replace(H, function (t, e) {
+            t = t.replace(I, "\\$&").replace(S, "(?:$1)?").replace(H,function (t, e) {
                 return e ? t : "([^/?]+)"
             }).replace(A, "([^?]*?)");
             return new RegExp("^" + t + "(?:\\?([\\s\\S]*))?$")

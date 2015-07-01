@@ -2,6 +2,8 @@
 /target
 
 /.idea
+gamificaiton-dao/gamification-dao-api/target
+gamificaiton-dao/gamification-dao-api/**.iml
 
 /*.iml
 

@@ -128,7 +128,7 @@
     }, h.sample = function (n, t, r) {
         return null == t || r ? (n.length !== +n.length && (n = h.values(n)), n[h.random(n.length - 1)]) : h.shuffle(n).slice(0, Math.max(0, t))
     }, h.sortBy = function (n, t, r) {
-        return t = h.iteratee(t, r), h.pluck(h.map(n, function (n, r, e) {
+        return t = h.iteratee(t, r), h.pluck(h.map(n,function (n, r, e) {
             return {value: n, index: r, criteria: t(n, r, e)}
         }).sort(function (n, t) {
             var r = n.criteria, e = t.criteria;

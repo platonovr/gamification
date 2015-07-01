@@ -1,0 +1,2 @@
+account_info_id,account_id,first_name,middle_name,last_name,birth_date,phone_number,create_time,change_time,finish_time,photo,point,email,account_group,entrance_year
+1,1,admin_first_name,admin_middle_name,admin_last_name,'2015-06-28',+71234567890,'2015-06-29 23:19:06','2015-06-29 23:19:08',NULL,'/photo',150,2013,'11-301',2013

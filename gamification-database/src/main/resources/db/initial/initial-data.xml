@@ -30,4 +30,13 @@
                         file="db/initial/csv/task_contraints.csv"/>
     </changeSet>
 
+    <changeSet id="2" author="rfatkhullin" runOnChange="true">
+        <loadUpdateData tableName="ACCOUNT_INFO" primaryKey="ACCOUNT_INFO_ID"
+                        file="db/initial/csv/account_info.csv"/>
+        <loadUpdateData tableName="BADGE" primaryKey="BADGE_ID"
+                        file="db/initial/csv/badge.csv"/>
+        <loadUpdateData tableName="ACCOUNT_BADGE" primaryKey="ACCOUNT_BADGE_ID"
+                        file="db/initial/csv/account_badge.csv"/>
+    </changeSet>
+
 </databaseChangeLog>

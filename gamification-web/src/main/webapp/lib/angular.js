@@ -47,13 +47,13 @@
                 message, i;
 
             message = prefix + template.replace(/\{\d+\}/g, function (match) {
-                    var index = +match.slice(1, -1), arg;
+                var index = +match.slice(1, -1), arg;
 
-                    if (index + 2 < templateArgs.length) {
-                        return toDebugString(templateArgs[index + 2]);
-                    }
-                    return match;
-                });
+                if (index + 2 < templateArgs.length) {
+                    return toDebugString(templateArgs[index + 2]);
+                }
+                return match;
+            });
 
             message = message + '\nhttp://errors.angularjs.org/1.3.16/' +
                 (module ? module + '/' : '') + code;
@@ -248,7 +248,7 @@
         ngMinErr = minErr('ng'),
 
         /** @name angular */
-        angular = window.angular || (window.angular = {}),
+            angular = window.angular || (window.angular = {}),
         angularModule,
         uid = 0;
 
@@ -718,8 +718,8 @@
      */
     function isElement(node) {
         return !!(node &&
-        (node.nodeName  // we are a direct element
-        || (node.prop && node.attr && node.find)));  // we have an on and find method part of jQuery API
+            (node.nodeName  // we are a direct element
+                || (node.prop && node.attr && node.find)));  // we have an on and find method part of jQuery API
     }
 
     /**
@@ -980,7 +980,7 @@
         if (isDefined(csp.isActive_)) return csp.isActive_;
 
         var active = !!(document.querySelector('[ng-csp]') ||
-        document.querySelector('[data-ng-csp]'));
+            document.querySelector('[data-ng-csp]'));
 
         if (!active) {
             try {
@@ -1485,12 +1485,12 @@
             modules.unshift('ng');
             var injector = createInjector(modules, config.strictDi);
             injector.invoke(['$rootScope', '$rootElement', '$compile', '$injector',
-                    function bootstrapApply(scope, element, compile, injector) {
-                        scope.$apply(function () {
-                            element.data('$injector', injector);
-                            compile(element)(scope);
-                        });
-                    }]
+                function bootstrapApply(scope, element, compile, injector) {
+                    scope.$apply(function () {
+                        element.data('$injector', injector);
+                        compile(element)(scope);
+                    });
+                }]
             );
             return injector;
         };
@@ -2460,7 +2460,7 @@
      */
     function camelCase(name) {
         return name.
-            replace(SPECIAL_CHARS_REGEXP, function (_, separator, letter, offset) {
+            replace(SPECIAL_CHARS_REGEXP,function (_, separator, letter, offset) {
                 return offset ? letter.toUpperCase() : letter;
             }).
             replace(MOZ_HACK_REGEXP, 'Moz$1');
@@ -2693,9 +2693,9 @@
         if (cssClasses && element.setAttribute) {
             forEach(cssClasses.split(' '), function (cssClass) {
                 element.setAttribute('class', trim(
-                        (" " + (element.getAttribute('class') || '') + " ")
-                            .replace(/[\n\t]/g, " ")
-                            .replace(" " + trim(cssClass) + " ", " "))
+                    (" " + (element.getAttribute('class') || '') + " ")
+                        .replace(/[\n\t]/g, " ")
+                        .replace(" " + trim(cssClass) + " ", " "))
                 );
             });
         }
@@ -2931,7 +2931,7 @@
                     }
                 } else {
                     return (element[name] ||
-                    (element.attributes.getNamedItem(name) || noop).specified)
+                        (element.attributes.getNamedItem(name) || noop).specified)
                         ? lowercasedName
                         : undefined;
                 }
@@ -5327,7 +5327,7 @@
                 } else {
                     if (isString(value)) {
                         cookieLength = (rawDocument.cookie = encodeURIComponent(name) + '=' + encodeURIComponent(value) +
-                                ';path=' + cookiePath).length + 1;
+                            ';path=' + cookiePath).length + 1;
 
                         // per http://www.ietf.org/rfc/rfc2109.txt browser must allow at minimum:
                         // - 300 cookies
@@ -6562,7 +6562,7 @@
                 if (!match) {
                     throw $compileMinErr('iscp',
                         "Invalid isolate scope definition for directive '{0}'." +
-                        " Definition: {... {1}: '{2}' ...}",
+                            " Definition: {... {1}: '{2}' ...}",
                         directiveName, scopeName, definition);
                 }
 
@@ -6735,8 +6735,7 @@
         this.$get = [
             '$injector', '$interpolate', '$exceptionHandler', '$templateRequest', '$parse',
             '$controller', '$rootScope', '$document', '$sce', '$animate', '$$sanitizeUri',
-            function ($injector, $interpolate, $exceptionHandler, $templateRequest, $parse,
-                      $controller, $rootScope, $document, $sce, $animate, $$sanitizeUri) {
+            function ($injector, $interpolate, $exceptionHandler, $templateRequest, $parse, $controller, $rootScope, $document, $sce, $animate, $$sanitizeUri) {
 
                 var Attributes = function (element, attributesToCopy) {
                     if (attributesToCopy) {
@@ -7019,8 +7018,7 @@
 
                 //================================
 
-                function compile($compileNodes, transcludeFn, maxPriority, ignoreDirective,
-                                 previousCompileContext) {
+                function compile($compileNodes, transcludeFn, maxPriority, ignoreDirective, previousCompileContext) {
                     if (!($compileNodes instanceof jqLite)) {
                         // jquery always rewraps, whereas we need to preserve the original selector so that we can
                         // modify it.
@@ -7114,8 +7112,7 @@
                  * @param {number=} maxPriority Max directive priority.
                  * @returns {Function} A composite linking function of all of the matched directives or null.
                  */
-                function compileNodes(nodeList, transcludeFn, $rootElement, maxPriority, ignoreDirective,
-                                      previousCompileContext) {
+                function compileNodes(nodeList, transcludeFn, $rootElement, maxPriority, ignoreDirective, previousCompileContext) {
                     var linkFns = [],
                         attrs, directives, nodeLinkFn, childNodes, childLinkFn, linkFnFound, nodeLinkFnFound;
 
@@ -7139,8 +7136,8 @@
                             ? null
                             : compileNodes(childNodes,
                             nodeLinkFn ? (
-                            (nodeLinkFn.transcludeOnThisElement || !nodeLinkFn.templateOnThisElement)
-                            && nodeLinkFn.transclude) : transcludeFn);
+                                (nodeLinkFn.transcludeOnThisElement || !nodeLinkFn.templateOnThisElement)
+                                    && nodeLinkFn.transclude) : transcludeFn);
 
                         if (nodeLinkFn || childLinkFn) {
                             linkFns.push(i, nodeLinkFn, childLinkFn);
@@ -7404,9 +7401,7 @@
                  *                                        node
                  * @returns {Function} linkFn
                  */
-                function applyDirectivesToNode(directives, compileNode, templateAttrs, transcludeFn,
-                                               jqCollection, originalReplaceDirective, preLinkFns, postLinkFns,
-                                               previousCompileContext) {
+                function applyDirectivesToNode(directives, compileNode, templateAttrs, transcludeFn, jqCollection, originalReplaceDirective, preLinkFns, postLinkFns, previousCompileContext) {
                     previousCompileContext = previousCompileContext || {};
 
                     var terminalPriority = -Number.MAX_VALUE,
@@ -7742,7 +7737,7 @@
 
                         if (newIsolateScopeDirective) {
                             compile.$$addScopeInfo($element, isolateScope, true, !(templateDirective && (templateDirective === newIsolateScopeDirective ||
-                            templateDirective === newIsolateScopeDirective.$$originalDirective)));
+                                templateDirective === newIsolateScopeDirective.$$originalDirective)));
                             compile.$$addScopeClass($element, true);
 
                             var isolateScopeController = controllers && controllers[newIsolateScopeDirective.name];
@@ -7786,12 +7781,12 @@
                                             };
                                         }
                                         parentSet = parentGet.assign || function () {
-                                                // reset the change, or we will throw this exception on every $digest
-                                                lastValue = isolateBindingContext[scopeName] = parentGet(scope);
-                                                throw $compileMinErr('nonassign',
-                                                    "Expression '{0}' used with directive '{1}' is non-assignable!",
-                                                    attrs[attrName], newIsolateScopeDirective.name);
-                                            };
+                                            // reset the change, or we will throw this exception on every $digest
+                                            lastValue = isolateBindingContext[scopeName] = parentGet(scope);
+                                            throw $compileMinErr('nonassign',
+                                                "Expression '{0}' used with directive '{1}' is non-assignable!",
+                                                attrs[attrName], newIsolateScopeDirective.name);
+                                        };
                                         lastValue = isolateBindingContext[scopeName] = parentGet(scope);
                                         var parentValueWatch = function parentValueWatch(parentValue) {
                                             if (!compare(parentValue, isolateBindingContext[scopeName])) {
@@ -7909,8 +7904,7 @@
                  *   * `M`: comment
                  * @returns {boolean} true if directive was added.
                  */
-                function addDirective(tDirectives, name, location, maxPriority, ignoreDirective, startAttrName,
-                                      endAttrName) {
+                function addDirective(tDirectives, name, location, maxPriority, ignoreDirective, startAttrName, endAttrName) {
                     if (name === ignoreDirective) return null;
                     var match = null;
                     if (hasDirectives.hasOwnProperty(name)) {
@@ -7998,8 +7992,7 @@
                 }
 
 
-                function compileTemplateUrl(directives, $compileNode, tAttrs,
-                                            $rootElement, childTranscludeFn, preLinkFns, postLinkFns, previousCompileContext) {
+                function compileTemplateUrl(directives, $compileNode, tAttrs, $rootElement, childTranscludeFn, preLinkFns, postLinkFns, previousCompileContext) {
                     var linkQueue = [],
                         afterTemplateNodeLinkFn,
                         afterTemplateChildLinkFn,
@@ -8181,7 +8174,7 @@
                     if (attrNormalizedName == "xlinkHref" ||
                         (tag == "form" && attrNormalizedName == "action") ||
                         (tag != "img" && (attrNormalizedName == "src" ||
-                        attrNormalizedName == "ngSrc"))) {
+                            attrNormalizedName == "ngSrc"))) {
                         return $sce.RESOURCE_URL;
                     }
                 }
@@ -8213,7 +8206,7 @@
                                     if (EVENT_HANDLER_ATTR_REGEXP.test(name)) {
                                         throw $compileMinErr('nodomevents',
                                             "Interpolations for HTML DOM event attributes are disallowed.  Please use the " +
-                                            "ng- versions (such as ng-click instead of onclick) instead.");
+                                                "ng- versions (such as ng-click instead of onclick) instead.");
                                     }
 
                                     // If the attribute has changed since last $interpolate()ed
@@ -8412,17 +8405,10 @@
      * Closure compiler type information
      */
 
-    function nodesetLinkingFn(/* angular.Scope */ scope,
-                              /* NodeList */ nodeList,
-                              /* Element */ rootElement,
-                              /* function(Function) */ boundTranscludeFn) {
+    function nodesetLinkingFn(/* angular.Scope */ scope, /* NodeList */ nodeList, /* Element */ rootElement, /* function(Function) */ boundTranscludeFn) {
     }
 
-    function directiveLinkingFn(/* nodesetLinkingFn */ nodesetLinkingFn,
-                                /* angular.Scope */ scope,
-                                /* Node */ node,
-                                /* Element */ rootElement,
-                                /* function(Function) */ boundTranscludeFn) {
+    function directiveLinkingFn(/* nodesetLinkingFn */ nodesetLinkingFn, /* angular.Scope */ scope, /* Node */ node, /* Element */ rootElement, /* function(Function) */ boundTranscludeFn) {
     }
 
     function tokenDifference(str1, str2) {
@@ -8551,14 +8537,14 @@
                     if (!match) {
                         throw $controllerMinErr('ctrlfmt',
                             "Badly formed controller string '{0}'. " +
-                            "Must match `__name__ as __id__` or `__name__`.", expression);
+                                "Must match `__name__ as __id__` or `__name__`.", expression);
                     }
                     constructor = match[1],
                         identifier = identifier || match[3];
                     expression = controllers.hasOwnProperty(constructor)
                         ? controllers[constructor]
                         : getter(locals.$scope, constructor, true) ||
-                    (globals ? getter($window, constructor, true) : undefined);
+                        (globals ? getter($window, constructor, true) : undefined);
 
                     assertArgFn(expression, constructor, true);
                 }
@@ -10248,8 +10234,8 @@
                 if (trustedContext && concat.length > 1) {
                     throw $interpolateMinErr('noconcat',
                         "Error while interpolating: {0}\nStrict Contextual Escaping disallows " +
-                        "interpolations that concatenate multiple expressions when a trusted value is " +
-                        "required.  See http://docs.angularjs.org/api/ng.$sce", text);
+                            "interpolations that concatenate multiple expressions when a trusted value is " +
+                            "required.  See http://docs.angularjs.org/api/ng.$sce", text);
                 }
 
                 if (!mustHaveExpression || expressions.length) {
@@ -10343,8 +10329,8 @@
              * Symbol to denote the start of expression in the interpolated string. Defaults to `{{`.
      *
      * Use {@link ng.$interpolateProvider#startSymbol `$interpolateProvider.startSymbol`} to change
-     * the symbol.
-     *
+             * the symbol.
+             *
              * @returns {string} start symbol.
              */
             $interpolate.startSymbol = function () {
@@ -10585,7 +10571,8 @@
                             negSuf: '',
                             gSize: 3,
                             lgSize: 3
-                        }, { //Currency Pattern
+                        },
+                        { //Currency Pattern
                             minInt: 1,
                             minFrac: 2,
                             maxFrac: 2,
@@ -11813,7 +11800,7 @@
             || name === "__proto__") {
             throw $parseMinErr('isecfld',
                 'Attempting to access a disallowed field in Angular expressions! '
-                + 'Expression: {0}', fullExpression);
+                    + 'Expression: {0}', fullExpression);
         }
         return name;
     }
@@ -11826,17 +11813,17 @@
                     'Referencing Function in Angular expressions is disallowed! Expression: {0}',
                     fullExpression);
             } else if (// isWindow(obj)
-            obj.window === obj) {
+                obj.window === obj) {
                 throw $parseMinErr('isecwindow',
                     'Referencing the Window in Angular expressions is disallowed! Expression: {0}',
                     fullExpression);
             } else if (// isElement(obj)
-            obj.children && (obj.nodeName || (obj.prop && obj.attr && obj.find))) {
+                obj.children && (obj.nodeName || (obj.prop && obj.attr && obj.find))) {
                 throw $parseMinErr('isecdom',
                     'Referencing DOM nodes in Angular expressions is disallowed! Expression: {0}',
                     fullExpression);
             } else if (// block Object so that we can't get hold of dangerous Object.* methods
-            obj === Object) {
+                obj === Object) {
                 throw $parseMinErr('isecobj',
                     'Referencing Object in Angular expressions is disallowed! Expression: {0}',
                     fullExpression);
@@ -12022,13 +12009,13 @@
         isWhitespace: function (ch) {
             // IE treats non-breaking space as \u00A0
             return (ch === ' ' || ch === '\r' || ch === '\t' ||
-            ch === '\n' || ch === '\v' || ch === '\u00A0');
+                ch === '\n' || ch === '\v' || ch === '\u00A0');
         },
 
         isIdent: function (ch) {
             return ('a' <= ch && ch <= 'z' ||
-            'A' <= ch && ch <= 'Z' ||
-            '_' === ch || ch === '$');
+                'A' <= ch && ch <= 'Z' ||
+                '_' === ch || ch === '$');
         },
 
         isExpOperator: function (ch) {
@@ -12741,10 +12728,10 @@
             forEach(pathKeys, function (key, index) {
                 ensureSafeMemberName(key, fullExp);
                 var lookupJs = (index
-                        // we simply dereference 's' on any .dot notation
-                        ? 's'
-                        // but if we are first then we check locals first, and if so read it first
-                        : '((l&&l.hasOwnProperty("' + key + '"))?l:s)') + '.' + key;
+                    // we simply dereference 's' on any .dot notation
+                    ? 's'
+                    // but if we are first then we check locals first, and if so read it first
+                    : '((l&&l.hasOwnProperty("' + key + '"))?l:s)') + '.' + key;
                 if (expensiveChecks || isPossiblyDangerousMemberName(key)) {
                     lookupJs = 'eso(' + lookupJs + ', fe)';
                     needsEnsureSafeObject = true;
@@ -13048,7 +13035,7 @@
 
                 var regularWatch =
                     watchDelegate !== oneTimeLiteralWatchDelegate &&
-                    watchDelegate !== oneTimeWatchDelegate;
+                        watchDelegate !== oneTimeWatchDelegate;
 
                 var fn = regularWatch ? function regularInterceptedExpression(scope, locals) {
                     var value = parsedExpression(scope, locals);
@@ -14484,8 +14471,8 @@
                                                 // circuit it with === operator, only when === fails do we use .equals
                                                 if (watch) {
                                                     if ((value = watch.get(current)) !== (last = watch.last) && !(watch.eq
-                                                            ? equals(value, last)
-                                                            : (typeof value === 'number' && typeof last === 'number'
+                                                        ? equals(value, last)
+                                                        : (typeof value === 'number' && typeof last === 'number'
                                                         && isNaN(value) && isNaN(last)))) {
                                                         dirty = true;
                                                         lastDirtyWatch = watch;
@@ -14530,7 +14517,7 @@
                                 clearPhase();
                                 throw $rootScopeMinErr('infdig',
                                     '{0} $digest() iterations reached. Aborting!\n' +
-                                    'Watchers fired in the last 5 iterations: {1}',
+                                        'Watchers fired in the last 5 iterations: {1}',
                                     TTL, watchLog);
                             }
 
@@ -15862,8 +15849,8 @@
             if (enabled && msie < 8) {
                 throw $sceMinErr('iequirks',
                     'Strict Contextual Escaping does not support Internet Explorer version < 11 in quirks ' +
-                    'mode.  You can fix this by adding the text <!doctype html> to the top of your HTML ' +
-                    'document.  See http://docs.angularjs.org/api/ng.$sce for more information.');
+                        'mode.  You can fix this by adding the text <!doctype html> to the top of your HTML ' +
+                        'document.  See http://docs.angularjs.org/api/ng.$sce for more information.');
             }
 
             var sce = shallowCopy(SCE_CONTEXTS);
@@ -16633,7 +16620,7 @@
     function urlIsSameOrigin(requestUrl) {
         var parsed = (isString(requestUrl)) ? urlResolve(requestUrl) : requestUrl;
         return (parsed.protocol === originUrl.protocol &&
-        parsed.host === originUrl.host);
+            parsed.host === originUrl.host);
     }
 
     /**
@@ -17506,10 +17493,10 @@
          expect(element(by.binding("1288323623006 | date:'yyyy-MM-dd HH:mm:ss Z'")).getText()).
             toMatch(/2010\-10\-2\d \d{2}:\d{2}:\d{2} (\-|\+)?\d{4}/);
          expect(element(by.binding("'1288323623006' | date:'MM/dd/yyyy @ h:mma'")).getText()).
-            toMatch(/10\/2\d\/2010 @ \d{1,2}:\d{2}(AM|PM)/);
-         expect(element(by.binding("'1288323623006' | date:\"MM/dd/yyyy 'at' h:mma\"")).getText()).
-            toMatch(/10\/2\d\/2010 at \d{1,2}:\d{2}(AM|PM)/);
-       });
+     toMatch(/10\/2\d\/2010 @ \d{1,2}:\d{2}(AM|PM)/);
+     expect(element(by.binding("'1288323623006' | date:\"MM/dd/yyyy 'at' h:mma\"")).getText()).
+     toMatch(/10\/2\d\/2010 at \d{1,2}:\d{2}(AM|PM)/);
+     });
      </file>
      </example>
      */
@@ -19801,8 +19788,8 @@
          .controller('ExampleController', ['$scope', function($scope) {
                $scope.email = {
                  text: 'me@example.com'
-               };
-             }]);
+         };
+         }]);
          </script>
          <form name="myForm" ng-controller="ExampleController">
          Email: <input type="email" name="input" ng-model="email.text" required>
@@ -19825,8 +19812,8 @@
 
          it('should initialize to model', function() {
             expect(text.getText()).toContain('me@example.com');
-            expect(valid.getText()).toContain('true');
-          });
+         expect(valid.getText()).toContain('true');
+         });
 
          it('should be invalid if empty', function() {
             input.clear();
@@ -21409,7 +21396,7 @@
  *      this.contacts = [
  *        {type: 'phone', value: '408 555 1212'},
  *        {type: 'email', value: 'john.smith@example.org'} ];
- *    }
+     *    }
      *
      *    SettingsController1.prototype.greet = function() {
  *      alert(this.name);
@@ -21417,7 +21404,7 @@
      *
      *    SettingsController1.prototype.addContact = function() {
  *      this.contacts.push({type: 'email', value: 'yourname@example.org'});
- *    };
+     *    };
      *
      *    SettingsController1.prototype.removeContact = function(contactToRemove) {
  *     var index = this.contacts.indexOf(contactToRemove);
@@ -21445,19 +21432,19 @@
  *
  *       expect(secondRepeat.element(by.model('contact.value')).getAttribute('value'))
  *           .toBe('john.smith@example.org');
- *
- *       firstRepeat.element(by.linkText('clear')).click();
- *
- *       expect(firstRepeat.element(by.model('contact.value')).getAttribute('value'))
- *           .toBe('');
- *
- *       container.element(by.linkText('add')).click();
- *
- *       expect(container.element(by.repeater('contact in settings.contacts').row(2))
- *           .element(by.model('contact.value'))
- *           .getAttribute('value'))
- *           .toBe('yourname@example.org');
- *     });
+     *
+     *       firstRepeat.element(by.linkText('clear')).click();
+     *
+     *       expect(firstRepeat.element(by.model('contact.value')).getAttribute('value'))
+     *           .toBe('');
+     *
+     *       container.element(by.linkText('add')).click();
+     *
+     *       expect(container.element(by.repeater('contact in settings.contacts').row(2))
+     *           .element(by.model('contact.value'))
+     *           .getAttribute('value'))
+     *           .toBe('yourname@example.org');
+     *     });
      *   </file>
      * </example>
      *
@@ -21492,25 +21479,25 @@
  *     $scope.contacts = [
  *       {type:'phone', value:'408 555 1212'},
  *       {type:'email', value:'john.smith@example.org'} ];
- *
- *     $scope.greet = function() {
+     *
+     *     $scope.greet = function() {
  *       alert($scope.name);
  *     };
- *
- *     $scope.addContact = function() {
+     *
+     *     $scope.addContact = function() {
  *       $scope.contacts.push({type:'email', value:'yourname@example.org'});
- *     };
- *
- *     $scope.removeContact = function(contactToRemove) {
+     *     };
+     *
+     *     $scope.removeContact = function(contactToRemove) {
  *       var index = $scope.contacts.indexOf(contactToRemove);
  *       $scope.contacts.splice(index, 1);
  *     };
- *
- *     $scope.clearContact = function(contact) {
+     *
+     *     $scope.clearContact = function(contact) {
  *       contact.type = 'phone';
  *       contact.value = '';
  *     };
- *   }
+     *   }
      *  </file>
      *  <file name="protractor.js" type="protractor">
      *    it('should check controller', function() {
@@ -21528,19 +21515,19 @@
  *          .toBe('408 555 1212');
  *      expect(secondRepeat.element(by.model('contact.value')).getAttribute('value'))
  *          .toBe('john.smith@example.org');
- *
- *      firstRepeat.element(by.linkText('clear')).click();
- *
- *      expect(firstRepeat.element(by.model('contact.value')).getAttribute('value'))
- *          .toBe('');
- *
- *      container.element(by.linkText('add')).click();
- *
- *      expect(container.element(by.repeater('contact in contacts').row(2))
- *          .element(by.model('contact.value'))
- *          .getAttribute('value'))
- *          .toBe('yourname@example.org');
- *    });
+     *
+     *      firstRepeat.element(by.linkText('clear')).click();
+     *
+     *      expect(firstRepeat.element(by.model('contact.value')).getAttribute('value'))
+     *          .toBe('');
+     *
+     *      container.element(by.linkText('add')).click();
+     *
+     *      expect(container.element(by.repeater('contact in contacts').row(2))
+     *          .element(by.model('contact.value'))
+     *          .getAttribute('value'))
+     *          .toBe('yourname@example.org');
+     *    });
      *  </file>
      *</example>
 
@@ -23633,9 +23620,9 @@
                 // if scope model value and ngModel value are out of sync
                 // TODO(perf): why not move this to the action fn?
                 if (modelValue !== ctrl.$modelValue &&
-                        // checks for NaN is needed to allow setting the model to NaN when there's an asyncValidator
+                    // checks for NaN is needed to allow setting the model to NaN when there's an asyncValidator
                     (ctrl.$modelValue === ctrl.$modelValue || modelValue === modelValue)
-                ) {
+                    ) {
                     ctrl.$modelValue = ctrl.$$rawModelValue = modelValue;
                     parserValid = undefined;
 
@@ -24808,7 +24795,7 @@
                     $scope.$watchCollection(rhs, function ngRepeatAction(collection) {
                         var index, length,
                             previousNode = $element[0],     // node that cloned nodes should be inserted after
-                                                            // initialized to the comment node anchor
+                        // initialized to the comment node anchor
                             nextNode,
                         // Same as lastBlockMap but it has the current state. It will become the
                         // lastBlockMap on the next iteration.
@@ -25556,12 +25543,12 @@
                restrict: 'E',
                transclude: true,
                scope: { title:'@' },
-               template: '<div style="border: 1px solid black;">' +
-                           '<div style="background-color: gray">{{title}}</div>' +
-                           '<ng-transclude></ng-transclude>' +
-                         '</div>'
-             };
-         })
+     template: '<div style="border: 1px solid black;">' +
+     '<div style="background-color: gray">{{title}}</div>' +
+     '<ng-transclude></ng-transclude>' +
+     '</div>'
+     };
+     })
      .controller('ExampleController', ['$scope', function($scope) {
            $scope.title = 'Lorem Ipsum';
            $scope.text = 'Neque porro quisquam est qui dolorem ipsum quia dolor...';
@@ -25594,8 +25581,8 @@
             if (!$transclude) {
                 throw minErr('ngTransclude')('orphan',
                     'Illegal use of ngTransclude directive in the template! ' +
-                    'No parent directive that requires a transclusion found. ' +
-                    'Element: {0}',
+                        'No parent directive that requires a transclusion found. ' +
+                        'Element: {0}',
                     startingTag($element));
             }
 
@@ -26022,8 +26009,8 @@
                     if (!(match = optionsExp.match(NG_OPTIONS_REGEXP))) {
                         throw ngOptionsMinErr('iexp',
                             "Expected expression in form of " +
-                            "'_select_ (as _label_)? for (_key_,)?_value_ in _collection_'" +
-                            " but got '{0}'. Element: {1}",
+                                "'_select_ (as _label_)? for (_key_,)?_value_ in _collection_'" +
+                                " but got '{0}'. Element: {1}",
                             optionsExp, startingTag(selectElement));
                     }
 
@@ -26042,7 +26029,11 @@
                     // We try to reuse these if possible
                     // - optionGroupsCache[0] is the options with no option group
                     // - optionGroupsCache[?][0] is the parent: either the SELECT or OPTGROUP element
-                        optionGroupsCache = [[{element: selectElement, label: ''}]],
+                        optionGroupsCache = [
+                            [
+                                {element: selectElement, label: ''}
+                            ]
+                        ],
                     //re-usable object to represent option's locals
                         locals = {};
 

@@ -460,7 +460,9 @@
                     objs[ref].push({obj: property, resolveAs: 'inline'});
                 }
                 else {
-                    objs[ref] = [{obj: property, resolveAs: 'inline'}];
+                    objs[ref] = [
+                        {obj: property, resolveAs: 'inline'}
+                    ];
                 }
             }
             else if (ref.indexOf('#') === 0) {
@@ -496,7 +498,9 @@
                     objs[ref].push({obj: property, resolveAs: '$ref'});
                 }
                 else {
-                    objs[ref] = [{obj: property, resolveAs: '$ref'}];
+                    objs[ref] = [
+                        {obj: property, resolveAs: '$ref'}
+                    ];
                 }
             }
         }
@@ -2049,7 +2053,7 @@
                     error: function (response) {
                         _this.api.resourceCount += 1;
                         return _this.api.fail('Unable to read api \'' +
-                        _this.name + '\' from path ' + _this.url + ' (server returned ' + response.statusText + ')');
+                            _this.name + '\' from path ' + _this.url + ' (server returned ' + response.statusText + ')');
                     }
                 }
             };

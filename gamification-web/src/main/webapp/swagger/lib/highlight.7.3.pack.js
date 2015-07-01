@@ -15,7 +15,7 @@ var hljs = new function () {
     }
 
     function h(p, o) {
-        return Array.prototype.map.call(p.childNodes, function (q) {
+        return Array.prototype.map.call(p.childNodes,function (q) {
             if (q.nodeType == 3) {
                 return o ? q.nodeValue.replace(/\n/g, "") : q.nodeValue
             }
@@ -473,41 +473,66 @@ hljs.LANGUAGES.xml = function (a) {
     var c = "[A-Za-z0-9\\._:-]+";
     var b = {
         eW: true,
-        c: [{cN: "attribute", b: c, r: 0}, {b: '="', rB: true, e: '"', c: [{cN: "value", b: '"', eW: true}]}, {
-            b: "='",
-            rB: true,
-            e: "'",
-            c: [{cN: "value", b: "'", eW: true}]
-        }, {b: "=", c: [{cN: "value", b: "[^\\s/>]+"}]}]
+        c: [
+            {cN: "attribute", b: c, r: 0},
+            {b: '="', rB: true, e: '"', c: [
+                {cN: "value", b: '"', eW: true}
+            ]},
+            {
+                b: "='",
+                rB: true,
+                e: "'",
+                c: [
+                    {cN: "value", b: "'", eW: true}
+                ]
+            },
+            {b: "=", c: [
+                {cN: "value", b: "[^\\s/>]+"}
+            ]}
+        ]
     };
     return {
         cI: true,
-        c: [{cN: "pi", b: "<\\?", e: "\\?>", r: 10}, {
-            cN: "doctype",
-            b: "<!DOCTYPE",
-            e: ">",
-            r: 10,
-            c: [{b: "\\[", e: "\\]"}]
-        }, {cN: "comment", b: "<!--", e: "-->", r: 10}, {
-            cN: "cdata",
-            b: "<\\!\\[CDATA\\[",
-            e: "\\]\\]>",
-            r: 10
-        }, {
-            cN: "tag",
-            b: "<style(?=\\s|>|$)",
-            e: ">",
-            k: {title: "style"},
-            c: [b],
-            starts: {e: "</style>", rE: true, sL: "css"}
-        }, {
-            cN: "tag",
-            b: "<script(?=\\s|>|$)",
-            e: ">",
-            k: {title: "script"},
-            c: [b],
-            starts: {e: "<\/script>", rE: true, sL: "javascript"}
-        }, {b: "<%", e: "%>", sL: "vbscript"}, {cN: "tag", b: "</?", e: "/?>", c: [{cN: "title", b: "[^ />]+"}, b]}]
+        c: [
+            {cN: "pi", b: "<\\?", e: "\\?>", r: 10},
+            {
+                cN: "doctype",
+                b: "<!DOCTYPE",
+                e: ">",
+                r: 10,
+                c: [
+                    {b: "\\[", e: "\\]"}
+                ]
+            },
+            {cN: "comment", b: "<!--", e: "-->", r: 10},
+            {
+                cN: "cdata",
+                b: "<\\!\\[CDATA\\[",
+                e: "\\]\\]>",
+                r: 10
+            },
+            {
+                cN: "tag",
+                b: "<style(?=\\s|>|$)",
+                e: ">",
+                k: {title: "style"},
+                c: [b],
+                starts: {e: "</style>", rE: true, sL: "css"}
+            },
+            {
+                cN: "tag",
+                b: "<script(?=\\s|>|$)",
+                e: ">",
+                k: {title: "script"},
+                c: [b],
+                starts: {e: "<\/script>", rE: true, sL: "javascript"}
+            },
+            {b: "<%", e: "%>", sL: "vbscript"},
+            {cN: "tag", b: "</?", e: "/?>", c: [
+                {cN: "title", b: "[^ />]+"},
+                b
+            ]}
+        ]
     }
 }(hljs);
 hljs.LANGUAGES.json = function (a) {
@@ -517,7 +542,9 @@ hljs.LANGUAGES.json = function (a) {
     var b = {
         b: "{",
         e: "}",
-        c: [{cN: "attribute", b: '\\s*"', e: '"\\s*:\\s*', eB: true, eE: true, c: [a.BE], i: "\\n", starts: c}],
+        c: [
+            {cN: "attribute", b: '\\s*"', e: '"\\s*:\\s*', eB: true, eE: true, c: [a.BE], i: "\\n", starts: c}
+        ],
         i: "\\S"
     };
     var f = {b: "\\[", e: "\\]", c: [a.inherit(c, {cN: null})], i: "\\S"};

@@ -31,39 +31,39 @@
     block.bullet = /(?:[*+-]|\d+\.)/;
     block.item = /^( *)(bull) [^\n]*(?:\n(?!\1bull )[^\n]*)*/;
     block.item = replace(block.item, 'gm')
-    (/bull/g, block.bullet)
-    ();
+        (/bull/g, block.bullet)
+        ();
 
     block.list = replace(block.list)
-    (/bull/g, block.bullet)
-    ('hr', '\\n+(?=\\1?(?:[-*_] *){3,}(?:\\n+|$))')
-    ('def', '\\n+(?=' + block.def.source + ')')
-    ();
+        (/bull/g, block.bullet)
+        ('hr', '\\n+(?=\\1?(?:[-*_] *){3,}(?:\\n+|$))')
+        ('def', '\\n+(?=' + block.def.source + ')')
+        ();
 
     block.blockquote = replace(block.blockquote)
-    ('def', block.def)
-    ();
+        ('def', block.def)
+        ();
 
     block._tag = '(?!(?:'
-    + 'a|em|strong|small|s|cite|q|dfn|abbr|data|time|code'
-    + '|var|samp|kbd|sub|sup|i|b|u|mark|ruby|rt|rp|bdi|bdo'
-    + '|span|br|wbr|ins|del|img)\\b)\\w+(?!:/|[^\\w\\s@]*@)\\b';
+        + 'a|em|strong|small|s|cite|q|dfn|abbr|data|time|code'
+        + '|var|samp|kbd|sub|sup|i|b|u|mark|ruby|rt|rp|bdi|bdo'
+        + '|span|br|wbr|ins|del|img)\\b)\\w+(?!:/|[^\\w\\s@]*@)\\b';
 
     block.html = replace(block.html)
-    ('comment', /<!--[\s\S]*?-->/)
-    ('closed', /<(tag)[\s\S]+?<\/\1>/)
-    ('closing', /<tag(?:"[^"]*"|'[^']*'|[^'">])*?>/)
-    (/tag/g, block._tag)
-    ();
+        ('comment', /<!--[\s\S]*?-->/)
+        ('closed', /<(tag)[\s\S]+?<\/\1>/)
+        ('closing', /<tag(?:"[^"]*"|'[^']*'|[^'">])*?>/)
+        (/tag/g, block._tag)
+        ();
 
     block.paragraph = replace(block.paragraph)
-    ('hr', block.hr)
-    ('heading', block.heading)
-    ('lheading', block.lheading)
-    ('blockquote', block.blockquote)
-    ('tag', '<' + block._tag)
-    ('def', block.def)
-    ();
+        ('hr', block.hr)
+        ('heading', block.heading)
+        ('lheading', block.lheading)
+        ('blockquote', block.blockquote)
+        ('tag', '<' + block._tag)
+        ('def', block.def)
+        ();
 
     /**
      * Normal Block Grammar
@@ -81,10 +81,10 @@
     });
 
     block.gfm.paragraph = replace(block.paragraph)
-    ('(?!', '(?!'
-    + block.gfm.fences.source.replace('\\1', '\\2') + '|'
-    + block.list.source.replace('\\1', '\\3') + '|')
-    ();
+        ('(?!', '(?!'
+            + block.gfm.fences.source.replace('\\1', '\\2') + '|'
+            + block.list.source.replace('\\1', '\\3') + '|')
+        ();
 
     /**
      * GFM + Tables Block Grammar
@@ -466,13 +466,13 @@
     inline._href = /\s*<?([\s\S]*?)>?(?:\s+['"]([\s\S]*?)['"])?\s*/;
 
     inline.link = replace(inline.link)
-    ('inside', inline._inside)
-    ('href', inline._href)
-    ();
+        ('inside', inline._inside)
+        ('href', inline._href)
+        ();
 
     inline.reflink = replace(inline.reflink)
-    ('inside', inline._inside)
-    ();
+        ('inside', inline._inside)
+        ();
 
     /**
      * Normal Inline Grammar
@@ -498,9 +498,9 @@
         url: /^(https?:\/\/[^\s<]+[^<.,:;"')\]\s])/,
         del: /^~~(?=\S)([\s\S]*?\S)~~/,
         text: replace(inline.text)
-        (']|', '~]|')
-        ('|', '|https?://|')
-        ()
+            (']|', '~]|')
+            ('|', '|https?://|')
+            ()
     });
 
     /**

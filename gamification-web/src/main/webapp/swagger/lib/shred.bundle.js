@@ -303,7 +303,7 @@ require.define("path", function (require, module, exports, __dirname, __filename
 // posix version
     exports.join = function () {
         var paths = Array.prototype.slice.call(arguments, 0);
-        return exports.normalize(filter(paths, function (p, index) {
+        return exports.normalize(filter(paths,function (p, index) {
             return p && typeof p === 'string';
         }).join('/'));
     };
@@ -795,59 +795,59 @@ require.define("/shred/request.js", function (require, module, exports, __dirnam
         ;
 
     var STATUS_CODES = HTTP.STATUS_CODES || {
-            100: 'Continue',
-            101: 'Switching Protocols',
-            102: 'Processing', // RFC 2518, obsoleted by RFC 4918
-            200: 'OK',
-            201: 'Created',
-            202: 'Accepted',
-            203: 'Non-Authoritative Information',
-            204: 'No Content',
-            205: 'Reset Content',
-            206: 'Partial Content',
-            207: 'Multi-Status', // RFC 4918
-            300: 'Multiple Choices',
-            301: 'Moved Permanently',
-            302: 'Moved Temporarily',
-            303: 'See Other',
-            304: 'Not Modified',
-            305: 'Use Proxy',
-            307: 'Temporary Redirect',
-            400: 'Bad Request',
-            401: 'Unauthorized',
-            402: 'Payment Required',
-            403: 'Forbidden',
-            404: 'Not Found',
-            405: 'Method Not Allowed',
-            406: 'Not Acceptable',
-            407: 'Proxy Authentication Required',
-            408: 'Request Time-out',
-            409: 'Conflict',
-            410: 'Gone',
-            411: 'Length Required',
-            412: 'Precondition Failed',
-            413: 'Request Entity Too Large',
-            414: 'Request-URI Too Large',
-            415: 'Unsupported Media Type',
-            416: 'Requested Range Not Satisfiable',
-            417: 'Expectation Failed',
-            418: 'I\'m a teapot', // RFC 2324
-            422: 'Unprocessable Entity', // RFC 4918
-            423: 'Locked', // RFC 4918
-            424: 'Failed Dependency', // RFC 4918
-            425: 'Unordered Collection', // RFC 4918
-            426: 'Upgrade Required', // RFC 2817
-            500: 'Internal Server Error',
-            501: 'Not Implemented',
-            502: 'Bad Gateway',
-            503: 'Service Unavailable',
-            504: 'Gateway Time-out',
-            505: 'HTTP Version not supported',
-            506: 'Variant Also Negotiates', // RFC 2295
-            507: 'Insufficient Storage', // RFC 4918
-            509: 'Bandwidth Limit Exceeded',
-            510: 'Not Extended' // RFC 2774
-        };
+        100: 'Continue',
+        101: 'Switching Protocols',
+        102: 'Processing', // RFC 2518, obsoleted by RFC 4918
+        200: 'OK',
+        201: 'Created',
+        202: 'Accepted',
+        203: 'Non-Authoritative Information',
+        204: 'No Content',
+        205: 'Reset Content',
+        206: 'Partial Content',
+        207: 'Multi-Status', // RFC 4918
+        300: 'Multiple Choices',
+        301: 'Moved Permanently',
+        302: 'Moved Temporarily',
+        303: 'See Other',
+        304: 'Not Modified',
+        305: 'Use Proxy',
+        307: 'Temporary Redirect',
+        400: 'Bad Request',
+        401: 'Unauthorized',
+        402: 'Payment Required',
+        403: 'Forbidden',
+        404: 'Not Found',
+        405: 'Method Not Allowed',
+        406: 'Not Acceptable',
+        407: 'Proxy Authentication Required',
+        408: 'Request Time-out',
+        409: 'Conflict',
+        410: 'Gone',
+        411: 'Length Required',
+        412: 'Precondition Failed',
+        413: 'Request Entity Too Large',
+        414: 'Request-URI Too Large',
+        415: 'Unsupported Media Type',
+        416: 'Requested Range Not Satisfiable',
+        417: 'Expectation Failed',
+        418: 'I\'m a teapot', // RFC 2324
+        422: 'Unprocessable Entity', // RFC 4918
+        423: 'Locked', // RFC 4918
+        424: 'Failed Dependency', // RFC 4918
+        425: 'Unordered Collection', // RFC 4918
+        426: 'Upgrade Required', // RFC 2817
+        500: 'Internal Server Error',
+        501: 'Not Implemented',
+        502: 'Bad Gateway',
+        503: 'Service Unavailable',
+        504: 'Gateway Time-out',
+        505: 'HTTP Version not supported',
+        506: 'Variant Also Negotiates', // RFC 2295
+        507: 'Insufficient Storage', // RFC 4918
+        509: 'Bandwidth Limit Exceeded',
+        510: 'Not Extended' // RFC 2774
+    };
 
 // The Shred object itself constructs the `Request` object. You should rarely
 // need to do this directly.
@@ -878,7 +878,7 @@ require.define("/shred/request.js", function (require, module, exports, __dirnam
                 return sprintf("%s://%s:%s%s",
                     this.scheme, this.host, this.port,
                     (this.proxy ? "/" : this.path) +
-                    (this.query ? ("?" + this.query) : ""));
+                        (this.query ? ("?" + this.query) : ""));
             },
             set: function (_url) {
                 _url = parseUri(_url);
@@ -1026,9 +1026,9 @@ require.define("/shred/request.js", function (require, module, exports, __dirnam
                 }
                 else {
                     milliseconds = (timeout.milliseconds || 0) +
-                    (1000 * ((timeout.seconds || 0) +
-                    (60 * ((timeout.minutes || 0) +
-                    (60 * (timeout.hours || 0))))));
+                        (1000 * ((timeout.seconds || 0) +
+                            (60 * ((timeout.minutes || 0) +
+                                (60 * (timeout.hours || 0))))));
                 }
                 this._timeout = milliseconds;
                 return this;
@@ -1229,7 +1229,7 @@ require.define("/shred/request.js", function (require, module, exports, __dirnam
                 // given in the `Location` header. We fire a `redirect` event.
                 if (response.isRedirect) {
                     request.log.debug("Redirecting to "
-                    + response.getHeader("Location"));
+                        + response.getHeader("Location"));
                     request.url = response.getHeader("Location");
                     emit("redirect");
                     createRequest(request);
@@ -1271,7 +1271,7 @@ require.define("/shred/request.js", function (require, module, exports, __dirnam
         // underlying request object.
         if (request.content) {
             request.log.debug("Streaming body: '" +
-            request.content.data.slice(0, 59) + "' ... ");
+                request.content.data.slice(0, 59) + "' ... ");
             request._raw.write(request.content.data);
         }
 
@@ -1945,8 +1945,8 @@ require.define("/shred/response.js", function (require, module, exports, __dirna
         isRedirect: {
             get: function () {
                 return (this.status > 299
-                && this.status < 400
-                && this.getHeader("Location"));
+                    && this.status < 400
+                    && this.getHeader("Location"));
             },
             enumerable: true
         },
@@ -1971,7 +1971,7 @@ require.define("/shred/response.js", function (require, module, exports, __dirna
     var getHeader = Response.prototype.getHeader;
     Response.prototype.getHeader = function (name) {
         return (getHeader.call(this, name) ||
-        (typeof this._raw.getHeader === 'function' && this._raw.getHeader(name)));
+            (typeof this._raw.getHeader === 'function' && this._raw.getHeader(name)));
     };
 
     module.exports = Response;
@@ -2166,11 +2166,11 @@ require.define("/shred/content.js", function (require, module, exports, __dirnam
     var Errors = {
         setDataWithBody: function (object) {
             throw new Error("Attempt to set data attribute of a content object " +
-            "when the body attributes was already set.");
+                "when the body attributes was already set.");
         },
         setBodyWithData: function (object) {
             throw new Error("Attempt to set body attribute of a content object " +
-            "when the data attributes was already set.");
+                "when the data attributes was already set.");
         }
     }
     module.exports = Content;

@@ -188,11 +188,11 @@ ngFileUpload.service('Upload', ['$http', '$q', '$timeout', function ($http, $q, 
 
     this.http = function (config) {
         config.transformRequest = config.transformRequest || function (data) {
-                if ((window.ArrayBuffer && data instanceof window.ArrayBuffer) || data instanceof Blob) {
-                    return data;
-                }
-                return $http.defaults.transformRequest[0](arguments);
-            };
+            if ((window.ArrayBuffer && data instanceof window.ArrayBuffer) || data instanceof Blob) {
+                return data;
+            }
+            return $http.defaults.transformRequest[0](arguments);
+        };
         return sendHttp(config);
     };
 }
@@ -280,7 +280,7 @@ ngFileUpload.service('Upload', ['$http', '$q', '$timeout', function ($http, $q, 
                 var attribute = elem[0].attributes[i];
                 if ((isInputTypeFile() && attribute.name !== 'type') ||
                     (attribute.name !== 'type' && attribute.name !== 'class' &&
-                    attribute.name !== 'id' && attribute.name !== 'style')) {
+                        attribute.name !== 'id' && attribute.name !== 'style')) {
                     fileElem.attr(attribute.name, attribute.value);
                 }
             }
@@ -404,8 +404,7 @@ ngFileUpload.service('Upload', ['$http', '$q', '$timeout', function ($http, $q, 
         return (accept == null || accept) && (file.size == null || (file.size < fileSizeMax && file.size > fileSizeMin));
     };
 
-    ngFileUpload.updateModel = function ($parse, $timeout, scope, ngModel, attr, fileChange,
-                                         files, rejFiles, evt, noDelay) {
+    ngFileUpload.updateModel = function ($parse, $timeout, scope, ngModel, attr, fileChange, files, rejFiles, evt, noDelay) {
         function update() {
             if ($parse(attr.ngfKeep)(scope) === true) {
                 var prevFiles = (ngModel.$modelValue || []).slice(0);
