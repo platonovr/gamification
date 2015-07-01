@@ -1,6 +1,5 @@
 package ru.kpfu.itis.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import ru.kpfu.itis.model.enums.TaskCategoryType;
 
 import javax.persistence.*;
@@ -22,7 +21,6 @@ public class TaskCategory extends BaseLongIdEntity {
     @Enumerated(EnumType.STRING)
     private TaskCategoryType taskCategoryType;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "category")
     private Set<Task> tasks = new HashSet<>();
 

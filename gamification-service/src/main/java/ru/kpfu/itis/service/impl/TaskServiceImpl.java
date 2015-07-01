@@ -7,12 +7,14 @@ import ru.kpfu.itis.dao.AccountDao;
 import ru.kpfu.itis.dao.TaskCategoryDao;
 import ru.kpfu.itis.dao.TaskDao;
 import ru.kpfu.itis.dto.TaskDto;
+import ru.kpfu.itis.mapper.TaskMapper;
 import ru.kpfu.itis.model.Task;
 import ru.kpfu.itis.model.TaskCategory;
 import ru.kpfu.itis.service.TaskService;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by timur on 17.06.15.
@@ -29,6 +31,9 @@ public class TaskServiceImpl implements TaskService {
     @Autowired
     private AccountDao accountDao;
 
+    @Autowired
+    private TaskMapper taskMapper;
+
     @Override
     @Transactional
     public Task submitTask(Task task) {
@@ -39,15 +44,10 @@ public class TaskServiceImpl implements TaskService {
     @Override
     @Transactional
     public Task save(TaskDto taskDto) {
-        Task task = new Task();
+        Task task = taskMapper.fromDto(taskDto);
         task.setCategory(taskCategoryDao.findByName(taskDto.getCategory()));
         //TODO replace with getAuthUser() when we will make authentication
         task.setAuthor(accountDao.findByLogin("admin"));
-        task.setName(taskDto.getName());
-        task.setMaxMark(taskDto.getMaxMark());
-        task.setDescription(taskDto.getDescription());
-        task.setStartDate(taskDto.getStartDate());
-        task.setEndDate(taskDto.getDeadline());
         taskDao.save(task);
         return task;
     }
@@ -76,6 +76,13 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public List<Task> getTasksByUser(Long userId) {
         return taskDao.getTasksByUser(userId);
+    }
+
+    @Override
+    @Transactional
+    public List<TaskDto> getAvailableTasksByUser(Long userId, Integer offset, Integer maxResult) {
+        List<Task> availableTasksByUser = taskDao.getAvailableTasksByUser(userId, offset, maxResult);
+        return availableTasksByUser.stream().map(taskMapper::toDto).collect(Collectors.toList());
     }
 
 

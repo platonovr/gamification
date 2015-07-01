@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="
+                       http://www.liquibase.org/xml/ns/dbchangelog
+                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd"
+                   logicalFilePath="20150630_1042.xml">
+
+    <changeSet id="account_info_del_group_column" author="tkasatkin">
+        <preConditions onError="MARK_RAN" onFail="MARK_RAN">
+            <columnExists tableName="ACCOUNT_INFO" columnName="ACCOUNT_GROUP"/>
+        </preConditions>
+        <dropColumn tableName="ACCOUNT_INFO" columnName="ACCOUNT_GROUP"/>
+    </changeSet>
+
+    <changeSet id="account_info_add_group_id_column" author="tkasatkin">
+        <preConditions onError="MARK_RAN" onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="ACCOUNT_INFO" columnName="ACADEMIC_GROUP_ID"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="ACCOUNT_INFO">
+            <column name="ACADEMIC_GROUP_ID" type="bigint">
+                <constraints foreignKeyName="AccountInfo_AcademicGroup"
+                             references="ACADEMIC_GROUP(GROUP_ID)"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="account_info_data" author="tkasatkin">
+        <loadUpdateData tableName="ACCOUNT_INFO" primaryKey="ACCOUNT_INFO_ID"
+                        file="db/changelog_v0.1/csv/account_info.csv"/>
+    </changeSet>
+
+</databaseChangeLog>

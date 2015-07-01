@@ -13,6 +13,7 @@
         <mapping class="ru.kpfu.itis.model.AccountTask"/>
         <mapping class="ru.kpfu.itis.model.AccountBadge"/>
         <mapping class="ru.kpfu.itis.model.Badge"/>
+        <mapping class="ru.kpfu.itis.model.AcademicGroup"/>
     </session-factory>
 
 </hibernate-configuration>

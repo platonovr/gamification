@@ -252,4 +252,43 @@
             <column name="ENTRANCE_YEAR" type="integer"/>
         </addColumn>
     </changeSet>
+    <changeSet id="10" author="tkasatkin">
+        <createTable tableName="ACADEMIC_GROUP">
+            <column name="GROUP_ID" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="GROUP_NAME" type="varchar(40)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="FORMATION_TIME" type="${datetime}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATE_TIME" type="${datetime}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CHANGE_TIME" type="${datetime}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="FINISH_TIME" type="${datetime}">
+            </column>
+        </createTable>
+    </changeSet>
+    
+    <changeSet id="11" author="tkasatkin">
+        <createTable tableName="TASK_CONSTRAINT">
+            <column name="TASK_ID" type="bigint">
+                <constraints primaryKey="true"
+                             foreignKeyName="TaskConstraint_Task"
+                             references="TASK(TASK_ID)"
+                             deleteCascade="true"/>
+            </column>
+            <column name="ACADEMIC_GROUP_ID" type="bigint">
+                <constraints primaryKey="true"
+                             foreignKeyName="TaskConstraint_AcademicGroup"
+                             references="ACADEMIC_GROUP(GROUP_ID)"
+                             deleteCascade="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
 </databaseChangeLog>
