@@ -21,6 +21,7 @@ import ru.kpfu.itis.validator.TaskValidator;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.List;
 
 import static org.springframework.http.HttpStatus.*;
 
@@ -46,7 +47,15 @@ public class TaskController {
         binder.setValidator(taskValidator);
     }
 
-    @ApiOperation(value = "create challenge", httpMethod = "POST")
+    @ApiOperation("get available tasks")
+    @RequestMapping(method = RequestMethod.GET)
+    public List<TaskDto> getAvailableTasks(@RequestParam(required = false) Integer offset,
+                                           @RequestParam(required = false) Integer maxResult) {
+        //before we make authentication userId = 1
+        return taskService.getAvailableTasksByUser(1L, offset, maxResult);
+    }
+
+    @ApiOperation(value = "create challenge")
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<TaskDto> createTask(@Valid @RequestBody TaskDto taskDto, BindingResult bindingResult) throws BindException {
         if (bindingResult.hasErrors()) throw new BindException(bindingResult);
@@ -54,6 +63,7 @@ public class TaskController {
         return new ResponseEntity<>(taskDto, HttpStatus.CREATED);
     }
 
+    @ApiOperation("upload challenge's attachment")
     @RequestMapping(value = "/{taskId:[1-9]+[0-9]*}/attachments", method = RequestMethod.POST)
     public ResponseEntity<ResponseDto<String>> uploadAttachment(@RequestPart MultipartFile file,
                                                                 @PathVariable Long taskId) {
@@ -71,12 +81,14 @@ public class TaskController {
             }
     }
 
-    @RequestMapping("/{taskId:[1-9]+[0-9]*}/attachments")
+    @ApiOperation("get challenge's attachments")
+    @RequestMapping(value = "/{taskId:[1-9]+[0-9]*}/attachments", method = RequestMethod.GET)
     public Collection<String> getTaskAttachmentsNames(@PathVariable Long taskId) {
         return fileService.getTaskAttachmentsNames(taskId);
     }
 
-    @RequestMapping("/categories")
+    @ApiOperation("get available task categories")
+    @RequestMapping(value = "/categories", method = RequestMethod.GET)
     public Collection<TaskCategory> getTaskCategories() {
         return taskService.getAllCategories();
     }

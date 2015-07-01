@@ -33,8 +33,9 @@ public class AccountInfo extends BaseLongIdEntity {
     @Column(name = "EMAIL")
     private String email;
 
-    @Column(name = "ACCOUNT_GROUP")
-    private String group;
+    @ManyToOne
+    @JoinColumn(name = "ACADEMIC_GROUP_ID")
+    private AcademicGroup group;
 
     @Column(name = "ENTRANCE_YEAR")
     private Integer entranceYear;
@@ -99,19 +100,19 @@ public class AccountInfo extends BaseLongIdEntity {
         this.account = account;
     }
 
-    public String getGroup() {
-        return group;
-    }
-
-    public void setGroup(String group) {
-        this.group = group;
-    }
-
     public Integer getEntranceYear() {
         return entranceYear;
     }
 
     public void setEntranceYear(Integer entranceYear) {
         this.entranceYear = entranceYear;
+    }
+
+    public AcademicGroup getGroup() {
+        return group;
+    }
+
+    public void setGroup(AcademicGroup group) {
+        this.group = group;
     }
 }

@@ -1,9 +1,7 @@
 package ru.kpfu.itis.dao.impl;
 
 import org.hibernate.Criteria;
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.springframework.orm.hibernate4.HibernateCallback;
+import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
 import ru.kpfu.itis.dao.TaskDao;
 import ru.kpfu.itis.model.Task;
@@ -23,29 +21,36 @@ public class TaskDaoImpl extends SimpleDaoImpl implements TaskDao {
 
     @Override
     public List<Task> getActualTasks() {
-        return getHibernateTemplate().execute(new HibernateCallback<List<Task>>() {
-            @Override
-            public List<Task> doInHibernate(Session session) throws HibernateException {
-                return session.createQuery("from Task task " +
-                        " where task.finishTime is null")
-                        .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
-                        .list();
-            }
-        });
+        return getHibernateTemplate().<List<Task>>execute(session -> session.createQuery("from Task task " +
+                " where task.finishTime is null")
+                .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
+                .list());
     }
 
     @Override
     public List<Task> getTasksByUser(Long userId) {
-        return getHibernateTemplate().execute(new HibernateCallback<List<Task>>() {
-            @Override
-            public List<Task> doInHibernate(Session session) throws HibernateException {
-                return session.createQuery("from Task task " +
-                        " left join fetch task.taskAccounts ta " +
-                        " where ta.account.id = :userId")
-                        .setParameter("userId", userId)
-                        .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
-                        .list();
-            }
+        return getHibernateTemplate().<List<Task>>execute(session -> session.createQuery("from Task task " +
+                " left join fetch task.taskAccounts ta " +
+                " where ta.account.id = :userId")
+                .setParameter("userId", userId)
+                .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
+                .list());
+    }
+
+    @Override
+    public List<Task> getAvailableTasksByUser(Long userId, Integer offset, Integer maxResult) {
+        return getHibernateTemplate().<List<Task>>execute(session -> {
+            Query query = session
+                    .createQuery("select distinct t from Task t " +
+                            "left join t.academicGroups tAcGroupes " +
+                            "left join t.taskAccounts ttacc " +
+                            "where :userId in (select tacAccIng.id from tAcGroupes.accountInfos tacAccIng) " +
+                            "and exists (from Account a left join a.accountTasks at where at is empty and a.id=:userId) " +
+                            "order by t.createTime desc")
+                    .setParameter("userId", userId);
+            if (offset != null) query.setFirstResult(offset);
+            if (maxResult != null) query.setMaxResults(maxResult);
+            return query.list();
         });
     }
 }
