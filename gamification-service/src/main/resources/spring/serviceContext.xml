@@ -7,6 +7,6 @@
 
     <context:component-scan base-package="ru.kpfu.itis.service,ru.kpfu.itis.dao,ru.kpfu.itis.mapper"/>
 
-    <import resource="securityContext.xml"/>
+    <bean name="objectMapper" class="org.springframework.http.converter.json.Jackson2ObjectMapperFactoryBean"/>
 
 </beans>
