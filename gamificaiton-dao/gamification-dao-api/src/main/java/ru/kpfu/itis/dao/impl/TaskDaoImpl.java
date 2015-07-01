@@ -45,7 +45,7 @@ public class TaskDaoImpl extends SimpleDaoImpl implements TaskDao {
                             "left join t.academicGroups tAcGroupes " +
                             "left join t.taskAccounts ttacc " +
                             "where :userId in (select tacAccIng.id from tAcGroupes.accountInfos tacAccIng) " +
-                            "and exists (from Account a left join a.accountTasks at where at is empty and a.id=:userId) " +
+                            "and (ttacc is empty or :userId not in (ttacc.account.id))" +
                             "order by t.createTime desc")
                     .setParameter("userId", userId);
             if (offset != null) query.setFirstResult(offset);

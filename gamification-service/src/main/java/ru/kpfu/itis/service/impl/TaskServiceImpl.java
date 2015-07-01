@@ -12,7 +12,6 @@ import ru.kpfu.itis.model.Task;
 import ru.kpfu.itis.model.TaskCategory;
 import ru.kpfu.itis.service.TaskService;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -58,7 +57,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Collection<TaskCategory> getAllCategories() {
+    public List<TaskCategory> getAllCategories() {
         return taskCategoryDao.fetchAll(TaskCategory.class);
     }
 

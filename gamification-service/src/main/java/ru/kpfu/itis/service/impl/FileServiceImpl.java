@@ -12,9 +12,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 
 import static java.io.File.separator;
 
@@ -50,13 +50,13 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public Collection<String> getTaskAttachmentsNames(Long taskId) {
+    public List<String> getTaskAttachmentsNames(Long taskId) {
         File[] attachments = new File(getFilesDirectory() + attachmentsPrefix + separator + taskId).listFiles();
-        Collection<String> attachmentsNames = new LinkedList<>();
+        List<String> attachmentsNames = new LinkedList<>();
         if (attachments != null && attachments.length > 0)
             for (File attachment : attachments)
                 attachmentsNames.add(attachment.getName());
-        return Collections.unmodifiableCollection(attachmentsNames);
+        return Collections.unmodifiableList(attachmentsNames);
     }
 
 }

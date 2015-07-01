@@ -4,7 +4,6 @@ import ru.kpfu.itis.dto.TaskDto;
 import ru.kpfu.itis.model.Task;
 import ru.kpfu.itis.model.TaskCategory;
 
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -18,7 +17,7 @@ public interface TaskService {
 
     Task findByName(String name);
 
-    Collection<TaskCategory> getAllCategories();
+    List<TaskCategory> getAllCategories();
 
     TaskCategory save(TaskCategory taskCategory);
 

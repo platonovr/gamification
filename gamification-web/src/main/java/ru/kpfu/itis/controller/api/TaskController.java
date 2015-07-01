@@ -20,7 +20,6 @@ import ru.kpfu.itis.validator.TaskValidator;
 
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.*;
@@ -83,13 +82,13 @@ public class TaskController {
 
     @ApiOperation("get challenge's attachments")
     @RequestMapping(value = "/{taskId:[1-9]+[0-9]*}/attachments", method = RequestMethod.GET)
-    public Collection<String> getTaskAttachmentsNames(@PathVariable Long taskId) {
+    public List<String> getTaskAttachmentsNames(@PathVariable Long taskId) {
         return fileService.getTaskAttachmentsNames(taskId);
     }
 
     @ApiOperation("get available task categories")
     @RequestMapping(value = "/categories", method = RequestMethod.GET)
-    public Collection<TaskCategory> getTaskCategories() {
+    public List<TaskCategory> getTaskCategories() {
         return taskService.getAllCategories();
     }
 
