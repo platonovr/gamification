@@ -30,7 +30,7 @@ public class TaskDto {
 
     private List<String> groups;
 
-    private List<String> performers;
+    private List<AccountInfoDto> performers;
 
     @ApiModelProperty(required = true)
     private Byte maxMark;
@@ -101,11 +101,11 @@ public class TaskDto {
         this.groups = groups;
     }
 
-    public List<String> getPerformers() {
+    public List<AccountInfoDto> getPerformers() {
         return performers;
     }
 
-    public void setPerformers(List<String> performers) {
+    public void setPerformers(List<AccountInfoDto> performers) {
         this.performers = performers;
     }
 

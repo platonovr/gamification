@@ -16,5 +16,9 @@ angular.module('gamificationApp').service('TaskService', function ($http, CONSTA
     };
     this.getCategories = function () {
         return $http.get(CONSTANTS.API_URI_PREFIX + CONSTANTS.TASK_URI + '/categories')
-    }
+    };
+    this.check = function (challenge, performer, mark) {
+        return $http.post(CONSTANTS.API_URI_PREFIX + CONSTANTS.TASK_URI + '/' + challenge.id +
+            '/user/' + performer.id, mark);
+    };
 });

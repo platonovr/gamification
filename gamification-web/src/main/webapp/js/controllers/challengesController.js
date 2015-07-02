@@ -6,6 +6,9 @@ angular.module('gamificationApp').controller('ChallengesController',
         var maxResult = 10;
         $scope.challenges = [];
         $scope.showedBlocks = [];
+        $scope.showedPerformerBlocks = [
+            []
+        ];
         $scope.autoLoadingDisabled = false;
         $scope.loadMore = function () {
             var length = $scope.challenges.length;
@@ -16,6 +19,17 @@ angular.module('gamificationApp').controller('ChallengesController',
                     $scope.challenges = $scope.challenges.concat(data)
                 } else
                     $scope.autoLoadingDisabled = true;
+            })
+        }
+        $scope.checkTask = function (challenge, performer, mark) {
+            TaskService.check(challenge, performer, mark).success(function (data) {
+                var i = 0;
+                for (i = 0; i < $scope.challenges.length; i++) {
+                    if ($scope.challenges[i].id == challenge.id) {
+                        break;
+                    }
+                }
+                $scope.challenges.splice(i, 1);
             })
         }
     }]);

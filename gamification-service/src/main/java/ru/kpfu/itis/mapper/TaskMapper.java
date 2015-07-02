@@ -1,6 +1,8 @@
 package ru.kpfu.itis.mapper;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import ru.kpfu.itis.dto.AccountInfoDto;
 import ru.kpfu.itis.dto.TaskDto;
 import ru.kpfu.itis.model.*;
 
@@ -13,6 +15,9 @@ import java.util.stream.Collectors;
  */
 @Component
 public class TaskMapper implements Mapper<Task, TaskDto> {
+
+    @Autowired
+    AccountInfoMapper accountInfoMapper;
 
     @Override
     public Task fromDto(TaskDto taskDto) {
@@ -45,16 +50,13 @@ public class TaskMapper implements Mapper<Task, TaskDto> {
                             .collect(Collectors.toList()))
                     .orElse(null));
             taskDto.setPerformers(Optional.ofNullable(task.getTaskAccounts())
-                    .<List<String>>map(accountTasks -> accountTasks.parallelStream()
-                            .<String>map(accountTask -> {
+                    .<List<AccountInfoDto>>map(accountTasks -> accountTasks.parallelStream()
+                            .<AccountInfoDto>map(accountTask -> {
                                 Account account = accountTask.getAccount();
                                 if (account != null) {
                                     AccountInfo accountInfo = account.getAccountInfo();
                                     if (accountInfo != null) {
-                                        String firstName = accountInfo.getFirstName();
-                                        String lastName = accountInfo.getLastName();
-                                        String group = Optional.ofNullable(accountInfo.getGroup()).map(AcademicGroup::getName).orElse(null);
-                                        return firstName + " " + lastName + ", " + group;
+                                        return accountInfoMapper.toDto(accountInfo);
                                     }
                                 }
                                 return null;

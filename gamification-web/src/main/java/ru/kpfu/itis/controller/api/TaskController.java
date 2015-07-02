@@ -12,7 +12,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.kpfu.itis.dto.ResponseDto;
 import ru.kpfu.itis.dto.TaskDto;
+import ru.kpfu.itis.model.AccountTask;
 import ru.kpfu.itis.model.TaskCategory;
+import ru.kpfu.itis.model.TaskStatus;
+import ru.kpfu.itis.service.AccountTaskService;
 import ru.kpfu.itis.service.FileService;
 import ru.kpfu.itis.service.TaskService;
 import ru.kpfu.itis.util.Constant;
@@ -37,6 +40,9 @@ public class TaskController {
 
     @Autowired
     private FileService fileService;
+
+    @Autowired
+    private AccountTaskService accountTaskService;
 
     @Autowired
     private TaskValidator taskValidator;
@@ -78,6 +84,26 @@ public class TaskController {
                 return new ResponseEntity<>(new ResponseDto<>("Failed to upload", INTERNAL_SERVER_ERROR.value()),
                         INTERNAL_SERVER_ERROR);
             }
+    }
+
+    @ApiOperation("check challenge")
+    @RequestMapping(value = "/{taskId:[1-9]+[0-9]*}/user/{accountId:[1-9]+[0-9]*}", method = RequestMethod.POST)
+    public ResponseEntity<ResponseDto<String>> checkTask(@PathVariable Long taskId,
+                                                         @PathVariable Long accountId,
+                                                         @RequestParam Integer mark) {
+        AccountTask accountTask = accountTaskService.findByTaskAndAccount(taskId, accountId);
+        if (accountTask != null) {
+            TaskStatus taskStatus = new TaskStatus();
+            taskStatus.setAccountTask(accountTask);
+            taskStatus.setType(TaskStatus.TaskStatusType.COMPLETED);
+            accountTask.setNewStatus(taskStatus);
+            accountTask.setMark(mark);
+            accountTaskService.saveOrUpdate(accountTask);
+            return new ResponseEntity<>(OK);
+        } else {
+            return new ResponseEntity<>(new ResponseDto<>("Task doesn't found", NOT_FOUND.value()), NOT_FOUND);
+        }
+
     }
 
     @ApiOperation("get challenge's attachments")
