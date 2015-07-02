@@ -44,32 +44,32 @@
             <div class="field">
                 <label for="worker">Исполнитель:</label>
                 <input type="text" id="worker" class="ui-autocomplete-input"
-                       ng-model="newTask.performers" ng-list autocomplete="off">
+                       ng-model="newTask.performerNames" ng-list autocomplete="off">
 
                 <div class="worker_elements">
-                    <div ng-repeat="performer in newTask.performers" class="worker_element">
+                    <div ng-repeat="performer in newTask.performerNames" class="worker_element">
                         <span>{{performer}}</span>
-                        <span class="close_elem icon-close" ng-click="newTask.performers.remove($index)"></span>
+                        <span class="close_elem icon-close" ng-click="newTask.performerNames.remove($index)"></span>
                     </div>
                 </div>
             </div>
             <div class="field">
                 <label for="mark">Оценка*:</label>
                 <span class="addition">(максимальный балл)</span>
-                <input id="mark" name="maxMark" ng-model="newTask.maxMark" type="number" min="1"
+                <input id="mark" name="maxMark" ng-model="newTask.max_volume" type="number" min="1"
                        ng-change="errors=null">
                 <label style="color: red" ng-show="errors.maxMark!=null">{{errors.maxMark}}</label>
             </div>
 
             <div class="field">
                 <label for="date">Начинается:</label>
-                <input ng-model="newTask.startDate" type="date" ng-change="errors=null" id="date">
+                <input ng-model="newTask.date_from" type="date" ng-change="errors=null" id="date">
                 <label style="color: red" ng-show="errors.startDate!=null">{{errors.startDate}}</label>
             </div>
 
             <div class="field">
                 <label for="date">Заканчивается:</label>
-                <input ng-model="newTask.deadline" type="date" ng-change="errors=null" id="date">
+                <input ng-model="newTask.date_to" type="date" ng-change="errors=null" id="date">
                 <label style="color: red" ng-show="errors.deadline!=null">{{errors.deadline}}</label>
             </div>
 

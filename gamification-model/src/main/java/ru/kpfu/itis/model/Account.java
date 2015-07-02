@@ -6,7 +6,9 @@ import ru.kpfu.itis.model.enums.Role;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Roman on 22.03.2015.
@@ -34,6 +36,8 @@ public class Account extends BaseLongIdEntity {
     @Cascade(CascadeType.SAVE_UPDATE)
     private List<AccountTask> accountTasks = new ArrayList<>();
 
+    @OneToMany(mappedBy = "author")
+    private Set<Task> tasks = new HashSet<>();
 
     public String getLogin() {
         return login;
@@ -73,5 +77,13 @@ public class Account extends BaseLongIdEntity {
 
     public void setAccountTasks(List<AccountTask> accountTasks) {
         this.accountTasks = accountTasks;
+    }
+
+    public Set<Task> getTasks() {
+        return tasks;
+    }
+
+    public void setTasks(Set<Task> tasks) {
+        this.tasks = tasks;
     }
 }

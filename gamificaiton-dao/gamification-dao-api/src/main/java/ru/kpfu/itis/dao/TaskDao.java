@@ -1,6 +1,7 @@
 package ru.kpfu.itis.dao;
 
 import ru.kpfu.itis.model.Task;
+import ru.kpfu.itis.model.TaskStatus;
 
 import java.util.List;
 
@@ -15,5 +16,7 @@ public interface TaskDao extends SimpleDao {
 
     List<Task> getTasksByUser(Long userId);
 
-    List<Task> getAvailableTasksByUser(Long userId, Integer offset, Integer maxResult);
+    List<Task> getTasksByUser(Long userId, Integer offset, Integer limit, TaskStatus.TaskStatusType status);
+
+    List<Task> getCreatedTasks(Long userId, Integer offset, Integer limit);
 }

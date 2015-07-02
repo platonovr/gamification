@@ -11,8 +11,9 @@ angular.module('gamificationApp').service('TaskService', function ($http, CONSTA
             file: attachment
         })
     };
-    this.getAvailableTasks = function (offset, maxResult) {
-        return $http.get(CONSTANTS.API_URI_PREFIX + CONSTANTS.TASK_URI+'?offset='+offset+'&maxResult='+maxResult)
+    this.getTasks = function (offset, limit) {
+        return $http.get(CONSTANTS.API_URI_PREFIX + CONSTANTS.TASK_URI +
+            '/my?offset=' + offset + '&limit=' + limit)
     };
     this.getCategories = function () {
         return $http.get(CONSTANTS.API_URI_PREFIX + CONSTANTS.TASK_URI + '/categories')
