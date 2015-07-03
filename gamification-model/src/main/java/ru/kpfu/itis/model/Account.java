@@ -3,6 +3,8 @@ package ru.kpfu.itis.model;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import ru.kpfu.itis.model.enums.Role;
+import ru.kpfu.jbl.auth.domain.AuthUser;
+import ru.kpfu.jbl.auth.service.UserServiceAuth;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -17,7 +19,7 @@ import java.util.Set;
 @Table(name = "ACCOUNT")
 @AttributeOverride(name = "id", column = @Column(name = "ACCOUNT_ID"))
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-public class Account extends BaseLongIdEntity {
+public class Account extends BaseLongIdEntity implements AuthUser {
 
 
     @Column(name = "LOGIN", length = 64, nullable = false)
@@ -49,6 +51,11 @@ public class Account extends BaseLongIdEntity {
 
     public String getPassword() {
         return password;
+    }
+
+    @Override
+    public String getUserRole() {
+        return role != null ? role.name() : null;
     }
 
     public void setPassword(String password) {
