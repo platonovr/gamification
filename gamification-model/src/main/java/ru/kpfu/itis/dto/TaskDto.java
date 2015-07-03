@@ -1,8 +1,10 @@
 package ru.kpfu.itis.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -21,6 +23,7 @@ public class TaskDto {
 
     private String subject;
 
+    @JsonProperty("max_count")
     private Integer maxPerformers;
 
     @ApiModelProperty(required = true)
@@ -30,19 +33,26 @@ public class TaskDto {
 
     private List<String> groups;
 
-    private List<AccountInfoDto> performers;
+    private List<String> performerNames = new ArrayList<>();
+
+    private List<AccountInfoDto> performers = new ArrayList<>();
 
     @ApiModelProperty(required = true)
+    @JsonProperty("max_volume")
     private Byte maxMark;
 
     @ApiModelProperty(required = true)
+    @JsonProperty("date_from")
     private Date startDate;
 
     @ApiModelProperty(required = true)
+    @JsonProperty("date_to")
     private Date deadline;
 
+    @JsonProperty("create_time")
     private Date createTime;
 
+    @JsonProperty("update_time")
     private Date changeTime;
 
     public Date getCreateTime() {
@@ -101,12 +111,12 @@ public class TaskDto {
         this.groups = groups;
     }
 
-    public List<AccountInfoDto> getPerformers() {
-        return performers;
+    public List<String> getPerformerNames() {
+        return performerNames;
     }
 
-    public void setPerformers(List<AccountInfoDto> performers) {
-        this.performers = performers;
+    public void setPerformerNames(List<String> performerNames) {
+        this.performerNames = performerNames;
     }
 
     public Byte getMaxMark() {
@@ -155,5 +165,13 @@ public class TaskDto {
 
     public void setMaxPerformers(Integer maxPerformers) {
         this.maxPerformers = maxPerformers;
+    }
+
+    public List<AccountInfoDto> getPerformers() {
+        return performers;
+    }
+
+    public void setPerformers(List<AccountInfoDto> performers) {
+        this.performers = performers;
     }
 }

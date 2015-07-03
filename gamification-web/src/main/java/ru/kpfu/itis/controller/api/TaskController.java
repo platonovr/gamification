@@ -13,7 +13,6 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.kpfu.itis.dto.ResponseDto;
 import ru.kpfu.itis.dto.TaskDto;
 import ru.kpfu.itis.model.AccountTask;
-import ru.kpfu.itis.model.TaskCategory;
 import ru.kpfu.itis.model.TaskStatus;
 import ru.kpfu.itis.service.AccountTaskService;
 import ru.kpfu.itis.service.FileService;
@@ -52,12 +51,21 @@ public class TaskController {
         binder.setValidator(taskValidator);
     }
 
-    @ApiOperation("get available tasks")
+    @ApiOperation("get student's tasks")
     @RequestMapping(method = RequestMethod.GET)
     public List<TaskDto> getAvailableTasks(@RequestParam(required = false) Integer offset,
-                                           @RequestParam(required = false) Integer maxResult) {
+                                           @RequestParam(required = false) Integer limit,
+                                           @RequestParam(required = false) TaskStatus.TaskStatusType status) {
+        //before we make authentication userId = 2 (user with role STUDENT)
+        return taskService.getTasksByUser(2L, offset, limit, status);
+    }
+
+    @ApiOperation("get created tasks[FOR ADMIN OR TEACHER]")
+    @RequestMapping(value = "/my", method = RequestMethod.GET)
+    public List<TaskDto> getCreatedTasks(@RequestParam(required = false) Integer offset,
+                                         @RequestParam(required = false) Integer limit) {
         //before we make authentication userId = 1
-        return taskService.getAvailableTasksByUser(1L, offset, maxResult);
+        return taskService.getCreatedTasks(1L, offset, limit);
     }
 
     @ApiOperation(value = "create challenge")
@@ -114,7 +122,7 @@ public class TaskController {
 
     @ApiOperation("get available task categories")
     @RequestMapping(value = "/categories", method = RequestMethod.GET)
-    public List<TaskCategory> getTaskCategories() {
+    public List<TaskCategoryDto> getTaskCategories() {
         return taskService.getAllCategories();
     }
 

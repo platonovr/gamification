@@ -10,16 +10,21 @@ angular.module('gamificationApp').controller('ChallengesController',
             []
         ];
         $scope.autoLoadingDisabled = false;
+        $scope.isLoading = false;
         $scope.loadMore = function () {
-            var length = $scope.challenges.length;
-            TaskService.getAvailableTasks(length, maxResult).success(function (data) {
-                if (data.length != 0) {
-                    for (var i = 0; i < data.length; i++)
-                        $scope.showedBlocks[i + length] = false;
-                    $scope.challenges = $scope.challenges.concat(data)
-                } else
-                    $scope.autoLoadingDisabled = true;
-            })
+            if (!$scope.isLoading) {
+                $scope.isLoading = true;
+                var length = $scope.challenges.length;
+                TaskService.getTasks(length, maxResult).success(function (data) {
+                    if (data.length != 0) {
+                        for (var i = 0; i < data.length; i++)
+                            $scope.showedBlocks[i + length] = false;
+                        $scope.challenges = $scope.challenges.concat(data);
+                        $scope.isLoading = false;
+                    } else
+                        $scope.autoLoadingDisabled = true;
+                })
+            }
         }
         $scope.checkTask = function (challenge, performer, mark) {
             TaskService.check(challenge, performer, mark).success(function (data) {

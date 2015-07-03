@@ -43,25 +43,34 @@ public class TaskMapper implements Mapper<Task, TaskDto> {
             taskDto.setDescription(task.getDescription());
             taskDto.setMaxPerformers(task.getParticipantsCount());
             taskDto.setCategory(Optional.ofNullable(task.getCategory()).<String>map(TaskCategory::getName).orElse(null));
-            taskDto.setCreator(Optional.ofNullable(task.getAuthor()).<String>map(Account::getLogin).orElse(null));
+            Account author = task.getAuthor();
+            if (author != null)
+                taskDto.setCreator(author.getLogin());
             taskDto.setGroups(Optional.ofNullable(task.getAcademicGroups())
                     .<List<String>>map(academicGroups -> academicGroups.parallelStream()
                             .<String>map(AcademicGroup::getName)
                             .collect(Collectors.toList()))
                     .orElse(null));
-            taskDto.setPerformers(Optional.ofNullable(task.getTaskAccounts())
-                    .<List<AccountInfoDto>>map(accountTasks -> accountTasks.parallelStream()
-                            .<AccountInfoDto>map(accountTask -> {
-                                Account account = accountTask.getAccount();
-                                if (account != null) {
-                                    AccountInfo accountInfo = account.getAccountInfo();
-                                    if (accountInfo != null) {
-                                        return accountInfoMapper.toDto(accountInfo);
-                                    }
-                                }
-                                return null;
-                            }).collect(Collectors.toList()))
-                    .orElse(null));
+            List<AccountTask> taskAccounts = task.getTaskAccounts();
+            Long id;
+            String firstName, lastName, group;
+            if (taskAccounts != null) {
+                List<String> performerNames = taskDto.getPerformerNames();
+                List<AccountInfoDto> performers = taskDto.getPerformers();
+                for (AccountTask accountTask : taskAccounts) {
+                    Account account = accountTask.getAccount();
+                    if (account != null) {
+                        AccountInfo accountInfo = account.getAccountInfo();
+                        if (accountInfo != null) {
+                            firstName = accountInfo.getFirstName();
+                            lastName = accountInfo.getLastName();
+                            group = Optional.ofNullable(accountInfo.getGroup()).map(AcademicGroup::getName).orElse(null);
+                            performerNames.add(firstName + " " + lastName + ", " + group);
+                            performers.add(accountInfoMapper.toDto(accountInfo));
+                        }
+                    }
+                }
+            }
             taskDto.setMaxMark(task.getMaxMark());
             taskDto.setStartDate(task.getStartDate());
             taskDto.setDeadline(task.getEndDate());

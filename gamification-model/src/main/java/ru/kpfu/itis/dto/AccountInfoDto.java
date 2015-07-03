@@ -1,5 +1,6 @@
 package ru.kpfu.itis.dto;
 
+import com.wordnik.swagger.annotations.ApiModel;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -7,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * Created by Rigen on 26.06.15.
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@ApiModel("Account")
 public class AccountInfoDto {
     private Long id;
     @JsonProperty(value = "first_name")
@@ -17,11 +19,13 @@ public class AccountInfoDto {
     private Double rating;
     private String group;
 
-    public String getGroup() {
-        return group;
+    public AccountInfoDto() {
     }
 
-    public void setGroup(String group) {
+    public AccountInfoDto(Long id, String firstName, String lastName, String group) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.group = group;
     }
 
@@ -63,5 +67,13 @@ public class AccountInfoDto {
 
     public void setRating(Double rating) {
         this.rating = rating;
+    }
+
+    public String getGroup() {
+        return group;
+    }
+
+    public void setGroup(String group) {
+        this.group = group;
     }
 }

@@ -403,9 +403,16 @@
                 <version>1.0.2</version>
             </dependency>
 
-
         </dependencies>
     </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>ru.kpfu.jbl.auth</groupId>
+            <artifactId>auth-module</artifactId>
+            <version>0.9.1</version>
+        </dependency>
+    </dependencies>
 
 
     <profiles>

@@ -6,10 +6,12 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.kpfu.itis.dao.AccountDao;
 import ru.kpfu.itis.dao.TaskCategoryDao;
 import ru.kpfu.itis.dao.TaskDao;
+import ru.kpfu.itis.dto.TaskCategoryDto;
 import ru.kpfu.itis.dto.TaskDto;
 import ru.kpfu.itis.mapper.TaskMapper;
 import ru.kpfu.itis.model.Task;
 import ru.kpfu.itis.model.TaskCategory;
+import ru.kpfu.itis.model.TaskStatus;
 import ru.kpfu.itis.service.TaskService;
 
 import java.util.List;
@@ -57,8 +59,11 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public List<TaskCategory> getAllCategories() {
-        return taskCategoryDao.fetchAll(TaskCategory.class);
+    public List<TaskCategoryDto> getAllCategories() {
+        return taskCategoryDao.fetchAll(TaskCategory.class)
+                .parallelStream().<TaskCategoryDto>map(taskCategory ->
+                        new TaskCategoryDto(taskCategory.getName(), taskCategory.getTaskCategoryType()))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -79,9 +84,16 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     @Transactional
-    public List<TaskDto> getAvailableTasksByUser(Long userId, Integer offset, Integer maxResult) {
-        List<Task> availableTasksByUser = taskDao.getAvailableTasksByUser(userId, offset, maxResult);
-        return availableTasksByUser.stream().map(taskMapper::toDto).collect(Collectors.toList());
+    public List<TaskDto> getTasksByUser(Long userId, Integer offset, Integer limit, TaskStatus.TaskStatusType status) {
+        List<Task> tasksByUser = taskDao.getTasksByUser(userId, offset, limit, status);
+        return tasksByUser.stream().map(taskMapper::toDto).collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public List<TaskDto> getCreatedTasks(Long userId, Integer offset, Integer limit) {
+        List<Task> createdTasks = taskDao.getCreatedTasks(userId, offset, limit);
+        return createdTasks.stream().map(taskMapper::toDto).collect(Collectors.toList());
     }
 
 

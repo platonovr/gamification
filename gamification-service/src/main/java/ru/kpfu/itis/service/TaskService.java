@@ -1,8 +1,10 @@
 package ru.kpfu.itis.service;
 
+import ru.kpfu.itis.dto.TaskCategoryDto;
 import ru.kpfu.itis.dto.TaskDto;
 import ru.kpfu.itis.model.Task;
 import ru.kpfu.itis.model.TaskCategory;
+import ru.kpfu.itis.model.TaskStatus;
 
 import java.util.List;
 
@@ -17,7 +19,7 @@ public interface TaskService {
 
     Task findByName(String name);
 
-    List<TaskCategory> getAllCategories();
+    List<TaskCategoryDto> getAllCategories();
 
     TaskCategory save(TaskCategory taskCategory);
 
@@ -25,5 +27,17 @@ public interface TaskService {
 
     List<Task> getTasksByUser(Long userId);
 
-    List<TaskDto> getAvailableTasksByUser(Long userId, Integer offset, Integer maxResult);
+    /**
+     * Get available tasks (if status null) or tasks with specified status
+     *
+     * @param userId student id
+     * @return if status null, will return available tasks, else - tasks with specified status
+     */
+    List<TaskDto> getTasksByUser(Long userId, Integer offset, Integer limit,
+                                 TaskStatus.TaskStatusType status);
+
+    /**
+     * @param userId admin or teacher id
+     */
+    List<TaskDto> getCreatedTasks(Long userId, Integer offset, Integer limit);
 }

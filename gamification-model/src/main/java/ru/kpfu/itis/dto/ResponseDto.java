@@ -1,10 +1,15 @@
 package ru.kpfu.itis.dto;
 
+import com.wordnik.swagger.annotations.ApiModel;
+import com.wordnik.swagger.annotations.ApiModelProperty;
+
 /**
  * Created by timur on 23.06.15.
  */
+@ApiModel("Response")
 public class ResponseDto<T> {
 
+    @ApiModelProperty(required = true)
     private String message;
 
     private T value;

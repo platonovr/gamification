@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="
+                       http://www.liquibase.org/xml/ns/dbchangelog
+                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd"
+                   logicalFilePath="20150702_1653.xml">
+
+    <changeSet id="account_info_data_2" author="tkasatkin">
+        <update tableName="ACCOUNT_INFO">
+            <column name="academic_group_id" value="NULL"/>
+            <where>account_id=1</where>
+        </update>
+    </changeSet>
+
+    <changeSet id="student_and_his_account_task_adding" author="tkasatkin">
+        <insert tableName="ACCOUNT">
+            <column name="ACCOUNT_ID" value="2"/>
+            <column name="LOGIN" value="login1"/>
+            <column name="PASSWORD" value="$2a$10$CIAIGeYIATEkiilT.twG2.Cf3AVCTsxaIgt0rMJY60JXr0pAzWzTq"/>
+            <column name="ROLE" value="STUDENT"/>
+            <column name="CREATE_TIME" value="2015-07-02"/>
+            <column name="CHANGE_TIME" value="2015-07-02"/>
+        </insert>
+        <insert tableName="ACCOUNT_INFO">
+            <column name="ACCOUNT_INFO_ID" value="2"/>
+            <column name="ACCOUNT_ID" value="2"/>
+            <column name="FIRST_NAME" value="логин 1"/>
+            <column name="LAST_NAME" value="логинович 1"/>
+            <column name="CREATE_TIME" value="2015-07-02"/>
+            <column name="CHANGE_TIME" value="2015-07-02"/>
+            <column name="ENTRANCE_YEAR" value="2013"/>
+            <column name="ACADEMIC_GROUP_ID" value="101"/>
+        </insert>
+        <insert tableName="ACCOUNT_TASK">
+            <column name="ACCOUNT_TASK_ID" value="2"/>
+            <column name="ACCOUNT_ID" value="2"/>
+            <column name="TASK_ID" value="100"/>
+            <column name="AVAILABILITY" value="false"/>
+            <column name="ATTEMPTS_COUNT" value="1"/>
+            <column name="CREATE_TIME" value="2015-07-02"/>
+            <column name="CHANGE_TIME" value="2015-07-02"/>
+        </insert>
+        <insert tableName="TASK_STATUS">
+            <column name="TASK_STATUS_ID" value="2"/>
+            <column name="ACCOUNT_TASK_ID" value="2"/>
+            <column name="ACCOUNT_TASK_HISTORY_ID" value="2"/>
+            <column name="TASK_STATUS_TYPE" value="INPROGRESS"/>
+            <column name="CREATE_TIME" value="2015-07-02"/>
+            <column name="CHANGE_TIME" value="2015-07-02"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

@@ -7,7 +7,7 @@
             </button>
             <input class="search_input" type="text" id="search" placeholder="Поиск">
         </form>
-        <div infinite-scroll="loadMore()" infinite-scroll-disabled='autoLoadingDisabled' class="events">
+        <div infinite-scroll="loadMore()" infinite-scroll-disabled='autoLoadingDisabled'  class="events">
             <div class="event" ng-repeat="challenge in challenges">
                 <h3>
                     <span class="icon icon-bookmark_icon"></span>
@@ -16,7 +16,7 @@
 
                 <div class="event_min_info">
                     <span ng-show="!showedBlocks[$index]" class="icon icon-options_icon"></span>
-                    <span>Дедлайн {{challenge.deadline|date:'dd MMMM yyyy'}}</span>
+                    <span>Дедлайн {{challenge.date_to|date:'dd MMMM yyyy'}}</span>
                     <span>Группа:
                         <a ng-repeat="group in challenge.groups">{{group}}{{$last?'':', '}}</a>
                     </span>
@@ -36,7 +36,7 @@
                     </dl>
                     <dl>
                         <dt>Оценка:</dt>
-                        <dd>{{challenge.maxMark}}</dd>
+                        <dd>{{challenge.max_volume}}</dd>
                     </dl>
                     <dl>
                         <dt>Исполнители ({{challenge.performers.length}}):</dt>
@@ -70,6 +70,3 @@
         </div>
     </div>
 </div>
-<!--<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>-->
-<!--<script src="/lib/main.js"></script>-->
-<!--<div id="__bs_notify__" style="display: none; padding: 15px; font-family: sans-serif; position: fixed; font-size: 0.9em; z-index: 9999; right: 0px; top: 0px; border-bottom-left-radius: 5px; margin: 0px; color: white; text-align: center; background-color: rgb(27, 32, 50);"></div>-->
