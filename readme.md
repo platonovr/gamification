@@ -35,6 +35,10 @@
  
 ### Модуль авторизации и security
 Для подключения и сборки модуля нужно спулить проект http://jetbrainslab.it.kpfu.ru/ainurminibaev/pretty_student_client.git
+
+??
+
+спулить надо http://jetbrainslab.it.kpfu.ru/ainurminibaev/pretty_student_api.git
 собрать там модуль auth-module ( mvn clean install) чтобы исходники проекта появились у вас в .m2
 дальше проект будет работать, периодически обновлять проект
 //TODO придумать maven репозиторий для упрощения этого процесса
