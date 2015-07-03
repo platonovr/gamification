@@ -4,7 +4,6 @@ import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import ru.kpfu.itis.model.enums.Role;
 import ru.kpfu.jbl.auth.domain.AuthUser;
-import ru.kpfu.jbl.auth.service.UserServiceAuth;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -47,6 +46,11 @@ public class Account extends BaseLongIdEntity implements AuthUser {
 
     public void setLogin(String login) {
         this.login = login;
+    }
+
+    @Override
+    public String getName() {
+        return login;
     }
 
     public String getPassword() {
