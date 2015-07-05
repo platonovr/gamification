@@ -54,11 +54,12 @@
                                     </dl>
                                     <dl>
                                         <dt>Оценка:</dt>
-                                        <dd>{{challenge.maxMark}}</dd>
+                                        <dd>{{challenge.max_volume}}</dd>
                                     </dl>
                                     <dl>
                                         <dt>Итоговый балл:</dt>
-                                        <dd><input ng-model="mark"></dd>
+                                        <dd><input type="number" max={{challenge.max_volume}} min="0" name="mark"
+                                                   ng-model="mark"></dd>
                                     </dl>
                                     <button ng-click="checkTask(challenge, performer, mark)">Подтвердить</button>
                                 </div>
