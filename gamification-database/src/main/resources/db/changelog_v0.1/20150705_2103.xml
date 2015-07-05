@@ -6,18 +6,6 @@
                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd"
                    logicalFilePath="20150702_1653.xml">
 
-    <!--<changeSet id="tasks_category_cascade_type_change" author="tkasatkin">-->
-        <!--<preConditions onFail="MARK_RAN" onError="MARK_RAN">-->
-            <!--<foreignKeyConstraintExists foreignKeyName="Task_Category"-->
-                                        <!--foreignKeyTableName="TASK"/>-->
-        <!--</preConditions>-->
-        <!--<dropForeignKeyConstraint baseTableName="TASK" constraintName="Task_Category"/>-->
-        <!--<addForeignKeyConstraint baseTableName="TASK" baseColumnNames="TASK_CATEGORY_ID"-->
-                                 <!--constraintName="Task_TaskCategory"-->
-                                 <!--referencedTableName="task_category"-->
-                                 <!--referencedColumnNames="task_category_id"/>-->
-    <!--</changeSet>-->
-
     <changeSet id="task_categories_data_inserts_and_updates" author="tkasatkin">
         <insert tableName="TASK_CATEGORY">
             <column name="TASK_CATEGORY_ID" value="1"/>
@@ -41,9 +29,6 @@
     <changeSet id="tasks_categories_data_delete" author="tkasatkin">
         <delete tableName="TASK_CATEGORY">
             <where>TASK_CATEGORY_ID>=100</where>
-            <!--<whereParams>-->
-                <!--<param name="time" valueDate="2015-01-01"/>-->
-            <!--</whereParams>-->
         </delete>
     </changeSet>
 
