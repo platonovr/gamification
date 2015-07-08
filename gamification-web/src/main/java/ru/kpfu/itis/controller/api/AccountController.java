@@ -68,8 +68,8 @@ public class AccountController {
         AccountProfileDto profileDto = new AccountProfileDto();
         profileDto.setId(account.getId());
         profileDto.setLogin(account.getLogin());
-        profileDto.setFirst_name(accountInfo.getFirstName());
-        profileDto.setLast_name(accountInfo.getLastName());
+        profileDto.setFirstName(accountInfo.getFirstName());
+        profileDto.setLastName(accountInfo.getLastName());
         profileDto.setRating(accountInfo.getPoint());
         ArrayList<BadgeDto> badgesDto = new ArrayList<>();
         BadgeDto badge;

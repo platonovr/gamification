@@ -38,9 +38,18 @@ public class AccountTask extends BaseLongIdEntity {
     @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
     private Set<TaskStatus> taskHistory = new HashSet<>();
 
+    private Integer mark;
+
     @Column(name = "ATTEMPTS_COUNT")
     public Integer attemptsCount;
 
+    public Integer getMark() {
+        return mark;
+    }
+
+    public void setMark(Integer mark) {
+        this.mark = mark;
+    }
 
     public Account getAccount() {
         return account;

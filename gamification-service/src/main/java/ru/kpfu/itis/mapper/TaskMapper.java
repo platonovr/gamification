@@ -1,5 +1,6 @@
 package ru.kpfu.itis.mapper;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.kpfu.itis.dto.AccountInfoDto;
 import ru.kpfu.itis.dto.TaskDto;
@@ -14,6 +15,9 @@ import java.util.stream.Collectors;
  */
 @Component
 public class TaskMapper implements Mapper<Task, TaskDto> {
+
+    @Autowired
+    AccountInfoMapper accountInfoMapper;
 
     @Override
     public Task fromDto(TaskDto taskDto) {
@@ -54,16 +58,17 @@ public class TaskMapper implements Mapper<Task, TaskDto> {
                 List<String> performerNames = taskDto.getPerformerNames();
                 List<AccountInfoDto> performers = taskDto.getPerformers();
                 for (AccountTask accountTask : taskAccounts) {
-                    Account account = accountTask.getAccount();
-                    if (account != null) {
-                        AccountInfo accountInfo = account.getAccountInfo();
-                        if (accountInfo != null) {
-                            id = account.getId();
-                            firstName = accountInfo.getFirstName();
-                            lastName = accountInfo.getLastName();
-                            group = Optional.ofNullable(accountInfo.getGroup()).map(AcademicGroup::getName).orElse(null);
-                            performerNames.add(firstName + " " + lastName + ", " + group);
-                            performers.add(new AccountInfoDto(id, firstName, lastName, group));
+                    if (accountTask.getTaskStatus().getType().equals(TaskStatus.TaskStatusType.INPROGRESS)) {
+                        Account account = accountTask.getAccount();
+                        if (account != null) {
+                            AccountInfo accountInfo = account.getAccountInfo();
+                            if (accountInfo != null) {
+                                firstName = accountInfo.getFirstName();
+                                lastName = accountInfo.getLastName();
+                                group = Optional.ofNullable(accountInfo.getGroup()).map(AcademicGroup::getName).orElse(null);
+                                performerNames.add(firstName + " " + lastName + ", " + group);
+                                performers.add(accountInfoMapper.toDto(accountInfo));
+                            }
                         }
                     }
                 }
@@ -77,4 +82,6 @@ public class TaskMapper implements Mapper<Task, TaskDto> {
         }
         return null;
     }
+
+//    private <T,L> T optionalField(T object)
 }

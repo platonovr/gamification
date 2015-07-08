@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="
+                       http://www.liquibase.org/xml/ns/dbchangelog
+                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd"
+                   logicalFilePath="20150701_2158.xml">
+
+    <changeSet id="account_task_mark" author="rfathullin">
+        <preConditions onError="MARK_RAN" onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="ACCOUNT_TASK" columnName="MARK"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="ACCOUNT_TASK">
+            <column name="MARK" type="integer"/>
+        </addColumn>
+    </changeSet>
+
+</databaseChangeLog>
