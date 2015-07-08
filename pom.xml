@@ -429,6 +429,12 @@
                 <module>gamification-database</module>
             </modules>
         </profile>
+        <profile>
+            <id>dev-server</id>
+            <properties>
+                <tomcat.home>/home/gamification/softwares/apache-tomcat-7.0.59/</tomcat.home>
+            </properties>
+        </profile>
     </profiles>
 
 </project>
