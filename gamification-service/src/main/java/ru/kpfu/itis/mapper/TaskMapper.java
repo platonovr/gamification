@@ -1,5 +1,6 @@
 package ru.kpfu.itis.mapper;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.kpfu.itis.dto.AccountInfoDto;
 import ru.kpfu.itis.dto.BadgeDto;
@@ -62,10 +63,9 @@ public class TaskMapper implements Mapper<Task, TaskDto> {
                         .map(AcademicGroup::getName)
                         .collect(Collectors.toList()));
             List<AccountTask> taskAccounts = task.getTaskAccounts();
-            Long id;
             String firstName, lastName, group;
             if (isInitialized(taskAccounts) && taskAccounts != null && !taskAccounts.isEmpty()) {
-//                List<String> performerNames = taskDto.getPerformerNames();
+                List<String> performerNames = taskDto.getPerformerNames();
                 List<AccountInfoDto> performers = taskDto.getPerformers();
                 for (AccountTask accountTask : taskAccounts) {
                     if (accountTask.getTaskStatus().getType().equals(TaskStatus.TaskStatusType.INPROGRESS)) {
@@ -75,8 +75,8 @@ public class TaskMapper implements Mapper<Task, TaskDto> {
                             if (accountInfo != null) {
                                 firstName = accountInfo.getFirstName();
                                 lastName = accountInfo.getLastName();
-                                group = Optional.ofNullable(accountInfo.getGroup()).map(AcademicGroup::getName).orElse(null);
-//                                performerNames.add(firstName + " " + lastName + ", " + group);
+                                group = ofNullable(accountInfo.getGroup()).map(AcademicGroup::getName).orElse(null);
+                                performerNames.add(firstName + " " + lastName + ", " + group);
                                 performers.add(accountInfoMapper.toDto(accountInfo));
                             }
                         }
