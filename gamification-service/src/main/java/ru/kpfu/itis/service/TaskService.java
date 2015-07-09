@@ -27,6 +27,8 @@ public interface TaskService {
 
     List<Task> getTasksByUser(Long userId);
 
+    TaskDto findById(Long taskId);
+
     /**
      * Get available tasks (if status null) or tasks with specified status
      *

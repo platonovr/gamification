@@ -41,7 +41,6 @@ public class TaskServiceImpl implements TaskService {
         return taskDao.submitTask(task);
     }
 
-    //    @RolesAllowed({"ADMIN", "TEACHER"})
     @Override
     @Transactional
     public Task save(TaskDto taskDto) {
@@ -83,10 +82,15 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    @Transactional
+    public TaskDto findById(Long taskId) {
+        Task task = taskDao.findById(taskId);
+        return taskMapper.toDto(task);
+    }
+
+    @Override
     public List<TaskDto> getTasksByUser(Long userId, Integer offset, Integer limit, TaskStatus.TaskStatusType status) {
         List<Task> tasksByUser = taskDao.getTasksByUser(userId, offset, limit, status);
-        return tasksByUser.stream().map(taskMapper::toDto).collect(Collectors.toList());
+        return tasksByUser.parallelStream().map(taskMapper::toDto).collect(Collectors.toList());
     }
 
     @Override

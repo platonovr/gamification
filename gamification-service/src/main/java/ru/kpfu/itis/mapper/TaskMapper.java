@@ -2,12 +2,16 @@ package ru.kpfu.itis.mapper;
 
 import org.springframework.stereotype.Component;
 import ru.kpfu.itis.dto.AccountInfoDto;
+import ru.kpfu.itis.dto.BadgeDto;
 import ru.kpfu.itis.dto.TaskDto;
 import ru.kpfu.itis.model.*;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
+
+import static java.util.Optional.ofNullable;
+import static org.hibernate.Hibernate.isInitialized;
 
 /**
  * Created by timur on 30.06.15.
@@ -38,34 +42,34 @@ public class TaskMapper implements Mapper<Task, TaskDto> {
             taskDto.setName(task.getName());
             taskDto.setDescription(task.getDescription());
             taskDto.setMaxPerformers(task.getParticipantsCount());
-            taskDto.setCategory(Optional.ofNullable(task.getCategory()).<String>map(TaskCategory::getName).orElse(null));
+            TaskCategory category = task.getCategory();
+            if (isInitialized(category))
+                taskDto.setCategory(ofNullable(category).map(TaskCategory::getName).orElse(null));
             Account author = task.getAuthor();
-            if (author != null)
-                taskDto.setCreator(author.getLogin());
-            taskDto.setGroups(Optional.ofNullable(task.getAcademicGroups())
-                    .<List<String>>map(academicGroups -> academicGroups.parallelStream()
-                            .<String>map(AcademicGroup::getName)
-                            .collect(Collectors.toList()))
-                    .orElse(null));
+            if (isInitialized(author))
+                taskDto.setCreator(ofNullable(author).map(Account::getLogin).orElse(null));
+            Badge badge = task.getBadge();
+            if (isInitialized(badge) && badge != null)
+                taskDto.setBadge(new BadgeDto(badge.getId(),
+                        badge.getName(), badge.getImage(),
+                        badge.getType().name(), badge.getDescription()));
+            Set<AcademicGroup> academicGroups = task.getAcademicGroups();
+            if (isInitialized(academicGroups) && academicGroups != null && !academicGroups.isEmpty())
+                taskDto.setGroups(academicGroups.parallelStream()
+                        .map(AcademicGroup::getName)
+                        .collect(Collectors.toList()));
             List<AccountTask> taskAccounts = task.getTaskAccounts();
-            Long id;
-            String firstName, lastName, group;
-            if (taskAccounts != null) {
-                List<String> performerNames = taskDto.getPerformerNames();
+            if (isInitialized(taskAccounts) && taskAccounts != null && !taskAccounts.isEmpty()) {
+//                List<String> performerNames = taskDto.getPerformerNames();
                 List<AccountInfoDto> performers = taskDto.getPerformers();
                 for (AccountTask accountTask : taskAccounts) {
-                    Account account = accountTask.getAccount();
-                    if (account != null) {
-                        AccountInfo accountInfo = account.getAccountInfo();
-                        if (accountInfo != null) {
-                            id = account.getId();
-                            firstName = accountInfo.getFirstName();
-                            lastName = accountInfo.getLastName();
-                            group = Optional.ofNullable(accountInfo.getGroup()).map(AcademicGroup::getName).orElse(null);
-                            performerNames.add(firstName + " " + lastName + ", " + group);
-                            performers.add(new AccountInfoDto(id, firstName, lastName, group));
-                        }
-                    }
+                    ofNullable(accountTask.getAccount())
+                            .ifPresent(account -> ofNullable(account.getAccountInfo())
+                                    .ifPresent(accountInfo -> performers.add(new AccountInfoDto(account.getId(),
+                                            accountInfo.getFirstName(),
+                                            accountInfo.getLastName(),
+                                            ofNullable(accountInfo.getGroup())
+                                                    .map(AcademicGroup::getName).orElse(null)))));
                 }
             }
             taskDto.setMaxMark(task.getMaxMark());

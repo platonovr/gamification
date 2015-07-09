@@ -25,7 +25,7 @@ public class Badge extends BaseLongIdEntity {
 
     private String image;
 
-    @OneToMany
+    @OneToMany(mappedBy = "badge")
     private List<Task> tasks;
 
     public String getDescription() {

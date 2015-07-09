@@ -42,9 +42,17 @@ public class TaskController {
     @Autowired
     private TaskValidator taskValidator;
 
+    //    password encoded with SHA-1 "5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8"
+
     @InitBinder
     private void initBinder(WebDataBinder binder) {
         binder.setValidator(taskValidator);
+    }
+
+    @ApiOperation("get task's information")
+    @RequestMapping(value = "/{taskId:[1-9]+[0-9]*}", method = RequestMethod.GET)
+    public TaskDto getTaskById(@PathVariable Long taskId) {
+        return taskService.findById(taskId);
     }
 
     @ApiOperation("get student's tasks")
