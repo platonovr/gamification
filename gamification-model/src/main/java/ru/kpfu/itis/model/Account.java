@@ -48,7 +48,6 @@ public class Account extends BaseLongIdEntity implements AuthUser {
         this.login = login;
     }
 
-    @Override
     public String getName() {
         return login;
     }

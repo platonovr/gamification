@@ -441,6 +441,12 @@
                 <tomcat.home>/home/gamification/softwares/apache-tomcat-7.0.59/</tomcat.home>
             </properties>
         </profile>
+        <profile>
+            <id>ainur-tomcat</id>
+            <properties>
+                <tomcat.home>/Users/ainurminibaev/Documents/Develop/installation/apache-tomcat-7.0.50/</tomcat.home>
+            </properties>
+        </profile>
     </profiles>
 
 </project>
