@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="
+                       http://www.liquibase.org/xml/ns/dbchangelog
+                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd"
+                   logicalFilePath="20150702_1653.xml">
+
+    <changeSet id="task_categories_data_inserts_and_updates" author="tkasatkin">
+        <insert tableName="TASK_CATEGORY">
+            <column name="TASK_CATEGORY_ID" value="1"/>
+            <column name="NAME" value="STUDY"/>
+            <column name="TASK_CATEGORY_TYPE" value="STUDY"/>
+            <column name="CREATE_TIME" value="2015-07-05"/>
+            <column name="CHANGE_TIME" value="2015-07-05 21:08:58.151000"/>
+        </insert>
+        <insert tableName="TASK_CATEGORY">
+            <column name="TASK_CATEGORY_ID" value="2"/>
+            <column name="NAME" value="NONSTUDY"/>
+            <column name="TASK_CATEGORY_TYPE" value="NONSTUDY"/>
+            <column name="CREATE_TIME" value="2015-07-05"/>
+            <column name="CHANGE_TIME" value="2015-07-05 21:08:58.151000"/>
+        </insert>
+        <update tableName="TASK">
+            <column name="TASK_CATEGORY_ID" value="1"/>
+        </update>
+    </changeSet>
+
+    <changeSet id="tasks_categories_data_delete" author="tkasatkin">
+        <delete tableName="TASK_CATEGORY">
+            <where>TASK_CATEGORY_ID>=100</where>
+        </delete>
+    </changeSet>
+
+</databaseChangeLog>

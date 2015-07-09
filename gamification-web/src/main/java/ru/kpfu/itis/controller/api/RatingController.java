@@ -62,8 +62,8 @@ public class RatingController {
     private AccountInfoDto accountInfoToDto(AccountInfo accountInfo) {
         AccountInfoDto accountInfoDTO = new AccountInfoDto();
         accountInfoDTO.setId(accountInfo.getId());
-        accountInfoDTO.setFirst_name(accountInfo.getFirstName());
-        accountInfoDTO.setLast_name(accountInfo.getLastName());
+        accountInfoDTO.setFirstName(accountInfo.getFirstName());
+        accountInfoDTO.setLastName(accountInfo.getLastName());
         accountInfoDTO.setPhoto(accountInfo.getPhoto());
         accountInfoDTO.setRating(accountInfo.getPoint());
         return accountInfoDTO;

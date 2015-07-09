@@ -5,6 +5,7 @@ import com.wordnik.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
@@ -13,7 +14,9 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.kpfu.itis.dto.ResponseDto;
 import ru.kpfu.itis.dto.TaskCategoryDto;
 import ru.kpfu.itis.dto.TaskDto;
+import ru.kpfu.itis.model.AccountTask;
 import ru.kpfu.itis.model.TaskStatus;
+import ru.kpfu.itis.service.AccountTaskService;
 import ru.kpfu.itis.service.FileService;
 import ru.kpfu.itis.service.TaskService;
 import ru.kpfu.itis.util.Constant;
@@ -40,11 +43,12 @@ public class TaskController {
     private FileService fileService;
 
     @Autowired
+    private AccountTaskService accountTaskService;
+
+    @Autowired
     private TaskValidator taskValidator;
 
-    //    password encoded with SHA-1 "5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8"
-
-    @InitBinder
+    @InitBinder("taskDto")
     private void initBinder(WebDataBinder binder) {
         binder.setValidator(taskValidator);
     }
@@ -96,6 +100,27 @@ public class TaskController {
                 return new ResponseEntity<>(new ResponseDto<>("Failed to upload", INTERNAL_SERVER_ERROR.value()),
                         INTERNAL_SERVER_ERROR);
             }
+    }
+
+    @Transactional
+    @ApiOperation("check challenge")
+    @RequestMapping(value = "/{taskId:[1-9]+[0-9]*}/user/{accountId:[1-9]+[0-9]*}", method = RequestMethod.POST)
+    public ResponseEntity<ResponseDto<String>> checkTask(@PathVariable Long taskId,
+                                                         @PathVariable Long accountId,
+                                                         @RequestBody Integer mark) {
+        AccountTask accountTask = accountTaskService.findByTaskAndAccount(taskId, accountId);
+        if (accountTask != null) {
+            TaskStatus taskStatus = new TaskStatus();
+            taskStatus.setAccountTask(accountTask);
+            taskStatus.setType(TaskStatus.TaskStatusType.COMPLETED);
+            accountTask.setNewStatus(taskStatus);
+            accountTask.setMark(mark);
+            accountTaskService.saveOrUpdate(accountTask);
+            return new ResponseEntity<>(OK);
+        } else {
+            return new ResponseEntity<>(new ResponseDto<>("Task doesn't found", NOT_FOUND.value()), NOT_FOUND);
+        }
+
     }
 
     @ApiOperation("get challenge's attachments")

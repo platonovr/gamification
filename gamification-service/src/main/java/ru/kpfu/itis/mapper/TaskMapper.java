@@ -19,6 +19,9 @@ import static org.hibernate.Hibernate.isInitialized;
 @Component
 public class TaskMapper implements Mapper<Task, TaskDto> {
 
+    @Autowired
+    AccountInfoMapper accountInfoMapper;
+
     @Override
     public Task fromDto(TaskDto taskDto) {
         Task task = new Task();
@@ -59,17 +62,25 @@ public class TaskMapper implements Mapper<Task, TaskDto> {
                         .map(AcademicGroup::getName)
                         .collect(Collectors.toList()));
             List<AccountTask> taskAccounts = task.getTaskAccounts();
+            Long id;
+            String firstName, lastName, group;
             if (isInitialized(taskAccounts) && taskAccounts != null && !taskAccounts.isEmpty()) {
 //                List<String> performerNames = taskDto.getPerformerNames();
                 List<AccountInfoDto> performers = taskDto.getPerformers();
                 for (AccountTask accountTask : taskAccounts) {
-                    ofNullable(accountTask.getAccount())
-                            .ifPresent(account -> ofNullable(account.getAccountInfo())
-                                    .ifPresent(accountInfo -> performers.add(new AccountInfoDto(account.getId(),
-                                            accountInfo.getFirstName(),
-                                            accountInfo.getLastName(),
-                                            ofNullable(accountInfo.getGroup())
-                                                    .map(AcademicGroup::getName).orElse(null)))));
+                    if (accountTask.getTaskStatus().getType().equals(TaskStatus.TaskStatusType.INPROGRESS)) {
+                        Account account = accountTask.getAccount();
+                        if (account != null) {
+                            AccountInfo accountInfo = account.getAccountInfo();
+                            if (accountInfo != null) {
+                                firstName = accountInfo.getFirstName();
+                                lastName = accountInfo.getLastName();
+                                group = Optional.ofNullable(accountInfo.getGroup()).map(AcademicGroup::getName).orElse(null);
+//                                performerNames.add(firstName + " " + lastName + ", " + group);
+                                performers.add(accountInfoMapper.toDto(accountInfo));
+                            }
+                        }
+                    }
                 }
             }
             taskDto.setMaxMark(task.getMaxMark());

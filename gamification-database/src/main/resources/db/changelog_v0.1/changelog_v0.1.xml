@@ -10,7 +10,11 @@
 
     <include file="20150630_1042.xml" relativeToChangelogFile="true"/>
 
+    <include file="20150701_2158.xml" relativeToChangelogFile="true"/>
+
     <include file="20150702_1653.xml" relativeToChangelogFile="true"/>
+
+    <include file="20150705_2103.xml" relativeToChangelogFile="true"/>
 
     <include file="20150709_2319.xml" relativeToChangelogFile="true"/>
 
