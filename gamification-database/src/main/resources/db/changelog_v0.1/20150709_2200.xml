@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="
+                       http://www.liquibase.org/xml/ns/dbchangelog
+                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd"
+                   logicalFilePath="20150702_1653.xml">
+
+    <changeSet id="account_password_data_update" author="aminibaev">
+        <update tableName="ACCOUNT">
+            <column name="PASSWORD" value="5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8"/>
+            <where>ACCOUNT_ID in (1,2)</where>
+        </update>
+    </changeSet>
+
+
+</databaseChangeLog>
