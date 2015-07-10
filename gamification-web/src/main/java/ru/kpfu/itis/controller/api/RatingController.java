@@ -7,14 +7,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import ru.kpfu.itis.dto.AccountInfoDto;
-import ru.kpfu.itis.dto.ResponseDto;
+import ru.kpfu.itis.dto.ErrorDto;
+import ru.kpfu.itis.dto.enums.Error;
 import ru.kpfu.itis.model.AccountInfo;
 import ru.kpfu.itis.service.AccountInfoService;
 import ru.kpfu.itis.service.AccountService;
 import ru.kpfu.itis.util.Constant;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Rigen on 26.06.15.
@@ -31,17 +31,17 @@ public class RatingController {
     @RequestMapping(value = "/")
 
     @ResponseBody
-    public ResponseEntity<ResponseDto<List<AccountInfoDto>>> getUsersRating() {
+    public ResponseEntity getUsersRating() {
         Long id = 1L;
         AccountInfo accountInform = accountInfoService.findByAccountId(id); //todo
         if (accountInform == null) {
-            return new ResponseEntity<>(new ResponseDto<>("User with requested id not found.", HttpStatus.NOT_FOUND.value()), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ErrorDto(Error.USER_INFO_NOT_FOUND), HttpStatus.NOT_FOUND);
         }
         ArrayList<AccountInfoDto> accountInfoDTOs = new ArrayList<>();
         for (AccountInfo accountInfo : accountInfoService.getAllAndSort(accountInform)) {
             accountInfoDTOs.add(accountInfoToDto(accountInfo));
         }
-        return new ResponseEntity<>(new ResponseDto<>("", accountInfoDTOs, HttpStatus.OK.value()), HttpStatus.OK);
+        return new ResponseEntity<>(accountInfoDTOs, HttpStatus.OK);
     }
 
     public int getUserRating(Long id) {
