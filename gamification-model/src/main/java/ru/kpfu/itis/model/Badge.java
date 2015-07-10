@@ -16,6 +16,9 @@ import java.util.List;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class Badge extends BaseLongIdEntity {
 
+    @Transient
+    public static final Integer MAX_STUDY_MARK = 50;
+
     @Enumerated(EnumType.STRING)
     private BadgeCategory type;
 

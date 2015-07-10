@@ -14,8 +14,11 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.kpfu.itis.dto.ResponseDto;
 import ru.kpfu.itis.dto.TaskCategoryDto;
 import ru.kpfu.itis.dto.TaskDto;
+import ru.kpfu.itis.model.AccountBadge;
 import ru.kpfu.itis.model.AccountTask;
+import ru.kpfu.itis.model.Task;
 import ru.kpfu.itis.model.TaskStatus;
+import ru.kpfu.itis.service.AccountBadgeService;
 import ru.kpfu.itis.service.AccountTaskService;
 import ru.kpfu.itis.service.FileService;
 import ru.kpfu.itis.service.TaskService;
@@ -24,6 +27,7 @@ import ru.kpfu.itis.validator.TaskValidator;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.*;
@@ -44,6 +48,9 @@ public class TaskController {
 
     @Autowired
     private AccountTaskService accountTaskService;
+
+    @Autowired
+    AccountBadgeService accountBadgeService;
 
     @Autowired
     private TaskValidator taskValidator;
@@ -110,6 +117,11 @@ public class TaskController {
             accountTask.setNewStatus(taskStatus);
             accountTask.setMark(mark);
             accountTaskService.saveOrUpdate(accountTask);
+            ArrayList<TaskStatus> taskStatuses = (ArrayList<TaskStatus>) accountTask.getTaskHistory();
+            TaskStatus status = taskStatuses.get(taskStatuses.size() - 1);
+            //Change progress of linked badges
+            Task task = taskService.findById(taskId);
+            List<AccountBadge> accountBadges = accountBadgeService.findByTaskAndAccount(task, accountId);
             return new ResponseEntity<>(OK);
         } else {
             return new ResponseEntity<>(new ResponseDto<>("Task doesn't found", NOT_FOUND.value()), NOT_FOUND);

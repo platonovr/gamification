@@ -19,6 +19,8 @@ public interface TaskService {
 
     Task findByName(String name);
 
+    Task findById(Long id);
+
     List<TaskCategoryDto> getAllCategories();
 
     TaskCategory save(TaskCategory taskCategory);

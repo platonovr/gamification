@@ -59,6 +59,11 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    public Task findById(Long id) {
+        return taskDao.findById(Task.class, id);
+    }
+
+    @Override
     public List<TaskCategoryDto> getAllCategories() {
         return taskCategoryDao.fetchAll(TaskCategory.class)
                 .parallelStream().<TaskCategoryDto>map(taskCategory ->
