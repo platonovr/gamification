@@ -64,6 +64,7 @@ public class TaskServiceTest {
         task.setCreateTime(new Date());
         task.setStartDate(new Date());
         task.setEndDate(new Date());
+        task.setBadge(null);
         task = taskService.submitTask(task);
 
         Task submittedTask = simpleService.findById(Task.class, task.getId());

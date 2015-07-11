@@ -2,6 +2,7 @@ package ru.kpfu.itis.dao;
 
 import ru.kpfu.itis.model.Account;
 import ru.kpfu.itis.model.AccountBadge;
+import ru.kpfu.itis.model.Badge;
 
 import java.util.List;
 
@@ -10,4 +11,6 @@ import java.util.List;
  */
 public interface AccountBadgeDao extends SimpleDao {
     List<AccountBadge> findAllBadgesByAccount(Account account);
+
+    AccountBadge findByBadgeAndAccount(Badge badge, Account account);
 }

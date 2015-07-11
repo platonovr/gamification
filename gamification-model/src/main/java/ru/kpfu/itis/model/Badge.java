@@ -16,6 +16,9 @@ import java.util.List;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class Badge extends BaseLongIdEntity {
 
+    @Transient
+    public static final Integer MAX_STUDY_MARK = 50;
+
     @Enumerated(EnumType.STRING)
     private BadgeCategory type;
 
@@ -27,6 +30,28 @@ public class Badge extends BaseLongIdEntity {
 
     @OneToMany
     private List<Task> tasks;
+
+    @Column(name = "MAX_MARK")
+    private Integer maxMark = 0;
+
+    public Integer computeMaxMark() {
+        switch (type) {
+            case COMMON:
+                return Badge.MAX_STUDY_MARK;
+            case SPECIAL:
+                return tasks.size();
+            default:
+                return 0;
+        }
+    }
+
+    public Integer getMaxMark() {
+        return maxMark;
+    }
+
+    public void setMaxMark(Integer maxMark) {
+        this.maxMark = maxMark;
+    }
 
     public String getDescription() {
         return description;

@@ -1,6 +1,7 @@
 package ru.kpfu.itis.model;
 
 import org.hibernate.annotations.Cascade;
+import ru.kpfu.itis.model.enums.StudyTaskType;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -28,6 +29,10 @@ public class Task extends BaseLongIdEntity {
     @Enumerated(EnumType.STRING)
     private TaskType type = TaskType.PERSONAL;
 
+    @Column(name = "STUDY_TYPE", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private StudyTaskType studyType = StudyTaskType.PRACTICE;
+
     @ManyToOne
     @JoinColumn(name = "TASK_CATEGORY_ID", nullable = false)
     private TaskCategory category;
@@ -51,11 +56,31 @@ public class Task extends BaseLongIdEntity {
     @Column(name = "END_DATE", nullable = false)
     private Date endDate;
 
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "BADGE_ID")
+    private Badge badge;
+
     @ManyToMany
     @JoinTable(name = "task_constraint",
             joinColumns = @JoinColumn(name = "task_id", nullable = false),
             inverseJoinColumns = @JoinColumn(name = "academic_group_id", nullable = false))
     private Set<AcademicGroup> academicGroups;
+
+    public Badge getBadge() {
+        return badge;
+    }
+
+    public void setBadge(Badge badge) {
+        this.badge = badge;
+    }
+
+    public StudyTaskType getStudyType() {
+        return studyType;
+    }
+
+    public void setStudyType(StudyTaskType studyType) {
+        this.studyType = studyType;
+    }
 
     public Account getAuthor() {
         return author;

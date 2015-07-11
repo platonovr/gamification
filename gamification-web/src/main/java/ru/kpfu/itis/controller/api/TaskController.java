@@ -17,6 +17,9 @@ import ru.kpfu.itis.dto.TaskDto;
 import ru.kpfu.itis.dto.enums.Error;
 import ru.kpfu.itis.model.AccountTask;
 import ru.kpfu.itis.model.TaskStatus;
+import ru.kpfu.itis.model.*;
+import ru.kpfu.itis.model.enums.StudyTaskType;
+import ru.kpfu.itis.service.AccountBadgeService;
 import ru.kpfu.itis.service.AccountTaskService;
 import ru.kpfu.itis.service.FileService;
 import ru.kpfu.itis.service.TaskService;
@@ -45,6 +48,9 @@ public class TaskController {
 
     @Autowired
     private AccountTaskService accountTaskService;
+
+    @Autowired
+    AccountBadgeService accountBadgeService;
 
     @Autowired
     private TaskValidator taskValidator;
@@ -108,7 +114,23 @@ public class TaskController {
             taskStatus.setType(TaskStatus.TaskStatusType.COMPLETED);
             accountTask.setNewStatus(taskStatus);
             accountTask.setMark(mark);
-            accountTaskService.saveOrUpdate(accountTask);
+            //Change progress of linked badges
+            Task task = taskService.findById(taskId);
+            Badge badge = task.getBadge();
+            Account account = accountTask.getAccount();
+            AccountBadge accountBadge = accountBadgeService.findByBadgeAndAccount(badge, account);
+            if (accountBadge == null) {
+                accountBadge = new AccountBadge();
+                accountBadge.setAccount(account);
+                accountBadge.setBadge(badge);
+            }
+            if (task.getStudyType().equals(StudyTaskType.PRACTICE)) {
+                accountBadge.setPractice(accountBadge.getPractice() + mark);
+            } else {
+                accountBadge.setTheory(accountBadge.getTheory() + mark);
+            }
+            accountBadge.computeProgress();
+            accountBadgeService.saveOrUpdate(accountBadge);
             return new ResponseEntity<>(OK);
         } else {
             return new ResponseEntity<>(new ErrorDto(Error.TASK_NOT_FOUND), NOT_FOUND);

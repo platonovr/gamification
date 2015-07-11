@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="
+                       http://www.liquibase.org/xml/ns/dbchangelog
+                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd"
+                   logicalFilePath="20150710_2315.xml">
+
+    <changeSet id="account_badge_marks" author="rfatkhullin">
+        <preConditions onError="MARK_RAN" onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="ACCOUNT_BADGE" columnName="THEORY"/>
+                <columnExists tableName="ACCOUNT_BADGE" columnName="PRACTICE"/>
+                <columnExists tableName="ACCOUNT_BADGE" columnName="PROGRESS"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="ACCOUNT_BADGE">
+            <column name="THEORY" type="float" defaultValue="0.0"/>
+            <column name="PRACTICE" type="float" defaultValue="0.0"/>
+            <column name="PROGRESS" type="float" defaultValue="0.0"/>
+        </addColumn>
+        <update tableName="ACCOUNT_BADGE">
+            <column name="THEORY" value="0.0"/>
+            <column name="PRACTICE" value="0.0"/>
+            <column name="PROGRESS" value="0.0"/>
+        </update>
+        <update tableName="ACCOUNT_BADGE">
+            <column name="ACCOUNT_BADGE_ID" value="100"/>
+            <where>account_badge_id=1</where>
+        </update>
+    </changeSet>
+
+    <changeSet id="badge_max_mark" author="rfatkhullin">
+        <preConditions onError="MARK_RAN" onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="BADGE" columnName="MAX_MARK"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="BADGE">
+            <column name="MAX_MARK" type="integer" defaultValue="0"/>
+        </addColumn>
+        <update tableName="BADGE">
+            <column name="MAX_MARK" value="0"/>
+        </update>
+    </changeSet>
+
+    <changeSet id="task_badge" author="rfatkhullin">
+        <preConditions onError="MARK_RAN" onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="TASK" columnName="BADGE_ID"/>
+                <columnExists tableName="TASK" columnName="STUDY_TYPE"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="TASK">
+            <column name="BADGE_ID" type="integer"/>
+        </addColumn>
+        <addColumn tableName="TASK">
+            <column name="STUDY_TYPE" type="varchar(64)"/>
+        </addColumn>
+        <addForeignKeyConstraint baseTableName="TASK" baseColumnNames="BADGE_ID" constraintName="TASK_BADGE_FK"
+                                 referencedTableName="BADGE"
+                                 referencedColumnNames="BADGE_ID"/>
+        <update tableName="TASK">
+            <column name="BADGE_ID" value="1"/>
+        </update>
+        <update tableName="TASK">
+            <column name="STUDY_TYPE" value="PRACTICE"/>
+        </update>
+    </changeSet>
+
+</databaseChangeLog>
