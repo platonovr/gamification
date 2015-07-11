@@ -25,33 +25,46 @@ public class AccountBadge extends BaseLongIdEntity {
     private Badge badge;
 
     @Column(name = "THEORY")
-    private Integer theory = 0;
+    private Double theory = 0.0;
 
     @Column(name = "PRACTICE")
-    private Integer practice = 0;
+    private Double practice = 0.0;
 
     @Column(name = "PROGRESS")
     private Double progress = 0.0;
 
-    @Column(name = "MAX_MARK")
-    private Integer maxMark = 0;
+    public void computeProgress() {
+        progress = theory + practice;
+    }
 
+    public Double getTheory() {
+        return theory;
+    }
+
+    public void setTheory(Double theory) {
+        this.theory = theory;
+    }
+
+    public Double getPractice() {
+        return practice;
+    }
+
+    public void setPractice(Double practice) {
+        this.practice = practice;
+    }
+
+    public Double getProgress() {
+        return progress;
+    }
+
+    public void setProgress(Double progress) {
+        this.progress = progress;
+    }
 
     @Override
     @CreationTimestamp
     public Date getCreateTime() {
         return super.getCreateTime();
-    }
-
-    public Integer computeMaxMark() {
-        switch (badge.getType()) {
-            case COMMON:
-                return Badge.MAX_STUDY_MARK;
-            case SPECIAL:
-                return badge.getTasks().size();
-            default:
-                return 0;
-        }
     }
 
     public Account getAccount() {

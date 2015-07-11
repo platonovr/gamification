@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 import ru.kpfu.itis.dao.AccountBadgeDao;
 import ru.kpfu.itis.model.Account;
 import ru.kpfu.itis.model.AccountBadge;
-import ru.kpfu.itis.model.Task;
+import ru.kpfu.itis.model.Badge;
 
 import java.util.List;
 
@@ -22,10 +22,12 @@ public class AccountBadgeDaoImpl extends SimpleDaoImpl implements AccountBadgeDa
                         .add(Restrictions.isNull("finishTime")).list());
     }
 
-    public AccountBadge findByTaskAndAccount(Task task, Long accountId) {
+    @Override
+    public AccountBadge findByBadgeAndAccount(Badge badge, Account account) {
         return getHibernateTemplate().execute((aSession) ->
                 (AccountBadge) aSession.createCriteria(AccountBadge.class)
-                        .add(Restrictions.eq("account.id", accountId))
-                        .add(Restrictions.isNull("finishTime")).list());
+                        .add(Restrictions.eq("account.id", account.getId()))
+                        .add(Restrictions.eq("badge.id", badge.getId()))
+                        .add(Restrictions.isNull("finishTime")).uniqueResult());
     }
 }

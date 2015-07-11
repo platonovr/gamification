@@ -31,6 +31,28 @@ public class Badge extends BaseLongIdEntity {
     @OneToMany
     private List<Task> tasks;
 
+    @Column(name = "MAX_MARK")
+    private Integer maxMark = 0;
+
+    public Integer computeMaxMark() {
+        switch (type) {
+            case COMMON:
+                return Badge.MAX_STUDY_MARK;
+            case SPECIAL:
+                return tasks.size();
+            default:
+                return 0;
+        }
+    }
+
+    public Integer getMaxMark() {
+        return maxMark;
+    }
+
+    public void setMaxMark(Integer maxMark) {
+        this.maxMark = maxMark;
+    }
+
     public String getDescription() {
         return description;
     }

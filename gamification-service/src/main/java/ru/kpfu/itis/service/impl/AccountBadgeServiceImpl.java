@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.kpfu.itis.dao.AccountBadgeDao;
 import ru.kpfu.itis.model.Account;
 import ru.kpfu.itis.model.AccountBadge;
+import ru.kpfu.itis.model.Badge;
 import ru.kpfu.itis.service.AccountBadgeService;
 
 import java.util.List;
@@ -23,5 +24,17 @@ public class AccountBadgeServiceImpl implements AccountBadgeService {
     @Override
     public List<AccountBadge> findAllBadgesByAccount(Account account) {
         return accountBadgeDao.findAllBadgesByAccount(account);
+    }
+
+    @Transactional
+    @Override
+    public AccountBadge findByBadgeAndAccount(Badge badge, Account account) {
+        return accountBadgeDao.findByBadgeAndAccount(badge, account);
+    }
+
+    @Transactional
+    @Override
+    public void saveOrUpdate(AccountBadge accountBadge) {
+        accountBadgeDao.saveOrUpdate(accountBadge);
     }
 }
