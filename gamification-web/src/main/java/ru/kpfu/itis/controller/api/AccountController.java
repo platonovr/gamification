@@ -7,8 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.kpfu.itis.dto.AccountProfileDto;
 import ru.kpfu.itis.dto.BadgeDto;
-import ru.kpfu.itis.dto.ErrorDto;
-import ru.kpfu.itis.dto.enums.Error;
 import ru.kpfu.itis.model.Account;
 import ru.kpfu.itis.model.AccountBadge;
 import ru.kpfu.itis.model.AccountInfo;
@@ -39,16 +37,16 @@ public class AccountController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity getProfile(@PathVariable Long id) {
+    public ResponseEntity<AccountProfileDto> getProfile(@PathVariable Long id) {
         Account account = accountService.findById(id);
-        if (account == null) {
-            return new ResponseEntity<>(new ErrorDto(Error.USER_NOT_FOUND), HttpStatus.NOT_FOUND);
-        }
+//        if (account == null) {
+//            return new ResponseEntity<>(new ErrorDto(Error.USER_NOT_FOUND), HttpStatus.NOT_FOUND);
+//        }
         AccountInfo accountInfo = accountInfoService.findByAccount(account);
-
-        if (accountInfo == null) {
-            return new ResponseEntity<>(new ErrorDto(Error.USER_INFO_NOT_FOUND), HttpStatus.NOT_FOUND);
-        }
+//
+//        if (accountInfo == null) {
+//            return new ResponseEntity<>(new ErrorDto(Error.USER_INFO_NOT_FOUND), HttpStatus.NOT_FOUND);
+//        }
         ArrayList<AccountBadge> badges = (ArrayList<AccountBadge>) accountBadgeService.findAllBadgesByAccount(account);
         AccountProfileDto profileDTO = packAccountProfileDto(account, accountInfo, badges);
         profileDTO.setRating_position(ratingController.getUserRating(id));
@@ -57,7 +55,7 @@ public class AccountController {
 
     @RequestMapping(value = "/current", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity getMyProfile() {
+    public ResponseEntity<AccountProfileDto> getMyProfile() {
         return getProfile(1L); //todo
     }
 
