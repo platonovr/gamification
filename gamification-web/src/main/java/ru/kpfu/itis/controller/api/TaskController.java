@@ -11,9 +11,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ru.kpfu.itis.dto.ResponseDto;
+import ru.kpfu.itis.dto.ErrorDto;
 import ru.kpfu.itis.dto.TaskCategoryDto;
 import ru.kpfu.itis.dto.TaskDto;
+import ru.kpfu.itis.dto.enums.Error;
 import ru.kpfu.itis.model.AccountTask;
 import ru.kpfu.itis.model.TaskStatus;
 import ru.kpfu.itis.service.AccountTaskService;
@@ -86,28 +87,26 @@ public class TaskController {
 
     @ApiOperation("upload challenge's attachment")
     @RequestMapping(value = "/{taskId:[1-9]+[0-9]*}/attachments", method = RequestMethod.POST)
-    public ResponseEntity<ResponseDto<String>> uploadAttachment(@RequestPart MultipartFile file,
-                                                                @PathVariable Long taskId) {
+    public ResponseEntity uploadAttachment(@RequestPart MultipartFile file,
+                                           @PathVariable Long taskId) {
         if (file.isEmpty())
-            return new ResponseEntity<>(new ResponseDto<>("file is empty", NO_CONTENT.value()), NO_CONTENT);
+            return new ResponseEntity<>(new ErrorDto(Error.EMPTY_FILE), NO_CONTENT);
         else
             try {
                 String attachmentDir = fileService.uploadTaskAttachment(file, taskId);
-                return new ResponseEntity<>(new ResponseDto<>("attachment uri", "/files/" + attachmentDir,
-                        CREATED.value()), CREATED);
+                return new ResponseEntity<>("/files/" + attachmentDir, CREATED);
             } catch (IOException e) {
                 e.printStackTrace();
-                return new ResponseEntity<>(new ResponseDto<>("Failed to upload", INTERNAL_SERVER_ERROR.value()),
-                        INTERNAL_SERVER_ERROR);
+                return new ResponseEntity(INTERNAL_SERVER_ERROR);
             }
     }
 
     @Transactional
     @ApiOperation("check challenge")
     @RequestMapping(value = "/{taskId:[1-9]+[0-9]*}/user/{accountId:[1-9]+[0-9]*}", method = RequestMethod.POST)
-    public ResponseEntity<ResponseDto<String>> checkTask(@PathVariable Long taskId,
-                                                         @PathVariable Long accountId,
-                                                         @RequestBody Integer mark) {
+    public ResponseEntity checkTask(@PathVariable Long taskId,
+                                    @PathVariable Long accountId,
+                                    @RequestBody Integer mark) {
         AccountTask accountTask = accountTaskService.findByTaskAndAccount(taskId, accountId);
         if (accountTask != null) {
             TaskStatus taskStatus = new TaskStatus();
@@ -118,7 +117,7 @@ public class TaskController {
             accountTaskService.saveOrUpdate(accountTask);
             return new ResponseEntity<>(OK);
         } else {
-            return new ResponseEntity<>(new ResponseDto<>("Task doesn't found", NOT_FOUND.value()), NOT_FOUND);
+            return new ResponseEntity<>(new ErrorDto(Error.TASK_NOT_FOUND), NOT_FOUND);
         }
 
     }
