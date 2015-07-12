@@ -24,12 +24,11 @@ import java.util.ArrayList;
 @RestController("apiRatingController")
 public class RatingController {
     @Autowired
-    AccountInfoService accountInfoService;
+    private AccountInfoService accountInfoService;
     @Autowired
-    AccountService accountService;
+    private AccountService accountService;
 
     @RequestMapping(value = "/")
-
     @ResponseBody
     public ResponseEntity getUsersRating() {
         Long id = 1L;

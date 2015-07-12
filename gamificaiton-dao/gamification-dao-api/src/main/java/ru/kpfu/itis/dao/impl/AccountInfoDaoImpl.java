@@ -1,5 +1,6 @@
 package ru.kpfu.itis.dao.impl;
 
+import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
@@ -33,6 +34,6 @@ public class AccountInfoDaoImpl extends SimpleDaoImpl implements AccountInfoDao 
                 (List<AccountInfo>) aSession.createCriteria(AccountInfo.class)
                         .add(Restrictions.eq("entranceYear", accountInfo.getEntranceYear()))
                         .add(Restrictions.isNull("finishTime"))
-                        .addOrder(Order.asc("point")).list());
+                        .addOrder(Order.asc("point")).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY).list());
     }
 }

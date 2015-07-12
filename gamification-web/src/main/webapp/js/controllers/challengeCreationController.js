@@ -1,6 +1,3 @@
-/**
- * Created by timur on 19.06.15.
- */
 angular.module('gamificationApp').controller('ChallengeCreationController',
     ['$scope', '$location', 'CONSTANTS', 'TaskService',
         function ($scope, $location, CONSTANTS, TaskService) {

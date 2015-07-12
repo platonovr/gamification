@@ -15,7 +15,7 @@ public class AccountProfileDto {
     private String lastName;
     private List<BadgeDto> badges;
     private Double rating;
-    private Integer rating_position;
+    private Integer ratingPosition;
 
     public List<BadgeDto> getBadges() {
         return badges;
@@ -65,11 +65,11 @@ public class AccountProfileDto {
         this.rating = rating;
     }
 
-    public Integer getRating_position() {
-        return rating_position;
+    public Integer getRatingPosition() {
+        return ratingPosition;
     }
 
-    public void setRating_position(Integer rating_position) {
-        this.rating_position = rating_position;
+    public void setRatingPosition(Integer ratingPosition) {
+        this.ratingPosition = ratingPosition;
     }
 }

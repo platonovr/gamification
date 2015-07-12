@@ -1,6 +1,3 @@
-/**
- * Created by timur on 19.06.15.
- */
 angular.module('gamificationApp').service('TaskService', function ($http, CONSTANTS, Upload) {
     this.createTask = function (newTask) {
         return $http.post(CONSTANTS.API_URI_PREFIX + CONSTANTS.TASK_URI, newTask)
