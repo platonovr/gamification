@@ -52,21 +52,24 @@ public class TaskDaoImpl extends SimpleDaoImpl implements TaskDao {
     public List<Task> getTasksByUser(Long userId, Integer offset, Integer limit, TaskStatus.TaskStatusType status) {
         return getHibernateTemplate().<List<Task>>execute(session -> {
             Query query;
-            if (status == null) query = session.createQuery("select task from Task task " +
-                    "left join fetch task.academicGroups " +
-                    "left join task.academicGroups tAcGroupes " +
-                    "left join tAcGroupes.accountInfos tacAccInf " +
-                    "left join task.taskAccounts ttacc " +
-                    "where :userId in (tacAccInf.account.id) " +
-                    "and (ttacc is empty or :userId not in (select tacc.id from ttacc.account tacc))" +
-                    "order by task.endDate");
-            else query = session.createQuery("select task from Task task " +
-                    "left join fetch task.academicGroups " +
-                    "left join task.taskAccounts ta " +
-                    "left join ta.account taa " +
-                    "left join taa.accountInfo " +
-                    "where ta.account.id = :userId and ta.taskStatus.type=:status ")
-                    .setParameter("status", status);
+            if (status == null) {
+                query = session.createQuery("select task from Task task " +
+                        "left join fetch task.academicGroups " +
+                        "left join task.academicGroups tAcGroupes " +
+                        "left join tAcGroupes.accountInfos tacAccInf " +
+                        "left join task.taskAccounts ttacc " +
+                        "where :userId in (tacAccInf.account.id) " +
+                        "and (ttacc is empty or :userId not in (select tacc.id from ttacc.account tacc))" +
+                        "order by task.endDate");
+            } else {
+                query = session.createQuery("select task from Task task " +
+                        "left join fetch task.academicGroups " +
+                        "left join task.taskAccounts ta " +
+                        "left join ta.account taa " +
+                        "left join taa.accountInfo " +
+                        "where ta.account.id = :userId and ta.taskStatus.type=:status ")
+                        .setParameter("status", status);
+            }
             query.setParameter("userId", userId).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
             if (offset != null) query.setFirstResult(offset);
             if (limit != null) query.setMaxResults(limit);

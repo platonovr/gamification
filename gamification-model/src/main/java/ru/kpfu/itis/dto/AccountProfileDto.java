@@ -9,12 +9,19 @@ import java.util.List;
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AccountProfileDto {
+
     private Long id;
+
     private String login;
+
     private String firstName;
+
     private String lastName;
+
     private List<BadgeDto> badges;
+
     private Double rating;
+
     private Integer ratingPosition;
 
     public List<BadgeDto> getBadges() {
