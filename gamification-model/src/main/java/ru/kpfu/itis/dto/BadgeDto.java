@@ -1,20 +1,37 @@
 package ru.kpfu.itis.dto;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
+import com.wordnik.swagger.annotations.ApiModel;
 
 import java.util.List;
 
 /**
  * Created by Rigen on 26.06.15.
  */
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@ApiModel("Badge")
 public class BadgeDto {
+
     private Long id;
+
     private String name;
+
     private String image;
+
     private String type;
+
     private String description;
+
     private List<TaskDto> challenges;
+
+    public BadgeDto() {
+    }
+
+    public BadgeDto(Long id, String name, String image, String type, String description) {
+        this.id = id;
+        this.name = name;
+        this.image = image;
+        this.type = type;
+        this.description = description;
+    }
 
     public Long getId() {
         return id;

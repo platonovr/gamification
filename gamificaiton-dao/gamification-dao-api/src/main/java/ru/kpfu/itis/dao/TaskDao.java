@@ -12,6 +12,8 @@ public interface TaskDao extends SimpleDao {
 
     Task submitTask(Task task);
 
+    Task findById(Long id);
+
     List<Task> getActualTasks();
 
     List<Task> getTasksByUser(Long userId);

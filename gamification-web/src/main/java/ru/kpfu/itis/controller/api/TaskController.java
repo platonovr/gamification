@@ -60,6 +60,12 @@ public class TaskController {
         binder.setValidator(taskValidator);
     }
 
+    @ApiOperation("get task's information")
+    @RequestMapping(value = "/{taskId:[1-9]+[0-9]*}", method = RequestMethod.GET)
+    public TaskDto getTaskById(@PathVariable Long taskId) {
+        return taskService.findById(taskId);
+    }
+
     @ApiOperation("get student's tasks")
     @RequestMapping(method = RequestMethod.GET)
     public List<TaskDto> getAvailableTasks(@RequestParam(required = false) Integer offset,

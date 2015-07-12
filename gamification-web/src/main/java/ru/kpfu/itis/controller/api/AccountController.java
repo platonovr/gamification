@@ -26,13 +26,13 @@ import java.util.ArrayList;
 public class AccountController {
 
     @Autowired
-    AccountService accountService;
+    private AccountService accountService;
     @Autowired
-    AccountInfoService accountInfoService;
+    private AccountInfoService accountInfoService;
     @Autowired
-    AccountBadgeService accountBadgeService;
+    private AccountBadgeService accountBadgeService;
     @Autowired
-    RatingController ratingController;
+    private RatingController ratingController;
 
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
@@ -49,7 +49,7 @@ public class AccountController {
 //        }
         ArrayList<AccountBadge> badges = (ArrayList<AccountBadge>) accountBadgeService.findAllBadgesByAccount(account);
         AccountProfileDto profileDTO = packAccountProfileDto(account, accountInfo, badges);
-        profileDTO.setRating_position(ratingController.getUserRating(id));
+        profileDTO.setRatingPosition(ratingController.getUserRating(id));
         return new ResponseEntity<>(profileDTO, HttpStatus.OK);
     }
 

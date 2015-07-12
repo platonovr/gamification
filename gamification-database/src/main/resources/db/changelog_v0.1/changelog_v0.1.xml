@@ -18,6 +18,8 @@
 
     <include file="20150709_2200.xml" relativeToChangelogFile="true"/>
 
+    <include file="20150709_2319.xml" relativeToChangelogFile="true"/>
+
     <include file="20150710_2315.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

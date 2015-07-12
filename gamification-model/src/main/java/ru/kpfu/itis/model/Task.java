@@ -37,6 +37,10 @@ public class Task extends BaseLongIdEntity {
     @JoinColumn(name = "TASK_CATEGORY_ID", nullable = false)
     private TaskCategory category;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "BADGE_ID")
+    private Badge badge;
+
     @Column(name = "PARTICIPANTS_COUNT")
     private Integer participantsCount;
 
@@ -168,6 +172,14 @@ public class Task extends BaseLongIdEntity {
 
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
+    }
+
+    public Badge getBadge() {
+        return badge;
+    }
+
+    public void setBadge(Badge badge) {
+        this.badge = badge;
     }
 
     public enum TaskType implements EnumedDictionary {

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="
+                       http://www.liquibase.org/xml/ns/dbchangelog
+                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd"
+                   logicalFilePath="20150709_2319.xml">
+
+    <changeSet id="task_badge_id_column" author="tkasatkin">
+        <preConditions onError="MARK_RAN" onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="TASK" columnName="BADGE_ID"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="TASK">
+            <column name="BADGE_ID" type="bigint">
+                <constraints foreignKeyName="Task_Badge"
+                             references="BADGE(BADGE_ID)"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="task_badge_data" author="tkasatkin">
+        <update tableName="TASK">
+            <column name="BADGE_ID" value="1"/>
+            <where>TASK_ID=101</where>
+        </update>
+    </changeSet>
+
+    <changeSet id="task_constraint_insert" author="tkasatkin">
+        <insert tableName="TASK_CONSTRAINT">
+            <column name="TASK_ID" value="100"/>
+            <column name="ACADEMIC_GROUP_ID" value="101"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

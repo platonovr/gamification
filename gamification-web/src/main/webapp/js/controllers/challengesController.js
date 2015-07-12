@@ -1,6 +1,3 @@
-/**
- * Created by timur on 30.06.15.
- */
 angular.module('gamificationApp').controller('ChallengesController',
     ['$scope', '$window', 'CONSTANTS', 'TaskService', function ($scope, $window, CONSTANTS, TaskService) {
         var maxResult = 10;

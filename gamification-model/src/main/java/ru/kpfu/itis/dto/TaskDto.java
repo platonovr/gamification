@@ -31,11 +31,13 @@ public class TaskDto {
 
     private String creator;
 
-    private List<String> groups;
+    private List<String> groups = new ArrayList<>();
 
     private List<String> performerNames = new ArrayList<>();
 
     private List<AccountInfoDto> performers = new ArrayList<>();
+
+    private BadgeDto badge;
 
     @ApiModelProperty(required = true)
     @JsonProperty("max_volume")
@@ -173,5 +175,13 @@ public class TaskDto {
 
     public void setPerformers(List<AccountInfoDto> performers) {
         this.performers = performers;
+    }
+
+    public BadgeDto getBadge() {
+        return badge;
+    }
+
+    public void setBadge(BadgeDto badge) {
+        this.badge = badge;
     }
 }
