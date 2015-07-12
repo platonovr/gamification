@@ -22,6 +22,8 @@ public class BadgeDto {
 
     private List<TaskDto> challenges;
 
+    private AccountBadgeDto status;
+
     public BadgeDto() {
     }
 
@@ -31,6 +33,14 @@ public class BadgeDto {
         this.image = image;
         this.type = type;
         this.description = description;
+    }
+
+    public AccountBadgeDto getStatus() {
+        return status;
+    }
+
+    public void setStatus(AccountBadgeDto status) {
+        this.status = status;
     }
 
     public Long getId() {

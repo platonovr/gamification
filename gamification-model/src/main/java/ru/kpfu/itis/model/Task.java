@@ -60,10 +60,6 @@ public class Task extends BaseLongIdEntity {
     @Column(name = "END_DATE", nullable = false)
     private Date endDate;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "BADGE_ID")
-    private Badge badge;
-
     @ManyToMany
     @JoinTable(name = "task_constraint",
             joinColumns = @JoinColumn(name = "task_id", nullable = false),
@@ -172,14 +168,6 @@ public class Task extends BaseLongIdEntity {
 
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
-    }
-
-    public Badge getBadge() {
-        return badge;
-    }
-
-    public void setBadge(Badge badge) {
-        this.badge = badge;
     }
 
     public enum TaskType implements EnumedDictionary {

@@ -47,22 +47,12 @@
     <changeSet id="task_badge" author="rfatkhullin">
         <preConditions onError="MARK_RAN" onFail="MARK_RAN">
             <not>
-                <columnExists tableName="TASK" columnName="BADGE_ID"/>
                 <columnExists tableName="TASK" columnName="STUDY_TYPE"/>
             </not>
         </preConditions>
         <addColumn tableName="TASK">
-            <column name="BADGE_ID" type="integer"/>
-        </addColumn>
-        <addColumn tableName="TASK">
             <column name="STUDY_TYPE" type="varchar(64)"/>
         </addColumn>
-        <addForeignKeyConstraint baseTableName="TASK" baseColumnNames="BADGE_ID" constraintName="TASK_BADGE_FK"
-                                 referencedTableName="BADGE"
-                                 referencedColumnNames="BADGE_ID"/>
-        <update tableName="TASK">
-            <column name="BADGE_ID" value="1"/>
-        </update>
         <update tableName="TASK">
             <column name="STUDY_TYPE" value="PRACTICE"/>
         </update>

@@ -15,8 +15,6 @@ import ru.kpfu.itis.dto.ErrorDto;
 import ru.kpfu.itis.dto.TaskCategoryDto;
 import ru.kpfu.itis.dto.TaskDto;
 import ru.kpfu.itis.dto.enums.Error;
-import ru.kpfu.itis.model.AccountTask;
-import ru.kpfu.itis.model.TaskStatus;
 import ru.kpfu.itis.model.*;
 import ru.kpfu.itis.model.enums.StudyTaskType;
 import ru.kpfu.itis.service.AccountBadgeService;
@@ -121,7 +119,7 @@ public class TaskController {
             accountTask.setNewStatus(taskStatus);
             accountTask.setMark(mark);
             //Change progress of linked badges
-            Task task = taskService.findById(taskId);
+            Task task = taskService.findTaskById(taskId);
             Badge badge = task.getBadge();
             Account account = accountTask.getAccount();
             AccountBadge accountBadge = accountBadgeService.findByBadgeAndAccount(badge, account);

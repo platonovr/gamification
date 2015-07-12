@@ -19,7 +19,7 @@ public interface TaskService {
 
     Task findByName(String name);
 
-    Task findById(Long id);
+    Task findTaskById(Long id);
 
     List<TaskCategoryDto> getAllCategories();
 

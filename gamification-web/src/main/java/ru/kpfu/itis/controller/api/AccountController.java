@@ -7,9 +7,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.kpfu.itis.dto.AccountProfileDto;
 import ru.kpfu.itis.dto.BadgeDto;
+import ru.kpfu.itis.mapper.AccountBadgeMapper;
 import ru.kpfu.itis.model.Account;
 import ru.kpfu.itis.model.AccountBadge;
 import ru.kpfu.itis.model.AccountInfo;
+import ru.kpfu.itis.model.Badge;
 import ru.kpfu.itis.service.AccountBadgeService;
 import ru.kpfu.itis.service.AccountInfoService;
 import ru.kpfu.itis.service.AccountService;
@@ -33,6 +35,8 @@ public class AccountController {
     private AccountBadgeService accountBadgeService;
     @Autowired
     private RatingController ratingController;
+    @Autowired
+    AccountBadgeMapper accountBadgeMapper;
 
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
@@ -69,16 +73,18 @@ public class AccountController {
         profileDto.setLastName(accountInfo.getLastName());
         profileDto.setRating(accountInfo.getPoint());
         ArrayList<BadgeDto> badgesDto = new ArrayList<>();
-        BadgeDto badge;
+        BadgeDto dto;
         if (badges != null) {
             for (AccountBadge accountBadge : badges) {
-                badge = new BadgeDto();
-                badge.setId(accountBadge.getBadge().getId());
-                badge.setName(accountBadge.getBadge().getName());
-                badge.setDescription(accountBadge.getBadge().getDescription());
-                badge.setImage(accountBadge.getBadge().getImage());
-                badge.setType(accountBadge.getBadge().getType().name());
-                badgesDto.add(badge);
+                dto = new BadgeDto();
+                Badge badge = accountBadge.getBadge();
+                dto.setId(badge.getId());
+                dto.setName(badge.getName());
+                dto.setDescription(badge.getDescription());
+                dto.setImage(badge.getImage());
+                dto.setType(badge.getType().name());
+                dto.setStatus(accountBadgeMapper.toDto(accountBadge));
+                badgesDto.add(dto);
             }
         }
         profileDto.setBadges(badgesDto);
