@@ -1,5 +1,6 @@
 package ru.kpfu.itis.service;
 
+import org.springframework.security.access.annotation.Secured;
 import ru.kpfu.itis.dto.TaskCategoryDto;
 import ru.kpfu.itis.dto.TaskDto;
 import ru.kpfu.itis.model.Task;
@@ -15,6 +16,7 @@ public interface TaskService {
 
     Task submitTask(Task task);
 
+    @Secured({"ADMIN", "TEACHER"})
     Task save(TaskDto taskDto);
 
     Task findByName(String name);
