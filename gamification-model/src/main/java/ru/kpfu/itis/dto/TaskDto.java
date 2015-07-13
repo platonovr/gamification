@@ -33,8 +33,6 @@ public class TaskDto {
 
     private List<String> groups = new ArrayList<>();
 
-    private List<String> performerNames = new ArrayList<>();
-
     private List<AccountInfoDto> performers = new ArrayList<>();
 
     private BadgeDto badge;
@@ -111,14 +109,6 @@ public class TaskDto {
 
     public void setGroups(List<String> groups) {
         this.groups = groups;
-    }
-
-    public List<String> getPerformerNames() {
-        return performerNames;
-    }
-
-    public void setPerformerNames(List<String> performerNames) {
-        this.performerNames = performerNames;
     }
 
     public Byte getMaxMark() {

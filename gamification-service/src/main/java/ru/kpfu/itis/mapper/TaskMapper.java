@@ -63,25 +63,17 @@ public class TaskMapper implements Mapper<Task, TaskDto> {
                         .map(AcademicGroup::getName)
                         .collect(Collectors.toList()));
             List<AccountTask> taskAccounts = task.getTaskAccounts();
-            String firstName, lastName, group;
             if (isInitialized(taskAccounts) && taskAccounts != null && !taskAccounts.isEmpty()) {
-                List<String> performerNames = taskDto.getPerformerNames();
                 List<AccountInfoDto> performers = taskDto.getPerformers();
-                for (AccountTask accountTask : taskAccounts) {
+                for (AccountTask accountTask : taskAccounts)
                     if (accountTask.getTaskStatus().getType().equals(TaskStatus.TaskStatusType.INPROGRESS)) {
                         Account account = accountTask.getAccount();
                         if (account != null) {
                             AccountInfo accountInfo = account.getAccountInfo();
-                            if (accountInfo != null) {
-                                firstName = accountInfo.getFirstName();
-                                lastName = accountInfo.getLastName();
-                                group = ofNullable(accountInfo.getGroup()).map(AcademicGroup::getName).orElse(null);
-                                performerNames.add(firstName + " " + lastName + ", " + group);
+                            if (accountInfo != null)
                                 performers.add(accountInfoMapper.toDto(accountInfo));
-                            }
                         }
                     }
-                }
             }
             taskDto.setMaxMark(task.getMaxMark());
             taskDto.setStartDate(task.getStartDate());
