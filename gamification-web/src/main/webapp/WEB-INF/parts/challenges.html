@@ -39,9 +39,9 @@
                         <dd>{{challenge.max_volume}}</dd>
                     </dl>
                     <dl>
-                        <dt>Исполнители ({{challenge.performers.length}}):</dt>
+                        <dt>Исполнители ({{challenge.users.length}}):</dt>
                         <dd>
-                            <div ng-repeat="performer in challenge.performers" class="person">
+                            <div ng-repeat="performer in challenge.users" class="person">
                                 <span>{{performer.first_name}} {{performer.last_name}}, {{performer.group}}</span>
                                 <span ng-click="showedPerformerBlocks[challenge.id][$index] = !showedPerformerBlocks[challenge.id][$index]"
                                       class="icon-tick"></span>

@@ -7,6 +7,8 @@ import ru.kpfu.itis.dto.BadgeDto;
 import ru.kpfu.itis.dto.TaskDto;
 import ru.kpfu.itis.model.*;
 import ru.kpfu.itis.model.classifier.TaskCategory;
+import ru.kpfu.itis.model.enums.Role;
+import ru.kpfu.itis.security.SecurityService;
 
 import java.util.Date;
 
@@ -26,6 +28,9 @@ public class TaskMapper implements Mapper<Task, TaskDto> {
 
     @Autowired
     private SubjectMapper subjectMapper;
+
+    @Autowired
+    private SecurityService securityService;
 
     @Override
     public Task fromDto(TaskDto taskDto) {
@@ -54,14 +59,16 @@ public class TaskMapper implements Mapper<Task, TaskDto> {
             if (isInitialized(subject) && subject != null)
                 taskDto.setSubject(subjectMapper.toDto(subject));
             taskDto.setMaxPerformers(task.getParticipantsCount());
-            //TODO replace with id of authenticated user and add condition which truth depends on user's role (ADMIN or TEACHER don't need status)
-            AccountTask accountTask = accountTaskDao.findByTaskIdAndAccountId(taskId, 2L);
-            if (accountTask == null)
-                taskDto.setStatus("NOT_STARTED");
-            else {
-                TaskStatus taskStatus = accountTask.getTaskStatus();
-                if (isInitialized(taskStatus) && taskStatus != null)
-                    taskDto.setStatus(taskStatus.getType().name());
+            Account currentUser = securityService.getCurrentUser();
+            if (currentUser != null && currentUser.getRole().equals(Role.STUDENT)) {
+                AccountTask accountTask = accountTaskDao.findByTaskIdAndAccountId(taskId, currentUser.getId());
+                if (accountTask == null)
+                    taskDto.setStatus("NOT_STARTED");
+                else {
+                    TaskStatus taskStatus = accountTask.getTaskStatus();
+                    if (isInitialized(taskStatus) && taskStatus != null)
+                        taskDto.setStatus(taskStatus.getType().name());
+                }
             }
             TaskCategory category = task.getCategory();
             if (isInitialized(category))

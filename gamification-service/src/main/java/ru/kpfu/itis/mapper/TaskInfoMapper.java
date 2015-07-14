@@ -45,9 +45,9 @@ public class TaskInfoMapper implements Mapper<Task, TaskInfoDto> {
                     TaskStatus taskStatus = accountTask.getTaskStatus();
                     if (isInitialized(taskStatus) && taskStatus.getType().equals(TaskStatus.TaskStatusType.INPROGRESS)) {
                         Account account = accountTask.getAccount();
-                        if (account != null) {
+                        if (isInitialized(account) && account != null) {
                             AccountInfo accountInfo = account.getAccountInfo();
-                            if (accountInfo != null)
+                            if (isInitialized(accountInfo) && accountInfo != null)
                                 performers.add(accountInfoMapper.toDto(accountInfo));
                         }
                     }

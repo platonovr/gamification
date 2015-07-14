@@ -17,6 +17,7 @@ import ru.kpfu.itis.dto.*;
 import ru.kpfu.itis.dto.enums.Error;
 import ru.kpfu.itis.model.*;
 import ru.kpfu.itis.model.enums.StudyTaskType;
+import ru.kpfu.itis.security.SecurityService;
 import ru.kpfu.itis.service.AccountBadgeService;
 import ru.kpfu.itis.service.AccountTaskService;
 import ru.kpfu.itis.service.FileService;
@@ -53,6 +54,9 @@ public class TaskController {
     @Autowired
     private TaskValidator taskValidator;
 
+    @Autowired
+    private SecurityService securityService;
+
     @InitBinder("taskDto")
     private void initBinder(WebDataBinder binder) {
         binder.setValidator(taskValidator);
@@ -61,7 +65,7 @@ public class TaskController {
     @ApiOperation("get task's information")
     @ApiImplicitParams(value = {@ApiImplicitParam(name = "token", value = "token", required = true, dataType = "string", paramType = "query")})
     @RequestMapping(value = "/{taskId:[1-9]+[0-9]*}", method = RequestMethod.GET)
-    public TaskDto getTaskById(@PathVariable Long taskId) {
+    public TaskInfoDto getTaskById(@PathVariable Long taskId) {
         return taskService.findById(taskId);
     }
 
@@ -69,19 +73,17 @@ public class TaskController {
     @ApiImplicitParams(value = {@ApiImplicitParam(name = "token", value = "token", required = true, dataType = "string", paramType = "query")})
     @RequestMapping(method = RequestMethod.GET)
     public ItemsDto<TaskDto> getAvailableTasks(@RequestParam(required = false) Integer offset,
-                                           @RequestParam(required = false) Integer limit,
-                                           @RequestParam(required = false) TaskStatus.TaskStatusType status) {
-        //TODO before we make authentication userId = 2 (user with role STUDENT)
-        return new ItemsDto<>(taskService.getTasksByUser(2L, offset, limit, status));
+                                               @RequestParam(required = false) Integer limit,
+                                               @RequestParam(required = false) TaskStatus.TaskStatusType status) {
+        return new ItemsDto<>(taskService.getTasksByUser(securityService.getCurrentUserId(), offset, limit, status));
     }
 
     @ApiOperation("get created tasks[FOR ADMIN OR TEACHER]")
     @ApiImplicitParams(value = {@ApiImplicitParam(name = "token", value = "token", required = true, dataType = "string", paramType = "query")})
     @RequestMapping(value = "/my", method = RequestMethod.GET)
     public List<TaskInfoDto> getCreatedTasks(@RequestParam(required = false) Integer offset,
-                                         @RequestParam(required = false) Integer limit) {
-        //TODO before we make authentication userId = 1
-        return taskService.getCreatedTasks(1L, offset, limit);
+                                             @RequestParam(required = false) Integer limit) {
+        return taskService.getCreatedTasks(securityService.getCurrentUserId(), offset, limit);
     }
 
     @ApiOperation(value = "create challenge")

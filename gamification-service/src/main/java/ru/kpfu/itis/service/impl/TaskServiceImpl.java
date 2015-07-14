@@ -14,6 +14,7 @@ import ru.kpfu.itis.mapper.TaskMapper;
 import ru.kpfu.itis.model.Task;
 import ru.kpfu.itis.model.TaskStatus;
 import ru.kpfu.itis.model.classifier.TaskCategory;
+import ru.kpfu.itis.security.SecurityService;
 import ru.kpfu.itis.service.TaskService;
 
 import java.util.List;
@@ -40,6 +41,9 @@ public class TaskServiceImpl implements TaskService {
     @Autowired
     private TaskInfoMapper taskInfoMapper;
 
+    @Autowired
+    private SecurityService securityService;
+
     @Override
     @Transactional
     public Task submitTask(Task task) {
@@ -51,8 +55,7 @@ public class TaskServiceImpl implements TaskService {
     public Task save(TaskDto taskDto) {
         Task task = taskMapper.fromDto(taskDto);
         task.setCategory(taskCategoryDao.findByName(taskDto.getCategory()));
-        //TODO replace with getAuthUser() when we will make authentication
-        task.setAuthor(accountDao.findByLogin("admin"));
+        task.setAuthor(securityService.getCurrentUser());
         taskDao.save(task);
         return task;
     }
@@ -92,10 +95,9 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-//    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
-    public TaskDto findById(Long taskId) {
+    public TaskInfoDto findById(Long taskId) {
         Task task = taskDao.findById(taskId);
-        return taskMapper.toDto(task);
+        return taskInfoMapper.toDto(task);
     }
 
     @Override

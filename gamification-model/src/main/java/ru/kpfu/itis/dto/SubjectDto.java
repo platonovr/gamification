@@ -1,6 +1,7 @@
 package ru.kpfu.itis.dto;
 
 import com.wordnik.swagger.annotations.ApiModel;
+import com.wordnik.swagger.annotations.ApiModelProperty;
 
 /**
  * Created by timur on 14.07.15.
@@ -8,10 +9,13 @@ import com.wordnik.swagger.annotations.ApiModel;
 @ApiModel("Subject")
 public class SubjectDto {
 
+    @ApiModelProperty(required = true)
     private Long id;
 
+    @ApiModelProperty(required = true)
     private String name;
 
+    @ApiModelProperty(required = true)
     private String type;
 
     public SubjectDto() {

@@ -1,5 +1,7 @@
 package ru.kpfu.itis.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.wordnik.swagger.annotations.ApiModel;
 
 import java.util.ArrayList;
@@ -11,7 +13,10 @@ import java.util.List;
 @ApiModel("TaskInfo")
 public class TaskInfoDto extends TaskDto {
 
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<String> groups = new ArrayList<>();
+
+    @JsonProperty("users")
     private List<AccountInfoDto> performers = new ArrayList<>();
 
     public TaskInfoDto() {

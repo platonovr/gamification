@@ -26,7 +26,7 @@ public class TaskDto {
     @JsonProperty("max_count")
     private Integer maxPerformers;
 
-    @ApiModelProperty(required = true, allowableValues = "ASSIGNED, INPROGRESS, CANCELED, COMPLETED, NOT_STARTED")
+    @ApiModelProperty(allowableValues = "ASSIGNED, INPROGRESS, CANCELED, COMPLETED, NOT_STARTED")
     private String status;
 
     @ApiModelProperty(required = true)
@@ -51,9 +51,11 @@ public class TaskDto {
     @JsonProperty("date_to")
     private Date deadline;
 
+    @ApiModelProperty(required = true)
     @JsonProperty("create_time")
     private Date createTime;
 
+    @ApiModelProperty(required = true)
     @JsonProperty("update_time")
     private Date changeTime;
 

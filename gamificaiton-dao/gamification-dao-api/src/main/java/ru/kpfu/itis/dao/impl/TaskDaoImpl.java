@@ -23,8 +23,11 @@ public class TaskDaoImpl extends SimpleDaoImpl implements TaskDao {
     @Override
     public Task findById(Long id) {
         return getHibernateTemplate().execute(session -> (Task) session.createQuery("from Task t " +
+                "left join fetch t.taskAccounts tacc " +
+                "left join fetch tacc.account taccAcc " +
+                "left join fetch taccAcc.accountInfo " +
+                "left join fetch tacc.taskStatus " +
                 "left join fetch t.subject " +
-                "left join fetch t.academicGroups " +
                 "left join fetch t.badge tb " +
                 "left join fetch tb.subject " +
                 "where t.id=:id")
