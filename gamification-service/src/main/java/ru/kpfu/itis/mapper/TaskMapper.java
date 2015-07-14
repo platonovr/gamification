@@ -65,6 +65,7 @@ public class TaskMapper implements Mapper<Task, TaskDto> {
                 if (accountTask == null)
                     taskDto.setStatus("NOT_STARTED");
                 else {
+                    taskDto.setCurrentMark(ofNullable(accountTask.getMark()).map(Integer::byteValue).orElse(null));
                     TaskStatus taskStatus = accountTask.getTaskStatus();
                     if (isInitialized(taskStatus) && taskStatus != null)
                         taskDto.setStatus(taskStatus.getType().name());
