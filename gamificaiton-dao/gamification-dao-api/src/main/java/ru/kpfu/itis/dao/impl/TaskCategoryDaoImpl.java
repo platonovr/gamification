@@ -2,7 +2,7 @@ package ru.kpfu.itis.dao.impl;
 
 import org.springframework.stereotype.Repository;
 import ru.kpfu.itis.dao.TaskCategoryDao;
-import ru.kpfu.itis.model.TaskCategory;
+import ru.kpfu.itis.model.classifier.TaskCategory;
 
 /**
  * Created by timur on 24.06.15.

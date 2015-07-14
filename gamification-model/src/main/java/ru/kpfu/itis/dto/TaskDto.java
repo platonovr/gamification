@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -21,21 +21,23 @@ public class TaskDto {
 
     private String description;
 
-    private String subject;
+    private SubjectDto subject;
 
     @JsonProperty("max_count")
     private Integer maxPerformers;
+
+    @ApiModelProperty(required = true, allowableValues = "ASSIGNED, INPROGRESS, CANCELED, COMPLETED, NOT_STARTED")
+    private String status;
 
     @ApiModelProperty(required = true)
     private String category;
 
     private String creator;
 
-    private List<String> groups = new ArrayList<>();
-
-    private List<AccountInfoDto> performers = new ArrayList<>();
-
     private BadgeDto badge;
+
+    @JsonProperty("current_volume")
+    private Byte currentMark;
 
     @ApiModelProperty(required = true)
     @JsonProperty("max_volume")
@@ -54,6 +56,33 @@ public class TaskDto {
 
     @JsonProperty("update_time")
     private Date changeTime;
+
+    private List<String> labels = new LinkedList<>();
+
+    public TaskDto() {
+    }
+
+    public TaskDto(Long id, String name, String description, SubjectDto subject,
+                   Integer maxPerformers, String status, String category, String creator,
+                   BadgeDto badge, Byte currentMark, Byte maxMark, Date startDate, Date deadline,
+                   Date createTime, Date changeTime, List<String> labels) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.subject = subject;
+        this.maxPerformers = maxPerformers;
+        this.status = status;
+        this.category = category;
+        this.creator = creator;
+        this.badge = badge;
+        this.currentMark = currentMark;
+        this.maxMark = maxMark;
+        this.startDate = startDate;
+        this.deadline = deadline;
+        this.createTime = createTime;
+        this.changeTime = changeTime;
+        this.labels = labels;
+    }
 
     public Date getCreateTime() {
         return createTime;
@@ -79,14 +108,6 @@ public class TaskDto {
         this.name = name;
     }
 
-    public String getSubject() {
-        return subject;
-    }
-
-    public void setSubject(String subject) {
-        this.subject = subject;
-    }
-
     public String getCategory() {
         return category;
     }
@@ -101,14 +122,6 @@ public class TaskDto {
 
     public void setCreator(String creator) {
         this.creator = creator;
-    }
-
-    public List<String> getGroups() {
-        return groups;
-    }
-
-    public void setGroups(List<String> groups) {
-        this.groups = groups;
     }
 
     public Byte getMaxMark() {
@@ -159,19 +172,43 @@ public class TaskDto {
         this.maxPerformers = maxPerformers;
     }
 
-    public List<AccountInfoDto> getPerformers() {
-        return performers;
-    }
-
-    public void setPerformers(List<AccountInfoDto> performers) {
-        this.performers = performers;
-    }
-
     public BadgeDto getBadge() {
         return badge;
     }
 
     public void setBadge(BadgeDto badge) {
         this.badge = badge;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public List<String> getLabels() {
+        return labels;
+    }
+
+    public void setLabels(List<String> labels) {
+        this.labels = labels;
+    }
+
+    public Byte getCurrentMark() {
+        return currentMark;
+    }
+
+    public void setCurrentMark(Byte currentMark) {
+        this.currentMark = currentMark;
+    }
+
+    public SubjectDto getSubject() {
+        return subject;
+    }
+
+    public void setSubject(SubjectDto subject) {
+        this.subject = subject;
     }
 }

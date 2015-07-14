@@ -9,11 +9,13 @@
         <mapping class="ru.kpfu.itis.model.AccountInfo"/>
         <mapping class="ru.kpfu.itis.model.Task"/>
         <mapping class="ru.kpfu.itis.model.TaskStatus"/>
-        <mapping class="ru.kpfu.itis.model.TaskCategory"/>
+        <mapping class="ru.kpfu.itis.model.classifier.TaskCategory"/>
         <mapping class="ru.kpfu.itis.model.AccountTask"/>
         <mapping class="ru.kpfu.itis.model.AccountBadge"/>
         <mapping class="ru.kpfu.itis.model.Badge"/>
         <mapping class="ru.kpfu.itis.model.AcademicGroup"/>
+        <mapping class="ru.kpfu.itis.model.classifier.SubjectType"/>
+        <mapping class="ru.kpfu.itis.model.Subject"/>
     </session-factory>
 
 </hibernate-configuration>

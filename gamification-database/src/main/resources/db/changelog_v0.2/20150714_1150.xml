@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="
+                       http://www.liquibase.org/xml/ns/dbchangelog
+                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd"
+                   logicalFilePath="20150714_1150.xml">
+
+    <changeSet id="task_category_table_changes" author="tkasatkin">
+        <preConditions onFail="MARK_RAN" onError="MARK_RAN">
+            <tableExists tableName="TASK_CATEGORY"/>
+        </preConditions>
+        <renameTable oldTableName="TASK_CATEGORY" newTableName="CLASSIFIER"/>
+        <renameColumn tableName="CLASSIFIER" oldColumnName="TASK_CATEGORY_ID" newColumnName="CLASSIFIER_ID"/>
+        <renameColumn tableName="CLASSIFIER" oldColumnName="TASK_CATEGORY_TYPE" newColumnName="TYPE"/>
+        <addColumn tableName="CLASSIFIER">
+            <column name="DESCRIPTION" type="text"/>
+            <column name="CLASSIFIER_TYPE" type="varchar(30)"/>
+        </addColumn>
+        <update tableName="CLASSIFIER">
+            <column name="CLASSIFIER_TYPE" value="TASK_CATEGORY"/>
+        </update>
+        <addNotNullConstraint tableName="CLASSIFIER" columnName="CLASSIFIER_TYPE" columnDataType="varchar(30)"/>
+        <dropNotNullConstraint tableName="CLASSIFIER" columnName="TYPE" columnDataType="varchar(10)"/>
+    </changeSet>
+
+    <changeSet id="subject_table" author="tkasatkin">
+        <!--<preConditions onFail="MARK_RAN" onError="MARK_RAN">-->
+        <!--<not>-->
+        <!--<tableExists tableName="SUBJECT"/>-->
+        <!--</not>-->
+        <!--</preConditions>-->
+        <createTable tableName="SUBJECT">
+            <column name="SUBJECT_ID" type="${autoincrement}">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="NAME" type="varchar(40)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="SUBJECT_TYPE_ID" type="bigint">
+                <constraints nullable="false"
+                             foreignKeyName="Subject_Classifier"
+                             references="CLASSIFIER(CLASSIFIER_ID)"/>
+            </column>
+            <column name="CREATE_TIME" type="${datetime}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CHANGE_TIME" type="${datetime}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="FINISH_TIME" type="${datetime}"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="subject_data" author="tkasatkin">
+        <insert tableName="CLASSIFIER">
+            <column name="CLASSIFIER_ID" value="3"/>
+            <column name="NAME" value="Foreign Languages"/>
+            <column name="CREATE_TIME" value="2015-07-14"/>
+            <column name="CHANGE_TIME" value="2015-07-14"/>
+            <column name="CLASSIFIER_TYPE" value="SUBJECT_TYPE"/>
+        </insert>
+        <insert tableName="SUBJECT">
+            <column name="NAME" value="English"/>
+            <column name="SUBJECT_TYPE_ID" value="3"/>
+            <column name="CREATE_TIME" value="2015-07-14"/>
+            <column name="CHANGE_TIME" value="2015-07-14"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="task_subject_column" author="tkasatkin">
+        <preConditions onError="MARK_RAN" onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="TASK" columnName="SUBJECT_ID"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="TASK">
+            <column name="SUBJECT_ID" type="bigint">
+                <constraints foreignKeyName="Task_Subject"
+                             references="SUBJECT(SUBJECT_ID)"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="badge_subject_column" author="tkasatkin">
+        <preConditions onFail="MARK_RAN" onError="MARK_RAN">
+            <not>
+                <columnExists tableName="BADGE" columnName="SUBJECT_ID"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="BADGE">
+            <column name="SUBJECT_ID" type="bigint">
+                <constraints foreignKeyName="Badge_Subject"
+                             references="SUBJECT(SUBJECT_ID)"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="task_subject_data" author="tkasatkin">
+        <update tableName="TASK">
+            <column name="SUBJECT_ID" value="1"/>
+            <where><![CDATA[TASK_ID<=105]]></where>
+        </update>
+    </changeSet>
+
+</databaseChangeLog>

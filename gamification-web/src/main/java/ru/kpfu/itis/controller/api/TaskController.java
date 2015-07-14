@@ -11,9 +11,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ru.kpfu.itis.dto.ErrorDto;
-import ru.kpfu.itis.dto.TaskCategoryDto;
-import ru.kpfu.itis.dto.TaskDto;
+import ru.kpfu.itis.dto.*;
 import ru.kpfu.itis.dto.enums.Error;
 import ru.kpfu.itis.model.*;
 import ru.kpfu.itis.model.enums.StudyTaskType;
@@ -48,7 +46,7 @@ public class TaskController {
     private AccountTaskService accountTaskService;
 
     @Autowired
-    AccountBadgeService accountBadgeService;
+    private AccountBadgeService accountBadgeService;
 
     @Autowired
     private TaskValidator taskValidator;
@@ -66,18 +64,18 @@ public class TaskController {
 
     @ApiOperation("get student's tasks")
     @RequestMapping(method = RequestMethod.GET)
-    public List<TaskDto> getAvailableTasks(@RequestParam(required = false) Integer offset,
+    public ItemsDto<TaskDto> getAvailableTasks(@RequestParam(required = false) Integer offset,
                                            @RequestParam(required = false) Integer limit,
                                            @RequestParam(required = false) TaskStatus.TaskStatusType status) {
-        //before we make authentication userId = 2 (user with role STUDENT)
-        return taskService.getTasksByUser(2L, offset, limit, status);
+        //TODO before we make authentication userId = 2 (user with role STUDENT)
+        return new ItemsDto<>(taskService.getTasksByUser(2L, offset, limit, status));
     }
 
     @ApiOperation("get created tasks[FOR ADMIN OR TEACHER]")
     @RequestMapping(value = "/my", method = RequestMethod.GET)
-    public List<TaskDto> getCreatedTasks(@RequestParam(required = false) Integer offset,
+    public List<TaskInfoDto> getCreatedTasks(@RequestParam(required = false) Integer offset,
                                          @RequestParam(required = false) Integer limit) {
-        //before we make authentication userId = 1
+        //TODO before we make authentication userId = 1
         return taskService.getCreatedTasks(1L, offset, limit);
     }
 
