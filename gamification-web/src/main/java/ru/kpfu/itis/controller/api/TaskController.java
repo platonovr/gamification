@@ -1,6 +1,8 @@
 package ru.kpfu.itis.controller.api;
 
 import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiImplicitParam;
+import com.wordnik.swagger.annotations.ApiImplicitParams;
 import com.wordnik.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -57,12 +59,14 @@ public class TaskController {
     }
 
     @ApiOperation("get task's information")
+    @ApiImplicitParams(value = {@ApiImplicitParam(name = "token", value = "token", required = true, dataType = "string", paramType = "query")})
     @RequestMapping(value = "/{taskId:[1-9]+[0-9]*}", method = RequestMethod.GET)
     public TaskDto getTaskById(@PathVariable Long taskId) {
         return taskService.findById(taskId);
     }
 
     @ApiOperation("get student's tasks")
+    @ApiImplicitParams(value = {@ApiImplicitParam(name = "token", value = "token", required = true, dataType = "string", paramType = "query")})
     @RequestMapping(method = RequestMethod.GET)
     public ItemsDto<TaskDto> getAvailableTasks(@RequestParam(required = false) Integer offset,
                                            @RequestParam(required = false) Integer limit,
@@ -72,6 +76,7 @@ public class TaskController {
     }
 
     @ApiOperation("get created tasks[FOR ADMIN OR TEACHER]")
+    @ApiImplicitParams(value = {@ApiImplicitParam(name = "token", value = "token", required = true, dataType = "string", paramType = "query")})
     @RequestMapping(value = "/my", method = RequestMethod.GET)
     public List<TaskInfoDto> getCreatedTasks(@RequestParam(required = false) Integer offset,
                                          @RequestParam(required = false) Integer limit) {
@@ -80,6 +85,7 @@ public class TaskController {
     }
 
     @ApiOperation(value = "create challenge")
+    @ApiImplicitParams(value = {@ApiImplicitParam(name = "token", value = "token", required = true, dataType = "string", paramType = "query")})
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<TaskDto> createTask(@Valid @RequestBody TaskDto taskDto, BindingResult bindingResult) throws BindException {
         if (bindingResult.hasErrors()) throw new BindException(bindingResult);
@@ -88,6 +94,7 @@ public class TaskController {
     }
 
     @ApiOperation("upload challenge's attachment")
+    @ApiImplicitParams(value = {@ApiImplicitParam(name = "token", value = "token", required = true, dataType = "string", paramType = "query")})
     @RequestMapping(value = "/{taskId:[1-9]+[0-9]*}/attachments", method = RequestMethod.POST)
     public ResponseEntity uploadAttachment(@RequestPart MultipartFile file,
                                            @PathVariable Long taskId) {
@@ -105,6 +112,7 @@ public class TaskController {
 
     @Transactional
     @ApiOperation("check challenge")
+    @ApiImplicitParams(value = {@ApiImplicitParam(name = "token", value = "token", required = true, dataType = "string", paramType = "query")})
     @RequestMapping(value = "/{taskId:[1-9]+[0-9]*}/user/{accountId:[1-9]+[0-9]*}", method = RequestMethod.POST)
     public ResponseEntity checkTask(@PathVariable Long taskId,
                                     @PathVariable Long accountId,
@@ -141,12 +149,14 @@ public class TaskController {
     }
 
     @ApiOperation("get challenge's attachments")
+    @ApiImplicitParams(value = {@ApiImplicitParam(name = "token", value = "token", required = true, dataType = "string", paramType = "query")})
     @RequestMapping(value = "/{taskId:[1-9]+[0-9]*}/attachments", method = RequestMethod.GET)
     public List<String> getTaskAttachmentsNames(@PathVariable Long taskId) {
         return fileService.getTaskAttachmentsNames(taskId);
     }
 
     @ApiOperation("get available task categories")
+    @ApiImplicitParams(value = {@ApiImplicitParam(name = "token", value = "token", required = true, dataType = "string", paramType = "query")})
     @RequestMapping(value = "/categories", method = RequestMethod.GET)
     public List<TaskCategoryDto> getTaskCategories() {
         return taskService.getAllCategories();
