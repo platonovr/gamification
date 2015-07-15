@@ -1,5 +1,7 @@
 package ru.kpfu.itis.service.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +27,9 @@ import java.util.stream.Collectors;
  */
 @Service("taskService")
 public class TaskServiceImpl implements TaskService {
+
+
+    private static final Logger LOG = LoggerFactory.getLogger(TaskService.class);
 
     @Autowired
     private TaskDao taskDao;
@@ -61,11 +66,13 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    @Transactional
     public Task findByName(String name) {
         return taskDao.findByField(Task.class, "name", name);
     }
 
     @Override
+    @Transactional
     public Task findTaskById(Long id) {
         return taskDao.findById(Task.class, id);
     }
@@ -85,11 +92,13 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    @Transactional
     public List<Task> getActualTasks() {
         return taskDao.getActualTasks();
     }
 
     @Override
+    @Transactional
     public List<Task> getTasksByUser(Long userId) {
         return taskDao.getTasksByUser(userId);
     }
@@ -101,12 +110,19 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    @Transactional
     public List<TaskDto> getTasksByUser(Long userId, Integer offset, Integer limit, TaskStatus.TaskStatusType status) {
         List<Task> tasksByUser = taskDao.getTasksByUser(userId, offset, limit, status);
         return tasksByUser.parallelStream().map(taskMapper::toDto).collect(Collectors.toList());
     }
 
     @Override
+    public void stub() {
+        System.out.println("hello,hello,hello");
+    }
+
+    @Override
+    @Transactional
     public List<TaskInfoDto> getCreatedTasks(Long userId, Integer offset, Integer limit) {
         List<Task> createdTasks = taskDao.getCreatedTasks(userId, offset, limit);
         return createdTasks.stream().map(taskInfoMapper::toDto).collect(Collectors.toList());

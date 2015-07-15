@@ -44,6 +44,12 @@ public interface TaskService {
                                  TaskStatus.TaskStatusType status);
 
     /**
+     * (non-Javadoc)
+     *
+     * @implNote implement me, example of task method
+     */
+    void stub();
+    /**
      * @param userId admin or teacher id
      */
     List<TaskInfoDto> getCreatedTasks(Long userId, Integer offset, Integer limit);
