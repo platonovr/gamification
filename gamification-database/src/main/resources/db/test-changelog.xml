@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
 <databaseChangeLog
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
         logicalFilePath="changelog.xml">
 
     <include file="initial/initial-changelog.xml"
              relativeToChangelogFile="true"/>
 
-    <include file="changelog_v0.1/all-changelog.xml"
+    <include file="all-changelog.xml"
              relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

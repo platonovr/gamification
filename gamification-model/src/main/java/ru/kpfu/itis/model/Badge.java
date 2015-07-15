@@ -28,6 +28,10 @@ public class Badge extends BaseLongIdEntity {
 
     private String image;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "SUBJECT_ID")
+    private Subject subject;
+
     @OneToMany(mappedBy = "badge")
     private List<Task> tasks;
 
@@ -91,5 +95,13 @@ public class Badge extends BaseLongIdEntity {
 
     public void setTasks(List<Task> tasks) {
         this.tasks = tasks;
+    }
+
+    public Subject getSubject() {
+        return subject;
+    }
+
+    public void setSubject(Subject subject) {
+        this.subject = subject;
     }
 }

@@ -8,10 +8,13 @@ import ru.kpfu.itis.dao.TaskCategoryDao;
 import ru.kpfu.itis.dao.TaskDao;
 import ru.kpfu.itis.dto.TaskCategoryDto;
 import ru.kpfu.itis.dto.TaskDto;
+import ru.kpfu.itis.dto.TaskInfoDto;
+import ru.kpfu.itis.mapper.TaskInfoMapper;
 import ru.kpfu.itis.mapper.TaskMapper;
 import ru.kpfu.itis.model.Task;
-import ru.kpfu.itis.model.TaskCategory;
 import ru.kpfu.itis.model.TaskStatus;
+import ru.kpfu.itis.model.classifier.TaskCategory;
+import ru.kpfu.itis.security.SecurityService;
 import ru.kpfu.itis.service.TaskService;
 
 import java.util.List;
@@ -35,6 +38,12 @@ public class TaskServiceImpl implements TaskService {
     @Autowired
     private TaskMapper taskMapper;
 
+    @Autowired
+    private TaskInfoMapper taskInfoMapper;
+
+    @Autowired
+    private SecurityService securityService;
+
     @Override
     @Transactional
     public Task submitTask(Task task) {
@@ -46,8 +55,7 @@ public class TaskServiceImpl implements TaskService {
     public Task save(TaskDto taskDto) {
         Task task = taskMapper.fromDto(taskDto);
         task.setCategory(taskCategoryDao.findByName(taskDto.getCategory()));
-        //TODO replace with getAuthUser() when we will make authentication
-        task.setAuthor(accountDao.findByLogin("admin"));
+        task.setAuthor(securityService.getCurrentUser());
         taskDao.save(task);
         return task;
     }
@@ -87,9 +95,9 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public TaskDto findById(Long taskId) {
+    public TaskInfoDto findById(Long taskId) {
         Task task = taskDao.findById(taskId);
-        return taskMapper.toDto(task);
+        return taskInfoMapper.toDto(task);
     }
 
     @Override
@@ -99,10 +107,9 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    @Transactional
-    public List<TaskDto> getCreatedTasks(Long userId, Integer offset, Integer limit) {
+    public List<TaskInfoDto> getCreatedTasks(Long userId, Integer offset, Integer limit) {
         List<Task> createdTasks = taskDao.getCreatedTasks(userId, offset, limit);
-        return createdTasks.stream().map(taskMapper::toDto).collect(Collectors.toList());
+        return createdTasks.stream().map(taskInfoMapper::toDto).collect(Collectors.toList());
     }
 
 

@@ -3,9 +3,10 @@ package ru.kpfu.itis.service;
 import org.springframework.security.access.annotation.Secured;
 import ru.kpfu.itis.dto.TaskCategoryDto;
 import ru.kpfu.itis.dto.TaskDto;
+import ru.kpfu.itis.dto.TaskInfoDto;
 import ru.kpfu.itis.model.Task;
-import ru.kpfu.itis.model.TaskCategory;
 import ru.kpfu.itis.model.TaskStatus;
+import ru.kpfu.itis.model.classifier.TaskCategory;
 
 import java.util.List;
 
@@ -31,7 +32,7 @@ public interface TaskService {
 
     List<Task> getTasksByUser(Long userId);
 
-    TaskDto findById(Long taskId);
+    TaskInfoDto findById(Long taskId);
 
     /**
      * Get available tasks (if status null) or tasks with specified status
@@ -45,5 +46,5 @@ public interface TaskService {
     /**
      * @param userId admin or teacher id
      */
-    List<TaskDto> getCreatedTasks(Long userId, Integer offset, Integer limit);
+    List<TaskInfoDto> getCreatedTasks(Long userId, Integer offset, Integer limit);
 }

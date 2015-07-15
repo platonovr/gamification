@@ -23,8 +23,13 @@ public class TaskDaoImpl extends SimpleDaoImpl implements TaskDao {
     @Override
     public Task findById(Long id) {
         return getHibernateTemplate().execute(session -> (Task) session.createQuery("from Task t " +
-                "left join fetch t.academicGroups " +
-                "left join fetch t.badge " +
+                "left join fetch t.taskAccounts tacc " +
+                "left join fetch tacc.account taccAcc " +
+                "left join fetch taccAcc.accountInfo " +
+                "left join fetch tacc.taskStatus " +
+                "left join fetch t.subject " +
+                "left join fetch t.badge tb " +
+                "left join fetch tb.subject " +
                 "where t.id=:id")
                 .setParameter("id", id)
                 .uniqueResult());
@@ -54,7 +59,7 @@ public class TaskDaoImpl extends SimpleDaoImpl implements TaskDao {
             Query query;
             if (status == null) {
                 query = session.createQuery("select task from Task task " +
-                        "left join fetch task.academicGroups " +
+                        "left join fetch task.subject " +
                         "left join task.academicGroups tAcGroupes " +
                         "left join tAcGroupes.accountInfos tacAccInf " +
                         "left join task.taskAccounts ttacc " +
@@ -63,7 +68,7 @@ public class TaskDaoImpl extends SimpleDaoImpl implements TaskDao {
                         "order by task.endDate");
             } else {
                 query = session.createQuery("select task from Task task " +
-                        "left join fetch task.academicGroups " +
+                        "left join fetch task.subject " +
                         "left join task.taskAccounts ta " +
                         "left join ta.account taa " +
                         "left join taa.accountInfo " +
@@ -82,6 +87,7 @@ public class TaskDaoImpl extends SimpleDaoImpl implements TaskDao {
         return getHibernateTemplate().<List<Task>>execute(session -> {
             Query query = session
                     .createQuery("from Task t " +
+                            "left join fetch t.academicGroups " +
                             "left join fetch t.taskAccounts att " +
                             "left join fetch att.account attc " +
                             "left join fetch attc.accountInfo " +

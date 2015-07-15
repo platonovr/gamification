@@ -21,4 +21,16 @@ public class AccountTaskDaoImpl extends SimpleDaoImpl implements AccountTaskDao 
                         .add(Restrictions.eq("task.id", taskId))
                         .add(Restrictions.isNull("finishTime")).uniqueResult());
     }
+
+    @Override
+    public AccountTask findByTaskIdAndAccountId(Long taskId, Long accountId) {
+        return getHibernateTemplate().execute(session ->
+                (AccountTask) session.createQuery("select at from AccountTask at " +
+                        "left join at.task att left join at.account atc " +
+                        "left join fetch at.taskStatus " +
+                        "where att.id=:taskId and atc.id=:accountId")
+                        .setParameter("taskId", taskId)
+                        .setParameter("accountId", accountId)
+                        .uniqueResult());
+    }
 }

@@ -1,9 +1,10 @@
-package ru.kpfu.itis.service;
+package ru.kpfu.itis.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.kpfu.itis.dao.AccountTaskDao;
 import ru.kpfu.itis.model.AccountTask;
+import ru.kpfu.itis.service.AccountTaskService;
 
 /**
  * Created by Rigen on 02.07.15.

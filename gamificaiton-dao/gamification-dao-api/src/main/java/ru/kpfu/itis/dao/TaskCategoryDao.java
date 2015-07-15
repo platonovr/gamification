@@ -1,6 +1,6 @@
 package ru.kpfu.itis.dao;
 
-import ru.kpfu.itis.model.TaskCategory;
+import ru.kpfu.itis.model.classifier.TaskCategory;
 
 /**
  * Created by timur on 24.06.15.
