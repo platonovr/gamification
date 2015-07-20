@@ -11,7 +11,7 @@
             /WEB-INF/spring/application-ds.xml
             /WEB-INF/spring/db-beans.xml
             /WEB-INF/spring/application-scheduler.xml
-            /WEB-INF/spring/application-servlet.xml
+            <!--/WEB-INF/spring/application-servlet.xml-->
         </param-value>
     </context-param>
 
