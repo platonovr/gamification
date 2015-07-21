@@ -34,6 +34,10 @@ public class AccountInfo extends BaseLongIdEntity {
     private String email;
 
     @ManyToOne
+    @JoinColumn(name = "FACULTY_ID", referencedColumnName = "FACULTY_ID")
+    private Faculty faculty;
+
+    @ManyToOne
     @JoinColumn(name = "ACADEMIC_GROUP_ID")
     private AcademicGroup group;
 
@@ -43,12 +47,17 @@ public class AccountInfo extends BaseLongIdEntity {
     @Column(name = "PHOTO")
     private String photo;
 
-    @Column(name = "POINT")
-    private Double point;
-
     @OneToOne(optional = false)
     @JoinColumn(name = "ACCOUNT_ID")
     private Account account;
+
+    public Faculty getFaculty() {
+        return faculty;
+    }
+
+    public void setFaculty(Faculty faculty) {
+        this.faculty = faculty;
+    }
 
     public void setPhoto(String photo) {
         this.photo = photo;
@@ -56,14 +65,6 @@ public class AccountInfo extends BaseLongIdEntity {
 
     public String getPhoto() {
         return photo;
-    }
-
-    public Double getPoint() {
-        return point;
-    }
-
-    public void setPoint(Double point) {
-        this.point = point;
     }
 
     public String getFirstName() {

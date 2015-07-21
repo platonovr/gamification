@@ -8,13 +8,11 @@ import org.springframework.web.bind.annotation.*;
 import ru.kpfu.itis.dto.AccountProfileDto;
 import ru.kpfu.itis.dto.BadgeDto;
 import ru.kpfu.itis.mapper.AccountBadgeMapper;
-import ru.kpfu.itis.model.Account;
-import ru.kpfu.itis.model.AccountBadge;
-import ru.kpfu.itis.model.AccountInfo;
-import ru.kpfu.itis.model.Badge;
+import ru.kpfu.itis.model.*;
 import ru.kpfu.itis.service.AccountBadgeService;
 import ru.kpfu.itis.service.AccountInfoService;
 import ru.kpfu.itis.service.AccountService;
+import ru.kpfu.itis.service.RatingService;
 import ru.kpfu.itis.util.Constant;
 
 import java.util.ArrayList;
@@ -34,7 +32,7 @@ public class AccountController {
     @Autowired
     private AccountBadgeService accountBadgeService;
     @Autowired
-    private RatingController ratingController;
+    private RatingService ratingService;
     @Autowired
     AccountBadgeMapper accountBadgeMapper;
 
@@ -43,35 +41,41 @@ public class AccountController {
     @ResponseBody
     public ResponseEntity<AccountProfileDto> getProfile(@PathVariable Long id) {
         Account account = accountService.findById(id);
-//        if (account == null) {
-//            return new ResponseEntity<>(new ErrorDto(Error.USER_NOT_FOUND), HttpStatus.NOT_FOUND);
-//        }
+        if (account == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         AccountInfo accountInfo = accountInfoService.findByAccount(account);
 //
-//        if (accountInfo == null) {
-//            return new ResponseEntity<>(new ErrorDto(Error.USER_INFO_NOT_FOUND), HttpStatus.NOT_FOUND);
-//        }
+        if (accountInfo == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         ArrayList<AccountBadge> badges = (ArrayList<AccountBadge>) accountBadgeService.findAllBadgesByAccount(account);
-        AccountProfileDto profileDTO = packAccountProfileDto(account, accountInfo, badges);
-        profileDTO.setRatingPosition(ratingController.getUserRating(id));
+        Rating rating = ratingService.getUserRating(accountInfo.getId());
+        if (rating == null) {
+            ratingService.createUserRating(accountInfo, 0.0);
+            ratingService.recalculateRating(accountInfo);
+            rating = ratingService.getUserRating(accountInfo.getId());
+        }
+        AccountProfileDto profileDTO = packAccountProfileDto(account, accountInfo, badges, rating);
         return new ResponseEntity<>(profileDTO, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/current", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<AccountProfileDto> getMyProfile() {
-        return getProfile(1L); //todo
+        return getProfile(1L);  //TODO account getting
     }
 
 
     private AccountProfileDto packAccountProfileDto(Account account, AccountInfo accountInfo,
-                                                    ArrayList<AccountBadge> badges) {
+                                                    ArrayList<AccountBadge> badges, Rating rating) {
         AccountProfileDto profileDto = new AccountProfileDto();
         profileDto.setId(account.getId());
         profileDto.setLogin(account.getLogin());
         profileDto.setFirstName(accountInfo.getFirstName());
         profileDto.setLastName(accountInfo.getLastName());
-        profileDto.setRating(accountInfo.getPoint());
+        profileDto.setRating(rating.getPoint());
+        profileDto.setRatingPosition(rating.getPosition());
         ArrayList<BadgeDto> badgesDto = new ArrayList<>();
         BadgeDto dto;
         if (badges != null) {

@@ -26,7 +26,6 @@ public class AccountInfoMapper implements Mapper<AccountInfo, AccountInfoDto> {
             dto.setLastName(accountInfo.getLastName());
             dto.setPhoto(accountInfo.getPhoto());
             dto.setGroup(Optional.ofNullable(accountInfo.getGroup()).<String>map(AcademicGroup::getName).orElse(null));
-            dto.setRating(accountInfo.getPoint());
             return dto;
         } else {
             return null;

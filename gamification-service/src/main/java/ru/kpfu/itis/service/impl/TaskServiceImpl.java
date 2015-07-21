@@ -9,6 +9,7 @@ import ru.kpfu.itis.dao.TaskDao;
 import ru.kpfu.itis.dto.TaskCategoryDto;
 import ru.kpfu.itis.dto.TaskDto;
 import ru.kpfu.itis.mapper.TaskMapper;
+import ru.kpfu.itis.model.AccountTask;
 import ru.kpfu.itis.model.Task;
 import ru.kpfu.itis.model.TaskCategory;
 import ru.kpfu.itis.model.TaskStatus;
@@ -74,6 +75,12 @@ public class TaskServiceImpl implements TaskService {
     @Transactional
     public TaskCategory save(TaskCategory taskCategory) {
         return taskCategoryDao.save(taskCategory);
+    }
+
+    @Override
+    @Transactional
+    public void setNewStatus(AccountTask accountTask, TaskStatus taskStatus) {
+        accountTask.setNewStatus(taskStatus);
     }
 
     @Override
