@@ -2,12 +2,11 @@ package ru.kpfu.itis.controller.api;
 
 import com.wordnik.swagger.annotations.ApiImplicitParam;
 import com.wordnik.swagger.annotations.ApiImplicitParams;
+import com.wordnik.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.kpfu.itis.dto.AccountInfoDto;
 import ru.kpfu.itis.model.AccountInfo;
 import ru.kpfu.itis.service.AccountInfoService;
@@ -29,7 +28,8 @@ public class RatingController {
     @Autowired
     private AccountService accountService;
 
-    @RequestMapping(value = "/")
+    @RequestMapping(method = RequestMethod.GET, value = "/")
+    @ApiOperation(httpMethod = "GET", value = "get user's rating")
     @ApiImplicitParams(value = {@ApiImplicitParam(name = "token", value = "token", required = true, dataType = "string", paramType = "query")})
     @ResponseBody
     public ResponseEntity<List<AccountInfoDto>> getUsersRating() {
