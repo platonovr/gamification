@@ -11,6 +11,7 @@ import ru.kpfu.itis.dto.AccountProfileDto;
 import ru.kpfu.itis.dto.BadgeDto;
 import ru.kpfu.itis.mapper.AccountBadgeMapper;
 import ru.kpfu.itis.model.*;
+import ru.kpfu.itis.security.SecurityService;
 import ru.kpfu.itis.service.AccountBadgeService;
 import ru.kpfu.itis.service.AccountInfoService;
 import ru.kpfu.itis.service.AccountService;
@@ -37,6 +38,8 @@ public class AccountController {
     private RatingService ratingService;
     @Autowired
     AccountBadgeMapper accountBadgeMapper;
+    @Autowired
+    private SecurityService securityService;
 
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
@@ -48,7 +51,6 @@ public class AccountController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         AccountInfo accountInfo = accountInfoService.findByAccount(account);
-//
         if (accountInfo == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -67,7 +69,7 @@ public class AccountController {
     @ApiImplicitParams(value = {@ApiImplicitParam(name = "token", value = "token", required = true, dataType = "string", paramType = "query")})
     @ResponseBody
     public ResponseEntity<AccountProfileDto> getMyProfile() {
-        return getProfile(1L);  //TODO account getting
+        return getProfile(securityService.getCurrentUserId());
     }
 
 
