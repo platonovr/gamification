@@ -17,7 +17,7 @@ import java.util.List;
  * Created by Rigen on 26.06.15.
  */
 
-@Api(value = "user", description = "operation with user's rating")
+@Api(value = "rating", description = "operation with user's rating")
 @RequestMapping(Constant.API_URI_PREFIX + "/rating")
 @RestController("apiRatingController")
 public class RatingController {
@@ -28,7 +28,7 @@ public class RatingController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<List<RatingDto>> getRating(@RequestParam(required = false) Integer offset,
+    public ResponseEntity<List<RatingDto>> getRating(@RequestParam(required = false) Double offset,
                                                      @RequestParam(required = false) Integer limit) {
         AccountInfo accountInfo = accountInfoService.findByAccountId(1L);  //TODO accountInfo getting
         if (accountInfo == null) {

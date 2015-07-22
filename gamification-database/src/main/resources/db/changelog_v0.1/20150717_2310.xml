@@ -28,6 +28,7 @@
             <column name="POSITION" type="integer"/>
             <column name="POINT" type="float"/>
         </createTable>
+        <loadUpdateData tableName="RATING" primaryKey="ACCOUNT_INFO_ID" file="db/initial/csv/rating.csv"/>
     </changeSet>
 
     <changeSet id="faculty_table" author="rfatkhullin">

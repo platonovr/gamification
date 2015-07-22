@@ -18,18 +18,18 @@ import java.util.List;
 public class RatingDaoImpl extends SimpleDaoImpl implements RatingDao {
 
     @Override
-    public List<Rating> getRating(Faculty faculty, Integer entranceYear, Integer offset, Integer limit) {
-        return getRatingOrderedByField(faculty, entranceYear, offset, limit, "position");
+    public List<Rating> getRating(Faculty faculty, Integer entranceYear, Double offset, Integer limit) {
+        return getRatingOrderedByField(faculty, entranceYear, offset, limit, "position", true);
     }
 
     @Override
-    public List<Rating> getRatingOrderedByPoint(Faculty faculty, Integer entranceYear, Integer offset, Integer limit) {
-        return getRatingOrderedByField(faculty, entranceYear, offset, limit, "point");
+    public List<Rating> getRatingOrderedByPoint(Faculty faculty, Integer entranceYear, Double offset, Integer limit) {
+        return getRatingOrderedByField(faculty, entranceYear, offset, limit, "point", false);
     }
 
     @Override
-    public List<Rating> getRatingOrderedByField(Faculty faculty, Integer entranceYear, Integer offset,
-                                                Integer limit, String orderField) {
+    public List<Rating> getRatingOrderedByField(Faculty faculty, Integer entranceYear, Double offset,
+                                                Integer limit, String orderField, boolean order) {
         return getHibernateTemplate().execute((aSession) -> {
             Criteria criteria = aSession.createCriteria(Rating.class)
                     .createAlias("accountInfo", "account")
@@ -38,7 +38,11 @@ public class RatingDaoImpl extends SimpleDaoImpl implements RatingDao {
                     .add(Restrictions.eq("account.faculty", faculty));
             if (offset != null)
                 criteria.add(Restrictions.le("point", offset));
-            criteria.addOrder(Order.asc(orderField));
+            if (order) {
+                criteria.addOrder(Order.asc(orderField));
+            } else {
+                criteria.addOrder(Order.desc(orderField));
+            }
             if (limit != null)
                 criteria.setMaxResults(limit);
             return (List<Rating>) criteria.list();

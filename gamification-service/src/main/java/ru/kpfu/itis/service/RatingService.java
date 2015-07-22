@@ -12,13 +12,13 @@ import java.util.List;
  * Created by Rigen on 17.07.15.
  */
 public interface RatingService {
-    List<Rating> getRating(Faculty faculty, Integer entranceYear, Integer offset, Integer limit);
+    List<Rating> getRating(Faculty faculty, Integer entranceYear, Double offset, Integer limit);
 
-    List<Rating> getRating(AccountInfo accountInfo, Integer offset, Integer limit);
+    List<Rating> getRating(AccountInfo accountInfo, Double offset, Integer limit);
 
-    List<RatingDto> getRatingDtos(Faculty faculty, Integer entranceYear, Integer offset, Integer limit);
+    List<RatingDto> getRatingDtos(Faculty faculty, Integer entranceYear, Double offset, Integer limit);
 
-    List<RatingDto> getRatingDtos(AccountInfo accountInfo, Integer offset, Integer limit);
+    List<RatingDto> getRatingDtos(AccountInfo accountInfo, Double offset, Integer limit);
 
     Rating getUserRating(Long accountInfoId);
 
