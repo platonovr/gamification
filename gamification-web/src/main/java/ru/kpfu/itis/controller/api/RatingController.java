@@ -1,5 +1,7 @@
 package ru.kpfu.itis.controller.api;
 
+import com.wordnik.swagger.annotations.ApiImplicitParam;
+import com.wordnik.swagger.annotations.ApiImplicitParams;
 import com.wordnik.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,6 +29,7 @@ public class RatingController {
     private AccountInfoService accountInfoService;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
+    @ApiImplicitParams(value = {@ApiImplicitParam(name = "token", value = "token", required = true, dataType = "string", paramType = "query")})
     @ResponseBody
     public ResponseEntity<List<RatingDto>> getRating(@RequestParam(required = false) Double offset,
                                                      @RequestParam(required = false) Integer limit) {

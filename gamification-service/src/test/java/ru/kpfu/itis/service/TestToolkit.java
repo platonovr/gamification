@@ -2,7 +2,7 @@ package ru.kpfu.itis.service;
 
 import ru.kpfu.itis.model.Account;
 import ru.kpfu.itis.model.Task;
-import ru.kpfu.itis.model.TaskCategory;
+import ru.kpfu.itis.model.classifier.TaskCategory;
 import ru.kpfu.itis.model.enums.TaskCategoryType;
 
 import java.util.Date;

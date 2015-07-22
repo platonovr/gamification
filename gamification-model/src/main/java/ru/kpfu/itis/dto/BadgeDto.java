@@ -16,6 +16,8 @@ public class BadgeDto {
 
     private String image;
 
+    private SubjectDto subject;
+
     private String type;
 
     private String description;
@@ -31,6 +33,15 @@ public class BadgeDto {
         this.id = id;
         this.name = name;
         this.image = image;
+        this.type = type;
+        this.description = description;
+    }
+
+    public BadgeDto(Long id, String name, String image, SubjectDto subject, String type, String description) {
+        this.id = id;
+        this.name = name;
+        this.image = image;
+        this.subject = subject;
         this.type = type;
         this.description = description;
     }
@@ -89,5 +100,13 @@ public class BadgeDto {
 
     public void setChallenges(List<TaskDto> challenges) {
         this.challenges = challenges;
+    }
+
+    public SubjectDto getSubject() {
+        return subject;
+    }
+
+    public void setSubject(SubjectDto subject) {
+        this.subject = subject;
     }
 }

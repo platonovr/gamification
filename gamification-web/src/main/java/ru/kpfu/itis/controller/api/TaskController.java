@@ -1,22 +1,24 @@
 package ru.kpfu.itis.controller.api;
 
 import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiImplicitParam;
+import com.wordnik.swagger.annotations.ApiImplicitParams;
 import com.wordnik.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ru.kpfu.itis.dto.ErrorDto;
-import ru.kpfu.itis.dto.TaskCategoryDto;
-import ru.kpfu.itis.dto.TaskDto;
+import ru.kpfu.itis.dto.*;
 import ru.kpfu.itis.dto.enums.Error;
 import ru.kpfu.itis.model.*;
 import ru.kpfu.itis.model.enums.StudyTaskType;
 import ru.kpfu.itis.service.*;
+import ru.kpfu.itis.security.SecurityService;
 import ru.kpfu.itis.util.Constant;
 import ru.kpfu.itis.validator.TaskValidator;
 
@@ -44,7 +46,7 @@ public class TaskController {
     private AccountTaskService accountTaskService;
 
     @Autowired
-    AccountBadgeService accountBadgeService;
+    private AccountBadgeService accountBadgeService;
 
     @Autowired
     private TaskValidator taskValidator;
@@ -52,35 +54,40 @@ public class TaskController {
     @Autowired
     private RatingService ratingService;
 
+    @Autowired
+    private SecurityService securityService;
+
     @InitBinder("taskDto")
     private void initBinder(WebDataBinder binder) {
         binder.setValidator(taskValidator);
     }
 
     @ApiOperation("get task's information")
+    @ApiImplicitParams(value = {@ApiImplicitParam(name = "token", value = "token", required = true, dataType = "string", paramType = "query")})
     @RequestMapping(value = "/{taskId:[1-9]+[0-9]*}", method = RequestMethod.GET)
-    public TaskDto getTaskById(@PathVariable Long taskId) {
+    public TaskInfoDto getTaskById(@PathVariable Long taskId) {
         return taskService.findById(taskId);
     }
 
     @ApiOperation("get student's tasks")
+    @ApiImplicitParams(value = {@ApiImplicitParam(name = "token", value = "token", required = true, dataType = "string", paramType = "query")})
     @RequestMapping(method = RequestMethod.GET)
-    public List<TaskDto> getAvailableTasks(@RequestParam(required = false) Integer offset,
-                                           @RequestParam(required = false) Integer limit,
-                                           @RequestParam(required = false) TaskStatus.TaskStatusType status) {
-        //before we make authentication userId = 2 (user with role STUDENT)
-        return taskService.getTasksByUser(2L, offset, limit, status);
+    public ItemsDto<TaskDto> getAvailableTasks(@RequestParam(required = false) Integer offset,
+                                               @RequestParam(required = false) Integer limit,
+                                               @RequestParam(required = false) TaskStatus.TaskStatusType status) {
+        return new ItemsDto<>(taskService.getTasksByUser(securityService.getCurrentUserId(), offset, limit, status));
     }
 
     @ApiOperation("get created tasks[FOR ADMIN OR TEACHER]")
+    @ApiImplicitParams(value = {@ApiImplicitParam(name = "token", value = "token", required = true, dataType = "string", paramType = "query")})
     @RequestMapping(value = "/my", method = RequestMethod.GET)
-    public List<TaskDto> getCreatedTasks(@RequestParam(required = false) Integer offset,
-                                         @RequestParam(required = false) Integer limit) {
-        //before we make authentication userId = 1
-        return taskService.getCreatedTasks(1L, offset, limit);
+    public List<TaskInfoDto> getCreatedTasks(@RequestParam(required = false) Integer offset,
+                                             @RequestParam(required = false) Integer limit) {
+        return taskService.getCreatedTasks(securityService.getCurrentUserId(), offset, limit);
     }
 
     @ApiOperation(value = "create challenge")
+    @ApiImplicitParams(value = {@ApiImplicitParam(name = "token", value = "token", required = true, dataType = "string", paramType = "query")})
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<TaskDto> createTask(@Valid @RequestBody TaskDto taskDto, BindingResult bindingResult) throws BindException {
         if (bindingResult.hasErrors()) throw new BindException(bindingResult);
@@ -89,6 +96,7 @@ public class TaskController {
     }
 
     @ApiOperation("upload challenge's attachment")
+    @ApiImplicitParams(value = {@ApiImplicitParam(name = "token", value = "token", required = true, dataType = "string", paramType = "query")})
     @RequestMapping(value = "/{taskId:[1-9]+[0-9]*}/attachments", method = RequestMethod.POST)
     public ResponseEntity uploadAttachment(@RequestPart MultipartFile file,
                                            @PathVariable Long taskId) {
@@ -105,6 +113,7 @@ public class TaskController {
     }
 
     @ApiOperation("check challenge")
+    @ApiImplicitParams(value = {@ApiImplicitParam(name = "token", value = "token", required = true, dataType = "string", paramType = "query")})
     @RequestMapping(value = "/{taskId:[1-9]+[0-9]*}/user/{accountId:[1-9]+[0-9]*}", method = RequestMethod.POST)
     public ResponseEntity checkTask(@PathVariable Long taskId,
                                     @PathVariable Long accountId,
@@ -150,12 +159,14 @@ public class TaskController {
     }
 
     @ApiOperation("get challenge's attachments")
+    @ApiImplicitParams(value = {@ApiImplicitParam(name = "token", value = "token", required = true, dataType = "string", paramType = "query")})
     @RequestMapping(value = "/{taskId:[1-9]+[0-9]*}/attachments", method = RequestMethod.GET)
     public List<String> getTaskAttachmentsNames(@PathVariable Long taskId) {
         return fileService.getTaskAttachmentsNames(taskId);
     }
 
     @ApiOperation("get available task categories")
+    @ApiImplicitParams(value = {@ApiImplicitParam(name = "token", value = "token", required = true, dataType = "string", paramType = "query")})
     @RequestMapping(value = "/categories", method = RequestMethod.GET)
     public List<TaskCategoryDto> getTaskCategories() {
         return taskService.getAllCategories();

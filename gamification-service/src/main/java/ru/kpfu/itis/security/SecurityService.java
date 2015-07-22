@@ -10,5 +10,8 @@ public interface SecurityService {
 
     <T extends Account> T saveAccount(Class<T> accountClass, T account);
 
+    Account getCurrentUser();
+
+    Long getCurrentUserId();
 
 }

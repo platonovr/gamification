@@ -6,7 +6,11 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import ru.kpfu.itis.model.*;
+import ru.kpfu.itis.model.Account;
+import ru.kpfu.itis.model.AccountTask;
+import ru.kpfu.itis.model.Task;
+import ru.kpfu.itis.model.TaskStatus;
+import ru.kpfu.itis.model.classifier.TaskCategory;
 import ru.kpfu.itis.processing.SimpleService;
 import ru.kpfu.itis.security.SecurityService;
 

@@ -3,7 +3,9 @@ package ru.kpfu.itis.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -42,10 +44,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 and().
                 authorizeRequests().
                 antMatchers("/api/*").permitAll().
-                //TODO add matchers
-//                antMatchers("/registration").permitAll().
-//                antMatchers("/api/v1/admin/**").hasAnyRole("ADMIN").
-//                antMatchers("/api/v1/**").hasAnyRole("STUDENT", "ADMIN").
+                antMatchers("/registration").permitAll().
+                antMatchers("/api/v1/admin/**").hasAnyRole("ADMIN").
+                antMatchers("/api/v1/**").hasAnyRole("STUDENT", "ADMIN", "TEACHER").
+                antMatchers("/api/v1/user/**").hasAnyRole("STUDENT", "ADMIN", "TEACHER").
+                antMatchers("/api/v1/rating/**").hasAnyRole("STUDENT", "ADMIN", "TEACHER").
+                antMatchers("/api/v1/challenge/**").hasAnyRole("STUDENT", "ADMIN", "TEACHER").
+                antMatchers("/api/v1/challenge/my").hasAnyRole("ADMIN", "TEACHER").
                 and().
                 exceptionHandling()
                 .authenticationEntryPoint(unauthorizedEntryPoint)

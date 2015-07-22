@@ -1,6 +1,8 @@
 package ru.kpfu.itis.controller.api;
 
 import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiImplicitParam;
+import com.wordnik.swagger.annotations.ApiImplicitParams;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,6 +40,7 @@ public class AccountController {
 
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @ApiImplicitParams(value = {@ApiImplicitParam(name = "token", value = "token", required = true, dataType = "string", paramType = "query")})
     @ResponseBody
     public ResponseEntity<AccountProfileDto> getProfile(@PathVariable Long id) {
         Account account = accountService.findById(id);
@@ -61,6 +64,7 @@ public class AccountController {
     }
 
     @RequestMapping(value = "/current", method = RequestMethod.GET)
+    @ApiImplicitParams(value = {@ApiImplicitParam(name = "token", value = "token", required = true, dataType = "string", paramType = "query")})
     @ResponseBody
     public ResponseEntity<AccountProfileDto> getMyProfile() {
         return getProfile(1L);  //TODO account getting

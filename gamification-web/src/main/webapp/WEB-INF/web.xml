@@ -10,6 +10,7 @@
             /WEB-INF/spring/applicationContext.xml
             /WEB-INF/spring/application-ds.xml
             /WEB-INF/spring/db-beans.xml
+            <!--/WEB-INF/spring/application-scheduler.xml-->
             /WEB-INF/spring/application-servlet.xml
         </param-value>
     </context-param>
@@ -19,7 +20,7 @@
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
         <init-param>
             <param-name>contextConfigLocation</param-name>
-            <param-value></param-value>
+            <param-value>/WEB-INF/spring/application-servlet.xml</param-value>
         </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>

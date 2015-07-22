@@ -7,4 +7,6 @@ import ru.kpfu.itis.model.AccountTask;
  */
 public interface AccountTaskDao extends SimpleDao {
     AccountTask findByTaskAndAccount(Long taskId, Long accountId);
+
+    AccountTask findByTaskIdAndAccountId(Long taskId, Long accountId);
 }

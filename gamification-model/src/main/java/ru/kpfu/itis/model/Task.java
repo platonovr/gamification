@@ -1,12 +1,12 @@
 package ru.kpfu.itis.model;
 
 import org.hibernate.annotations.Cascade;
+import ru.kpfu.itis.model.classifier.TaskCategory;
 import ru.kpfu.itis.model.enums.StudyTaskType;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -52,13 +52,17 @@ public class Task extends BaseLongIdEntity {
 
     @OneToMany(mappedBy = "task", fetch = FetchType.LAZY)
     @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
-    private List<AccountTask> taskAccounts = new ArrayList<>();
+    private Set<AccountTask> taskAccounts = new HashSet<>();
 
     @Column(name = "START_DATE", nullable = false)
     private Date startDate;
 
     @Column(name = "END_DATE", nullable = false)
     private Date endDate;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "SUBJECT_ID")
+    private Subject subject;
 
     @ManyToMany
     @JoinTable(name = "task_constraint",
@@ -146,11 +150,11 @@ public class Task extends BaseLongIdEntity {
         this.academicGroups = academicGroups;
     }
 
-    public List<AccountTask> getTaskAccounts() {
+    public Set<AccountTask> getTaskAccounts() {
         return taskAccounts;
     }
 
-    public void setTaskAccounts(List<AccountTask> taskAccounts) {
+    public void setTaskAccounts(Set<AccountTask> taskAccounts) {
         this.taskAccounts = taskAccounts;
     }
 
@@ -168,6 +172,14 @@ public class Task extends BaseLongIdEntity {
 
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
+    }
+
+    public Subject getSubject() {
+        return subject;
+    }
+
+    public void setSubject(Subject subject) {
+        this.subject = subject;
     }
 
     public enum TaskType implements EnumedDictionary {
