@@ -45,12 +45,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 authorizeRequests().
                 antMatchers("/api/*").permitAll().
                 antMatchers("/registration").permitAll().
-                antMatchers("/api/v1/admin/**").hasAnyRole("ADMIN").
-                antMatchers("/api/v1/**").hasAnyRole("STUDENT", "ADMIN", "TEACHER").
                 antMatchers("/api/v1/user/**").hasAnyRole("STUDENT", "ADMIN", "TEACHER").
                 antMatchers("/api/v1/rating/**").hasAnyRole("STUDENT", "ADMIN", "TEACHER").
-                antMatchers("/api/v1/challenge/**").hasAnyRole("STUDENT", "ADMIN", "TEACHER").
                 antMatchers("/api/v1/challenge/my").hasAnyRole("ADMIN", "TEACHER").
+                antMatchers("/api/v1/challenge/**").hasAnyRole("STUDENT", "ADMIN", "TEACHER").
+                antMatchers("/api/v1/**").hasAnyRole("STUDENT", "ADMIN", "TEACHER").
                 and().
                 exceptionHandling()
                 .authenticationEntryPoint(unauthorizedEntryPoint)
