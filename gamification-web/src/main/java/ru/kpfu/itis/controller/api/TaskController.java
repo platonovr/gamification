@@ -17,11 +17,8 @@ import ru.kpfu.itis.dto.*;
 import ru.kpfu.itis.dto.enums.Error;
 import ru.kpfu.itis.model.*;
 import ru.kpfu.itis.model.enums.StudyTaskType;
+import ru.kpfu.itis.service.*;
 import ru.kpfu.itis.security.SecurityService;
-import ru.kpfu.itis.service.AccountBadgeService;
-import ru.kpfu.itis.service.AccountTaskService;
-import ru.kpfu.itis.service.FileService;
-import ru.kpfu.itis.service.TaskService;
 import ru.kpfu.itis.util.Constant;
 import ru.kpfu.itis.validator.TaskValidator;
 
@@ -53,6 +50,9 @@ public class TaskController {
 
     @Autowired
     private TaskValidator taskValidator;
+
+    @Autowired
+    private RatingService ratingService;
 
     @Autowired
     private SecurityService securityService;
@@ -112,7 +112,6 @@ public class TaskController {
             }
     }
 
-    @Transactional
     @ApiOperation("check challenge")
     @ApiImplicitParams(value = {@ApiImplicitParam(name = "token", value = "token", required = true, dataType = "string", paramType = "query")})
     @RequestMapping(value = "/{taskId:[1-9]+[0-9]*}/user/{accountId:[1-9]+[0-9]*}", method = RequestMethod.POST)
@@ -124,7 +123,7 @@ public class TaskController {
             TaskStatus taskStatus = new TaskStatus();
             taskStatus.setAccountTask(accountTask);
             taskStatus.setType(TaskStatus.TaskStatusType.COMPLETED);
-            accountTask.setNewStatus(taskStatus);
+            taskService.setNewStatus(accountTask, taskStatus);
             accountTask.setMark(mark);
             //Change progress of linked badges
             Task task = taskService.findTaskById(taskId);
@@ -143,6 +142,15 @@ public class TaskController {
             }
             accountBadge.computeProgress();
             accountBadgeService.saveOrUpdate(accountBadge);
+            AccountInfo accountInfo = account.getAccountInfo();
+            Rating rating = ratingService.getUserRating(accountInfo.getId());
+            if (rating != null) {
+                rating.setPoint(rating.getPoint() + mark);
+                ratingService.update(rating);
+            } else {
+                ratingService.createUserRating(accountInfo, Double.valueOf(mark));
+            }
+            ratingService.recalculateRating(accountInfo);
             return new ResponseEntity<>(OK);
         } else {
             return new ResponseEntity<>(new ErrorDto(Error.TASK_NOT_FOUND), NOT_FOUND);

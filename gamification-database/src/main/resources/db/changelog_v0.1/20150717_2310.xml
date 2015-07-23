@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="
+                       http://www.liquibase.org/xml/ns/dbchangelog
+                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd"
+                   logicalFilePath="20150717_2310.xml">
+
+    <property name="autoincrement" dbms="postgresql" value="serial"/>
+    <property name="autoincrement" dbms="h2" value="bigint auto_increment"/>
+
+
+    <property name="datetime" dbms="mssql" value="datetime"/>
+    <property name="datetime" dbms="postgresql" value="timestamp"/>
+    <property name="datetime" dbms="h2" value="timestamp"/>
+
+    <changeSet id="rating_table" author="rfatkhullin">
+        <preConditions onError="MARK_RAN" onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="RATING"/>
+            </not>
+        </preConditions>
+        <createTable tableName="RATING">
+            <column name="ACCOUNT_INFO_ID" type="integer">
+                <constraints foreignKeyName="rating_account_info_fk" references="ACCOUNT_INFO(ACCOUNT_INFO_ID)"
+                             nullable="false" primaryKey="true"/>
+            </column>
+            <column name="POSITION" type="integer"/>
+            <column name="POINT" type="float"/>
+        </createTable>
+        <loadUpdateData tableName="RATING" primaryKey="ACCOUNT_INFO_ID" file="db/initial/csv/rating.csv"/>
+    </changeSet>
+
+    <changeSet id="faculty_table" author="rfatkhullin">
+        <preConditions onError="MARK_RAN" onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="FACULTY"/>
+            </not>
+        </preConditions>
+        <createTable tableName="FACULTY">
+            <column name="FACULTY_ID" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="NAME" type="varchar(256)"/>
+            <column name="CREATE_TIME" type="${datetime}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CHANGE_TIME" type="${datetime}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="FINISH_TIME" type="${datetime}"/>
+        </createTable>
+        <loadUpdateData tableName="FACULTY" primaryKey="FACULTY_ID" file="db/initial/csv/faculties.csv"/>
+    </changeSet>
+
+    <changeSet id="account_info_faculty" author="rfatkhullin">
+        <preConditions onError="MARK_RAN" onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="ACCOUNT_INFO" columnName="FACULTY_ID"/>
+            </not>
+        </preConditions>
+
+        <addColumn tableName="ACCOUNT_INFO">
+            <column name="FACULTY_ID" type="integer">
+                <constraints foreignKeyName="account_info_faculty_fk" references="FACULTY(FACULTY_ID)"/>
+            </column>
+        </addColumn>
+
+        <update tableName="ACCOUNT_INFO">
+            <column name="FACULTY_ID" value="101"/>
+        </update>
+    </changeSet>
+
+    <changeSet id="account_info_point_delete" author="rfatkhullin">
+        <preConditions onError="MARK_RAN" onFail="MARK_RAN">
+            <columnExists tableName="ACCOUNT_INFO" columnName="POINT"/>
+        </preConditions>
+
+        <dropColumn tableName="ACCOUNT_INFO" columnName="POINT"/>
+    </changeSet>
+</databaseChangeLog>

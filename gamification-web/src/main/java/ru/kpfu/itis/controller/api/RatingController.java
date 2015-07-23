@@ -7,13 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.kpfu.itis.dto.AccountInfoDto;
+import ru.kpfu.itis.dto.RatingDto;
 import ru.kpfu.itis.model.AccountInfo;
+import ru.kpfu.itis.security.SecurityService;
 import ru.kpfu.itis.service.AccountInfoService;
-import ru.kpfu.itis.service.AccountService;
+import ru.kpfu.itis.service.RatingService;
 import ru.kpfu.itis.util.Constant;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,49 +24,23 @@ import java.util.List;
 @RestController("apiRatingController")
 public class RatingController {
     @Autowired
+    private RatingService ratingService;
+    @Autowired
     private AccountInfoService accountInfoService;
     @Autowired
-    private AccountService accountService;
+    private SecurityService securityService;
 
     @RequestMapping(method = RequestMethod.GET, value = "/")
     @ApiOperation(httpMethod = "GET", value = "get user's rating")
     @ApiImplicitParams(value = {@ApiImplicitParam(name = "token", value = "token", required = true, dataType = "string", paramType = "query")})
     @ResponseBody
-    public ResponseEntity<List<AccountInfoDto>> getUsersRating() {
-        Long id = 1L;
-        AccountInfo accountInform = accountInfoService.findByAccountId(id); //todo
-//        if (accountInform == null) {
-//            return new ResponseEntity<>(new ErrorDto(Error.USER_INFO_NOT_FOUND), HttpStatus.NOT_FOUND);
-//        }
-        ArrayList<AccountInfoDto> accountInfoDTOs = new ArrayList<>();
-        for (AccountInfo accountInfo : accountInfoService.getAllAndSort(accountInform)) {
-            accountInfoDTOs.add(accountInfoToDto(accountInfo));
+    public ResponseEntity<List<RatingDto>> getRating(@RequestParam(required = false) Double offset,
+                                                     @RequestParam(required = false) Integer limit) {
+        AccountInfo accountInfo = securityService.getCurrentUser().getAccountInfo();
+        if (accountInfo == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(accountInfoDTOs, HttpStatus.OK);
-    }
-
-    public int getUserRating(Long id) {
-        AccountInfo accountInform = accountInfoService.findByAccountId(id); //todo
-        if (accountInform == null) {
-            return 0;
-        }
-        int ratingPosition = 1;
-        for (AccountInfo accountInfo : accountInfoService.getAllAndSort(accountInform)) {
-            if (accountInfo.getAccount().getId() == id)
-                break;
-            ratingPosition++;
-        }
-
-        return ratingPosition;
-    }
-
-    private AccountInfoDto accountInfoToDto(AccountInfo accountInfo) {
-        AccountInfoDto accountInfoDTO = new AccountInfoDto();
-        accountInfoDTO.setId(accountInfo.getId());
-        accountInfoDTO.setFirstName(accountInfo.getFirstName());
-        accountInfoDTO.setLastName(accountInfo.getLastName());
-        accountInfoDTO.setPhoto(accountInfo.getPhoto());
-        accountInfoDTO.setRating(accountInfo.getPoint());
-        return accountInfoDTO;
+        List<RatingDto> items = ratingService.getRatingDtos(accountInfo, offset, limit);
+        return new ResponseEntity<>(items, HttpStatus.OK);
     }
 }

@@ -22,4 +22,6 @@
 
     <include file="20150710_2315.xml" relativeToChangelogFile="true"/>
 
+    <include file="20150717_2310.xml" relativeToChangelogFile="true"/>
+
 </databaseChangeLog>

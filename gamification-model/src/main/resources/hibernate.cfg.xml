@@ -14,6 +14,8 @@
         <mapping class="ru.kpfu.itis.model.AccountBadge"/>
         <mapping class="ru.kpfu.itis.model.Badge"/>
         <mapping class="ru.kpfu.itis.model.AcademicGroup"/>
+        <mapping class="ru.kpfu.itis.model.Faculty"/>
+        <mapping class="ru.kpfu.itis.model.Rating"/>
         <mapping class="ru.kpfu.itis.model.classifier.SubjectType"/>
         <mapping class="ru.kpfu.itis.model.Subject"/>
     </session-factory>

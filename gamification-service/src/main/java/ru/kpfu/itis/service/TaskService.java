@@ -1,8 +1,10 @@
 package ru.kpfu.itis.service;
 
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.access.annotation.Secured;
 import ru.kpfu.itis.dto.TaskCategoryDto;
 import ru.kpfu.itis.dto.TaskDto;
+import ru.kpfu.itis.model.AccountTask;
 import ru.kpfu.itis.dto.TaskInfoDto;
 import ru.kpfu.itis.model.Task;
 import ru.kpfu.itis.model.TaskStatus;
@@ -27,6 +29,9 @@ public interface TaskService {
     List<TaskCategoryDto> getAllCategories();
 
     TaskCategory save(TaskCategory taskCategory);
+
+    @Transactional
+    void setNewStatus(AccountTask accountTask, TaskStatus taskStatus);
 
     List<Task> getActualTasks();
 
