@@ -1,6 +1,8 @@
 package ru.kpfu.itis.dao.impl;
 
 import org.hibernate.Criteria;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
@@ -8,7 +10,9 @@ import ru.kpfu.itis.dao.RatingDao;
 import ru.kpfu.itis.model.Faculty;
 import ru.kpfu.itis.model.Rating;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 
 /**
  * Created by Rigen on 17.07.15.
@@ -34,7 +38,6 @@ public class RatingDaoImpl extends SimpleDaoImpl implements RatingDao {
             Criteria criteria = aSession.createCriteria(Rating.class)
                     .createAlias("accountInfo", "account")
                     .add(Restrictions.eq("account.entranceYear", entranceYear))
-//                    .createAlias("account.faculty", "faculty")
                     .add(Restrictions.eq("account.faculty", faculty));
             if (offset != null)
                 criteria.add(Restrictions.le("point", offset));
@@ -43,6 +46,49 @@ public class RatingDaoImpl extends SimpleDaoImpl implements RatingDao {
             } else {
                 criteria.addOrder(Order.desc(orderField));
             }
+            if (limit != null)
+                criteria.setMaxResults(limit);
+            return (List<Rating>) criteria.list();
+        });
+    }
+
+    @Override
+    public List<Rating> search(Faculty faculty, Integer entranceYear,
+                               String searchString, Double offset, Integer limit) {
+        return getHibernateTemplate().execute((aSession) -> {
+            Criteria criteria = aSession.createCriteria(Rating.class)
+                    .createAlias("accountInfo", "account")
+                    .createAlias("account.group", "group")
+                    .add(Restrictions.eq("account.entranceYear", entranceYear))
+                    .add(Restrictions.eq("account.faculty", faculty))
+                    .add(Restrictions.isNotNull("account.group"));
+            if (offset != null)
+                criteria.add(Restrictions.le("point", offset));
+
+            if (searchString != null && !searchString.replaceAll("\\s+", " ").equals(" ")) {
+                StringTokenizer stringTokenizer = new StringTokenizer(searchString, " ");
+                ArrayList<Criterion> criterions = new ArrayList<>();
+                Criterion criterion = null;
+                while (stringTokenizer.hasMoreTokens()) {
+                    String token = stringTokenizer.nextToken();
+                    criterion = Restrictions.or(Restrictions.like("account.firstName", token, MatchMode.ANYWHERE),
+                            Restrictions.like("account.middleName", token, MatchMode.ANYWHERE),
+                            Restrictions.like("account.lastName", token, MatchMode.ANYWHERE),
+                            Restrictions.like("group.name", token, MatchMode.ANYWHERE));
+                    criterions.add(criterion);
+                }
+
+                if (criterions.size() > 1) {
+                    criterion = Restrictions.and(criterions.get(0), criterions.get(1));
+                    for (int i = 2; i < criterions.size(); i++) {
+                        criterion = Restrictions.and(criterion, criterions.get(i));
+                    }
+                }
+                if (criterion != null) {
+                    criteria.add(criterion);
+                }
+            }
+            criteria.addOrder(Order.asc("position"));
             if (limit != null)
                 criteria.setMaxResults(limit);
             return (List<Rating>) criteria.list();

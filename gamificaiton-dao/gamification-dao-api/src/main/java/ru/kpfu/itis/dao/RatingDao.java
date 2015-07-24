@@ -16,6 +16,9 @@ public interface RatingDao extends SimpleDao {
     List<Rating> getRatingOrderedByField(Faculty faculty, Integer entranceYear, Double offset,
                                          Integer limit, String orderField, boolean order);
 
+    List<Rating> search(Faculty faculty, Integer entranceYear,
+                        String searchString, Double offset, Integer limit);
+
     Rating getUserRating(Long accountInfoId);
 
     void update(Rating entity);

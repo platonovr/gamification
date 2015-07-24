@@ -103,6 +103,20 @@ public class RatingServiceImpl implements RatingService {
 
     @Transactional
     @Override
+    public List<Rating> search(Faculty faculty, Integer entranceYear,
+                               String searchString, Double offset, Integer limit) {
+        return ratingDao.search(faculty, entranceYear, searchString, offset, limit);
+    }
+
+    @Transactional
+    @Override
+    public List<RatingDto> searchDto(AccountInfo accountInfo, String searchString, Double offset, Integer limit) {
+        return ratingDao.search(accountInfo.getFaculty(), accountInfo.getEntranceYear(),
+                searchString, offset, limit).parallelStream().map(ratingMapper::toDto).collect(Collectors.toList());
+    }
+
+    @Transactional
+    @Override
     public void update(Rating rating) {
         ratingDao.update(rating);
     }

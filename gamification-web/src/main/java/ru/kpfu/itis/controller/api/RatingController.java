@@ -43,4 +43,19 @@ public class RatingController {
         List<RatingDto> items = ratingService.getRatingDtos(accountInfo, offset, limit);
         return new ResponseEntity<>(items, HttpStatus.OK);
     }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/search")
+    @ApiOperation(httpMethod = "GET", value = "search in users rating")
+    @ApiImplicitParams(value = {@ApiImplicitParam(name = "token", value = "token", required = true, dataType = "string", paramType = "query")})
+    @ResponseBody
+    public ResponseEntity<List<RatingDto>> search(@RequestParam(required = false) String searchString,
+                                                  @RequestParam(required = false) Double offset,
+                                                  @RequestParam(required = false) Integer limit) {
+        AccountInfo accountInfo = securityService.getCurrentUser().getAccountInfo();
+        if (accountInfo == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        List<RatingDto> items = ratingService.searchDto(accountInfo, searchString, offset, limit);
+        return new ResponseEntity<>(items, HttpStatus.OK);
+    }
 }

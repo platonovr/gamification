@@ -30,6 +30,13 @@ public interface RatingService {
     void recalculateRating(AccountInfo accountInfo);
 
     @Transactional
+    List<Rating> search(Faculty faculty, Integer entranceYear,
+                        String searchString, Double offset, Integer limit);
+
+    @Transactional
+    List<RatingDto> searchDto(AccountInfo accountInfo, String searchString, Double offset, Integer limit);
+
+    @Transactional
     void update(Rating rating);
 
     @Transactional
