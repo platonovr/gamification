@@ -37,8 +37,10 @@ public class RatingDaoImpl extends SimpleDaoImpl implements RatingDao {
         return getHibernateTemplate().execute((aSession) -> {
             Criteria criteria = aSession.createCriteria(Rating.class)
                     .createAlias("accountInfo", "account")
+                    .createAlias("account.group", "group")
                     .add(Restrictions.eq("account.entranceYear", entranceYear))
-                    .add(Restrictions.eq("account.faculty", faculty));
+                    .add(Restrictions.eq("account.faculty", faculty))
+                    .add(Restrictions.isNotNull("account.group"));
             if (offset != null)
                 criteria.add(Restrictions.le("point", offset));
             if (order) {
