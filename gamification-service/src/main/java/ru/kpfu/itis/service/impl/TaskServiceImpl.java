@@ -1,18 +1,25 @@
 package ru.kpfu.itis.service.impl;
 
+import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kpfu.itis.dao.AccountDao;
+import ru.kpfu.itis.dao.AccountTaskDao;
 import ru.kpfu.itis.dao.TaskCategoryDao;
 import ru.kpfu.itis.dao.TaskDao;
+import ru.kpfu.itis.dto.ErrorDto;
 import ru.kpfu.itis.dto.TaskCategoryDto;
 import ru.kpfu.itis.dto.TaskDto;
 import ru.kpfu.itis.dto.TaskInfoDto;
+import ru.kpfu.itis.dto.enums.Error;
 import ru.kpfu.itis.mapper.TaskInfoMapper;
 import ru.kpfu.itis.mapper.TaskMapper;
+import ru.kpfu.itis.model.Account;
 import ru.kpfu.itis.model.AccountTask;
 import ru.kpfu.itis.model.Task;
 import ru.kpfu.itis.model.TaskStatus;
@@ -20,7 +27,9 @@ import ru.kpfu.itis.model.classifier.TaskCategory;
 import ru.kpfu.itis.security.SecurityService;
 import ru.kpfu.itis.service.TaskService;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -34,6 +43,9 @@ public class TaskServiceImpl implements TaskService {
 
     @Autowired
     private TaskDao taskDao;
+
+    @Autowired
+    private AccountTaskDao accountTaskDao;
 
     @Autowired
     private TaskCategoryDao taskCategoryDao;
@@ -135,5 +147,52 @@ public class TaskServiceImpl implements TaskService {
         return createdTasks.stream().map(taskInfoMapper::toDto).collect(Collectors.toList());
     }
 
+    @Override
+    @Transactional
+    public ResponseEntity enroll(Account account, Long taskId) {
+        Validate.notNull(account);
+        Task neededTask = taskDao.findById(taskId);
+        if (Objects.isNull(neededTask)) {
+            return new ResponseEntity<>(new ErrorDto(Error.TASK_NOT_FOUND), HttpStatus.NOT_FOUND);
+        }
+
+        AccountTask accountTask = accountTaskDao.findByTaskAndAccount(taskId, account.getId());
+        if (Objects.isNull(accountTask)) {
+            AccountTask youngAccountTask = createAccountTask(account, neededTask);
+            accountTaskDao.save(youngAccountTask);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            if (TaskStatus.TaskStatusType.CANCELED.equals(accountTask.getTaskStatus().getType()) && Boolean.TRUE.equals(accountTask.getAvailability())) {
+                TaskStatus newStatus = createNewStatus(accountTask);
+                accountTask.setNewStatus(newStatus);
+                accountTask.setAttemptsCount(accountTask.getAttemptsCount() + 1);
+                accountTaskDao.save(accountTask);
+                return new ResponseEntity<>(HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(new ErrorDto(Error.TASK_ALREADY_TAKEN), HttpStatus.BAD_REQUEST);
+            }
+        }
+    }
+
+
+    public AccountTask createAccountTask(Account account, Task task) {
+        AccountTask accountTask = new AccountTask();
+        TaskStatus taskStatus = createNewStatus(accountTask);
+        accountTask.setCreateTime(new Date());
+        accountTask.setAccount(account);
+        accountTask.setTask(task);
+        accountTask.setAttemptsCount(1);
+        accountTask.setAvailability(false);
+        accountTask.setNewStatus(taskStatus);
+        return accountTask;
+    }
+
+    public TaskStatus createNewStatus(AccountTask accountTask) {
+        TaskStatus taskStatus = new TaskStatus();
+        taskStatus.setAccountTask(accountTask);
+        taskStatus.setCreateTime(new Date());
+        taskStatus.setType(TaskStatus.TaskStatusType.ASSIGNED);
+        return taskStatus;
+    }
 
 }

@@ -1,11 +1,13 @@
 package ru.kpfu.itis.service;
 
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.transaction.annotation.Transactional;
 import ru.kpfu.itis.dto.TaskCategoryDto;
 import ru.kpfu.itis.dto.TaskDto;
-import ru.kpfu.itis.model.AccountTask;
 import ru.kpfu.itis.dto.TaskInfoDto;
+import ru.kpfu.itis.model.Account;
+import ru.kpfu.itis.model.AccountTask;
 import ru.kpfu.itis.model.Task;
 import ru.kpfu.itis.model.TaskStatus;
 import ru.kpfu.itis.model.classifier.TaskCategory;
@@ -58,4 +60,13 @@ public interface TaskService {
      * @param userId admin or teacher id
      */
     List<TaskInfoDto> getCreatedTasks(Long userId, Integer offset, Integer limit);
+
+    /**
+     * User takes task to do
+     *
+     * @param account current account
+     * @param taskId  id of needed task
+     * @return http code
+     */
+    ResponseEntity enroll(Account account, Long taskId);
 }

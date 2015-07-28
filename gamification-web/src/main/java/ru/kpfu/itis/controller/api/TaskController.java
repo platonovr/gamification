@@ -7,7 +7,6 @@ import com.wordnik.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
@@ -17,8 +16,8 @@ import ru.kpfu.itis.dto.*;
 import ru.kpfu.itis.dto.enums.Error;
 import ru.kpfu.itis.model.*;
 import ru.kpfu.itis.model.enums.StudyTaskType;
-import ru.kpfu.itis.service.*;
 import ru.kpfu.itis.security.SecurityService;
+import ru.kpfu.itis.service.*;
 import ru.kpfu.itis.util.Constant;
 import ru.kpfu.itis.validator.TaskValidator;
 
@@ -172,4 +171,11 @@ public class TaskController {
         return taskService.getAllCategories();
     }
 
+    @ApiOperation("user takes task")
+    @ApiImplicitParams(value = {@ApiImplicitParam(name = "token", value = "token", required = true, dataType = "string", paramType = "query")})
+    @RequestMapping(value = "/{taskId:[1-9]+[0-9]*}/enroll", method = RequestMethod.POST)
+    public ResponseEntity enroll(@PathVariable Long taskId) {
+        Account account = securityService.getCurrentUser();
+        return taskService.enroll(account, taskId);
+    }
 }
