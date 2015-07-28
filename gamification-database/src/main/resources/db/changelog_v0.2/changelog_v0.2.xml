@@ -7,5 +7,6 @@
                    logicalFilePath="changelog_v0.2.xml">
 
     <include file="20150714_1150.xml" relativeToChangelogFile="true"/>
+    <include file="20150728_2217.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

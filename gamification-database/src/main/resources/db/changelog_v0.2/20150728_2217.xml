@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="
+                       http://www.liquibase.org/xml/ns/dbchangelog
+                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd"
+                   logicalFilePath="20150728_2217.xml">
+
+    <changeSet id="updateAccountAndRating" author="rfatkhullin">
+        <loadUpdateData tableName="ACCOUNT" file="db/changelog_v0.2/csv/account.csv" primaryKey="ACCOUNT_ID"/>
+        <loadUpdateData tableName="ACCOUNT_INFO" file="db/changelog_v0.2/csv/account_info.csv"
+                        primaryKey="ACCOUNT_INFO_ID"/>
+        <loadUpdateData tableName="RATING" file="db/changelog_v0.2/csv/rating.csv" primaryKey="account_info_id"/>
+    </changeSet>
+
+</databaseChangeLog>

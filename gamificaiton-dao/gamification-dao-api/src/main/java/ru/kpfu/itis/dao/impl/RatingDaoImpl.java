@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import ru.kpfu.itis.dao.RatingDao;
 import ru.kpfu.itis.model.Faculty;
 import ru.kpfu.itis.model.Rating;
+import ru.kpfu.itis.model.enums.Role;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,9 +38,11 @@ public class RatingDaoImpl extends SimpleDaoImpl implements RatingDao {
         return getHibernateTemplate().execute((aSession) -> {
             Criteria criteria = aSession.createCriteria(Rating.class)
                     .createAlias("accountInfo", "account")
+                    .createAlias("account.account", "user")
                     .createAlias("account.group", "group")
                     .add(Restrictions.eq("account.entranceYear", entranceYear))
                     .add(Restrictions.eq("account.faculty", faculty))
+                    .add(Restrictions.eq("user.role", "STUDENT"))
                     .add(Restrictions.isNotNull("account.group"));
             if (offset != null)
                 criteria.add(Restrictions.le("point", offset));
@@ -60,9 +63,11 @@ public class RatingDaoImpl extends SimpleDaoImpl implements RatingDao {
         return getHibernateTemplate().execute((aSession) -> {
             Criteria criteria = aSession.createCriteria(Rating.class)
                     .createAlias("accountInfo", "account")
+                    .createAlias("account.account", "user")
                     .createAlias("account.group", "group")
                     .add(Restrictions.eq("account.entranceYear", entranceYear))
                     .add(Restrictions.eq("account.faculty", faculty))
+                    .add(Restrictions.eq("user.role", Role.STUDENT))
                     .add(Restrictions.isNotNull("account.group"));
             if (offset != null)
                 criteria.add(Restrictions.le("point", offset));
