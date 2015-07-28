@@ -16,22 +16,30 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import ru.kpfu.itis.model.Account;
 import ru.kpfu.jbl.auth.AuthenticationFilter;
-import ru.kpfu.jbl.auth.config.AuthSecirityModuleConfig;
+import ru.kpfu.jbl.auth.config.AuthSecurityModuleConfig;
+import ru.kpfu.jbl.auth.config.AuthWebServiceConfig;
+import ru.kpfu.jbl.auth.config.EncacheTokenServiceConfig;
 import ru.kpfu.jbl.auth.ep.RestAuthenticationEntryPoint;
+import ru.kpfu.jbl.auth.service.TokenService;
+import ru.kpfu.jbl.auth.service.impl.SecurityContextHolderServiceImpl;
 
 @Configuration
 @EnableWebMvcSecurity
-@Import(AuthSecirityModuleConfig.class)
+@Import(value = {AuthSecurityModuleConfig.class, AuthWebServiceConfig.class, EncacheTokenServiceConfig.class})
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    @Qualifier("domainAuthProvider")
+    @Qualifier("webAuthProvider")
     private AuthenticationProvider authenticationProvider;
 
     @Autowired
     @Qualifier("tokenAuthProvider")
     private AuthenticationProvider tokenAuthenticationProvider;
+
+    @Autowired
+    TokenService tokenService;
 
     private ObjectMapper mapper;
 
@@ -81,5 +89,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     public void setMapper(ObjectMapper mapper) {
         this.mapper = mapper;
+    }
+
+    @Bean
+    public SecurityContextHolderServiceImpl<Account> securityContextHolderService(){
+        return new SecurityContextHolderServiceImpl<>(tokenService);
     }
 }

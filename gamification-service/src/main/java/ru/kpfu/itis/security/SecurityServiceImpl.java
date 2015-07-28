@@ -1,13 +1,11 @@
 package ru.kpfu.itis.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kpfu.itis.dao.security.SecurityDao;
 import ru.kpfu.itis.model.Account;
+import ru.kpfu.jbl.auth.service.SecurityContextHolderService;
 
 import static java.util.Optional.ofNullable;
 
@@ -19,6 +17,10 @@ public class SecurityServiceImpl implements SecurityService {
 
     @Autowired
     private SecurityDao securityDao;
+
+    //loading only by web configs
+    @Autowired(required = false)
+    SecurityContextHolderService<Account> securityContextHolderService;
 
 
     @Override
@@ -36,9 +38,11 @@ public class SecurityServiceImpl implements SecurityService {
 
     @Override
     public Account getCurrentUser() {
-        return (Account) ofNullable(SecurityContextHolder.getContext())
-                .map(SecurityContext::getAuthentication)
-                .map(Authentication::getPrincipal).orElse(null);
+        if (securityContextHolderService == null) {
+            return null;
+        }
+        return ofNullable(securityContextHolderService.getCurrentUser())
+                .orElse(null);
     }
 
     @Override

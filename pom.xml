@@ -416,7 +416,7 @@
         <dependency>
             <groupId>ru.kpfu.jbl.auth</groupId>
             <artifactId>auth-module</artifactId>
-            <version>0.9.2</version>
+            <version>1.2.0</version>
         </dependency>
     </dependencies>
 
