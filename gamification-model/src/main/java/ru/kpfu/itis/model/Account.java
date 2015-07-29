@@ -61,6 +61,11 @@ public class Account extends BaseLongIdEntity implements AuthUser {
         return role != null ? role.name() : null;
     }
 
+    @Override
+    public String getSalt() {
+        return null;
+    }
+
     public void setPassword(String password) {
         this.password = password;
     }
