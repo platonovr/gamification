@@ -116,7 +116,7 @@ public class TaskController {
     @RequestMapping(value = "/{taskId:[1-9]+[0-9]*}/user/{accountId:[1-9]+[0-9]*}", method = RequestMethod.POST)
     public ResponseEntity checkTask(@PathVariable Long taskId,
                                     @PathVariable Long accountId,
-                                    @RequestBody Integer mark) {
+                                    @RequestParam Integer mark) {
         AccountTask accountTask = accountTaskService.findByTaskAndAccount(taskId, accountId);
         if (accountTask != null) {
             TaskStatus taskStatus = new TaskStatus();
