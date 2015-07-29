@@ -27,11 +27,11 @@ import ru.kpfu.jbl.auth.service.impl.SecurityContextHolderServiceImpl;
 
 @Configuration
 @EnableWebMvcSecurity
-@Import(value = {AuthSecurityModuleConfig.class, AuthWebServiceConfig.class, EncacheTokenServiceConfig.class})
+@Import(value = {AuthSecurityModuleConfig.class,  EncacheTokenServiceConfig.class})
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    @Qualifier("webAuthProvider")
+    @Qualifier("domainAuthProvider")
     private AuthenticationProvider authenticationProvider;
 
     @Autowired
