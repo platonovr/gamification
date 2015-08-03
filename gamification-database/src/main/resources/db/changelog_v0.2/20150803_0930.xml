@@ -8,7 +8,7 @@
 
     <changeSet id="20150803_0930" author="aminibaev">
         <sql>
-            update task SET end_date = '01-01-2020'
+            update task SET end_date = '2020-01-01'
         </sql>
     </changeSet>
 
