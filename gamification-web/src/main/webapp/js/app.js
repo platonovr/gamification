@@ -34,6 +34,15 @@ Array.prototype.remove = function (from, to) {
             templateUrl: '/parts/taskForm.html',
             controller: 'ChallengeCreationController'
         })
+    }).run(function ($rootScope, $location) {
+        //$rootScope.$on("$routeChangeStart", function (event, next, current) {
+        //    if (AuthInfo.isLogin()) {
+        //        // no logged user, redirect to /login
+        //        if (next.templateUrl === "partials/login.html") {
+        //        } else {
+        //            $location.path("/login");
+        //        }
+        //    }
+        //});
     });
-
 })();
