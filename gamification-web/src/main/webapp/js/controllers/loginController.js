@@ -7,7 +7,9 @@ function LoginController($scope, $http, $location, $timeout, AuthInfo) {
     var vm = this;
     vm.login = login;
     vm.user = {};
-    console.log("success");
+    if (AuthInfo.isLogin()) {
+        $location.path('#/challenges');
+    }
     function login() {
         AuthInfo.login(vm.user).then(function (data) {
             //$scope.$emit('Auth');
