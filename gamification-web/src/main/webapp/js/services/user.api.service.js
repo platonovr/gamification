@@ -10,7 +10,8 @@ UserApiService.$inject = ['$http', 'ApiService', 'CONSTANTS'];
 function UserApiService($http, ApiService, CONSTANTS) {
     return {
         loginUser: loginUser,
-        register: register
+        register: register,
+        getUser: getUser
     };
 
     function loginUser(param) {
@@ -19,5 +20,9 @@ function UserApiService($http, ApiService, CONSTANTS) {
 
     function register(user) {
         return $http.post(ApiService.api('register'), user);
+    }
+
+    function getUser(token) {
+        return $http.get(CONSTANTS.API_URI_PREFIX + '/user/current', {params: {token: token}})
     }
 }

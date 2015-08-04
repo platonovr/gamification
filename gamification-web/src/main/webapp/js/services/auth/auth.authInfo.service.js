@@ -10,18 +10,29 @@ angular.module('gamificationApp')
 AuthInfo.$inject = ['$http', '$location', 'UserApiService', '$q', '$rootScope'];
 function AuthInfo($http, $location, UserApiService, $q, $rootScope) {
     var user = null;
+
     return {
-        login : function (loginForm) {
+        updateCurrentUser: function (token) {
             var self = this;
-            var params = {username:loginForm.username, password:loginForm.password};
-            return UserApiService.loginUser(params).then(function(data){
-                self.setToken(data.data.token);
+            UserApiService.getUser(token).then(function (response) {
+                self.setUser(response.data);
+            }, function (error) {
+                return $q.reject(error);
+            });
+        },
+        login: function (loginForm) {
+            var self = this;
+            var params = {username: loginForm.username, password: loginForm.password};
+            return UserApiService.loginUser(params).then(function (response) {
+                var token = response.data.token;
+                self.setToken(token);
+                self.updateCurrentUser(token);
                 $rootScope.$broadcast('authStateChanged', true);
             }, function (error) {
                 return $q.reject(error);
             });
         },
-        logout : function () {
+        logout: function () {
             localStorage.removeItem('token');
             localStorage.removeItem('auth');
             user = null;
@@ -31,7 +42,7 @@ function AuthInfo($http, $location, UserApiService, $q, $rootScope) {
         setToken: function (token) {
             localStorage.setItem('token', JSON.stringify(token));
         },
-        getToken: function(){
+        getToken: function () {
             return JSON.parse(localStorage.getItem('token'));
         },
         setUser: function (data) {
@@ -42,7 +53,7 @@ function AuthInfo($http, $location, UserApiService, $q, $rootScope) {
             this.checkUser();
             return !(user == null);
         },
-        getUser : function () {
+        getUser: function () {
             this.checkUser();
             return user;
         },

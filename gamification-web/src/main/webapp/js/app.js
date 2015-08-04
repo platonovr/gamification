@@ -9,7 +9,7 @@ Array.prototype.remove = function (from, to) {
 
 (function () {
     var app = angular.module('gamificationApp',
-        ['ngRoute', 'ngFileUpload', 'infinite-scroll','LocalStorageModule']);
+        ['ngRoute', 'ngFileUpload', 'infinite-scroll', 'LocalStorageModule']);
 
 
     angular.module('infinite-scroll').value('THROTTLE_MILLISECONDS', 250);
@@ -33,8 +33,6 @@ Array.prototype.remove = function (from, to) {
         }).when('/challenges/create', {
             templateUrl: '/parts/taskForm.html',
             controller: 'ChallengeCreationController'
-        }).otherwise({
-            redirectTo: '/login'
         })
     });
 
