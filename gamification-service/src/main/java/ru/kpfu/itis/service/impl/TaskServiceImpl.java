@@ -8,21 +8,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.kpfu.itis.dao.AccountDao;
-import ru.kpfu.itis.dao.AccountTaskDao;
-import ru.kpfu.itis.dao.TaskCategoryDao;
-import ru.kpfu.itis.dao.TaskDao;
-import ru.kpfu.itis.dto.ErrorDto;
-import ru.kpfu.itis.dto.TaskCategoryDto;
-import ru.kpfu.itis.dto.TaskDto;
-import ru.kpfu.itis.dto.TaskInfoDto;
+import ru.kpfu.itis.dao.*;
+import ru.kpfu.itis.dto.*;
 import ru.kpfu.itis.dto.enums.Error;
 import ru.kpfu.itis.mapper.TaskInfoMapper;
 import ru.kpfu.itis.mapper.TaskMapper;
-import ru.kpfu.itis.model.Account;
-import ru.kpfu.itis.model.AccountTask;
-import ru.kpfu.itis.model.Task;
-import ru.kpfu.itis.model.TaskStatus;
+import ru.kpfu.itis.model.*;
 import ru.kpfu.itis.model.classifier.TaskCategory;
 import ru.kpfu.itis.security.SecurityService;
 import ru.kpfu.itis.service.TaskService;
@@ -106,7 +97,12 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     @Transactional
-    public void setNewStatus(AccountTask accountTask, TaskStatus taskStatus) {
+    public void setNewStatus(AccountTask accountTask) {
+        accountTask = accountTaskDao.findById(AccountTask.class, accountTask.getId());
+//        Hibernate.initialize(accountTask.getTaskHistory());
+        TaskStatus taskStatus = new TaskStatus();
+        taskStatus.setAccountTask(accountTask);
+        taskStatus.setType(TaskStatus.TaskStatusType.COMPLETED);
         accountTask.setNewStatus(taskStatus);
     }
 

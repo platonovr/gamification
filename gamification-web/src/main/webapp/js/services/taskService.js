@@ -28,12 +28,11 @@ angular.module('gamificationApp').service('TaskService', ['$http', 'CONSTANTS', 
         })
     };
     this.check = function (challenge, performer, mark) {
+        var params = {
+            token: AuthInfo.getToken(),
+            mark: mark
+        };
         return $http.post(CONSTANTS.API_URI_PREFIX + CONSTANTS.TASK_URI + '/' + challenge.id +
-            '/user/' + performer.id, {
-            params: {
-                token: AuthInfo.getToken(),
-                mark: mark
-            }
-        });
+            '/user/' + performer.id, params);
     };
 }]);

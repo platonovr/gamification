@@ -119,10 +119,7 @@ public class TaskController {
                                     @RequestParam Integer mark) {
         AccountTask accountTask = accountTaskService.findByTaskAndAccount(taskId, accountId);
         if (accountTask != null) {
-            TaskStatus taskStatus = new TaskStatus();
-            taskStatus.setAccountTask(accountTask);
-            taskStatus.setType(TaskStatus.TaskStatusType.COMPLETED);
-            taskService.setNewStatus(accountTask, taskStatus);
+            taskService.setNewStatus(accountTask);
             accountTask.setMark(mark);
             //Change progress of linked badges
             Task task = taskService.findTaskById(taskId);

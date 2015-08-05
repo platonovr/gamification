@@ -33,7 +33,7 @@ public interface TaskService {
     TaskCategory save(TaskCategory taskCategory);
 
     @Transactional
-    void setNewStatus(AccountTask accountTask, TaskStatus taskStatus);
+    void setNewStatus(AccountTask accountTask);
 
     List<Task> getActualTasks();
 

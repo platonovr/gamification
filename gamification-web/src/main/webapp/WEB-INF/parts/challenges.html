@@ -7,7 +7,7 @@
             </button>
             <input class="search_input" type="text" id="search" placeholder="Поиск">
         </form>
-        <div infinite-scroll="loadMore()" infinite-scroll-disabled='autoLoadingDisabled'  class="events">
+        <div infinite-scroll="loadMore()" infinite-scroll-disabled='autoLoadingDisabled' class="events">
             <div class="event" ng-repeat="challenge in challenges">
                 <h3>
                     <span class="icon icon-bookmark_icon"></span>
@@ -43,26 +43,8 @@
                         <dd>
                             <div ng-repeat="performer in challenge.users" class="person">
                                 <span>{{performer.first_name}} {{performer.last_name}}, {{performer.group}}</span>
-                                <span ng-click="showedPerformerBlocks[challenge.id][$index] = !showedPerformerBlocks[challenge.id][$index]"
+                                <span ng-click="showChangeBlock(challenge,performer)"
                                       class="icon-tick"></span>
-
-                                <div ng-show="showedPerformerBlocks[challenge.id][$index]" class="task_check">
-                                    <h4>{{challenge.name}}</h4>
-                                    <dl>
-                                        <dt>Исполнитель:</dt>
-                                        <dd>{{performer.first_name}} {{performer.last_name}}, {{performer.group}}</dd>
-                                    </dl>
-                                    <dl>
-                                        <dt>Оценка:</dt>
-                                        <dd>{{challenge.max_volume}}</dd>
-                                    </dl>
-                                    <dl>
-                                        <dt>Итоговый балл:</dt>
-                                        <dd><input type="number" max={{challenge.max_volume}} min="0" name="mark"
-                                                   ng-model="mark"></dd>
-                                    </dl>
-                                    <button ng-click="checkTask(challenge, performer, mark)">Подтвердить</button>
-                                </div>
                             </div>
                         </dd>
                     </dl>
@@ -70,4 +52,17 @@
             </div>
         </div>
     </div>
+</div>
+
+<div id="dialog-message" title="Прийти на лекцию">
+    <p>
+        <span class="grey_label">Исполнитель:</span>
+        <span class="nowrap">{{mark_dialog.performer.first_name}} {{mark_modal.performer.last_name}}, {{mark_dialog.performer.group}}</span>
+    </p>
+
+    <p>
+        <span class="grey_label">Максимальная оценка:</span> {{mark_dialog.challenge.max_volume}} баллов
+    </p>
+    <span class="grey_label">Итоговый балл:</span>
+    <input class="mark" type="number" max={{mark_dialog.challenge.max_volume}} min="0" ng-model="mark_dialog.mark">
 </div>

@@ -17,7 +17,7 @@
     <mvc:resources mapping="/js/**" location="/js/"/>
     <mvc:resources mapping="/lib/**" location="/lib/"/>
     <mvc:resources mapping="/parts/**" location="/WEB-INF/parts/"/>
-    <mvc:resources mapping="/files/**" location="file:///${image.upload.path}" cache-period="86400"/>
+    <mvc:resources mapping="/files/**" location="file://${image.upload.path}" cache-period="86400"/>
     <mvc:resources mapping="/index.html" location="/WEB-INF/"/>
     <!-- Swagger resources-->
     <mvc:resources mapping="/swagger/css/**" location="/swagger/css/"/>

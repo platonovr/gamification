@@ -2,7 +2,6 @@ package ru.kpfu.itis.dao.impl;
 
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 import ru.kpfu.itis.dao.AccountTaskDao;
 import ru.kpfu.itis.model.AccountTask;
 
@@ -12,7 +11,6 @@ import ru.kpfu.itis.model.AccountTask;
 @Repository
 public class AccountTaskDaoImpl extends SimpleDaoImpl implements AccountTaskDao {
 
-    @Transactional
     @Override
     public AccountTask findByTaskAndAccount(Long taskId, Long accountId) {
         return getHibernateTemplate().execute((aSession) ->

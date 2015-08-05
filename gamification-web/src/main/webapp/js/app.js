@@ -22,6 +22,7 @@ Array.prototype.remove = function (from, to) {
     });
 
     app.config(function ($routeProvider, $locationProvider) {
+
         $routeProvider.when('/', {
             redirectTo: '/login'
         }).when('/login', {

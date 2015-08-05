@@ -1,5 +1,6 @@
 package ru.kpfu.itis.model;
 
+import org.hibernate.Hibernate;
 import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
