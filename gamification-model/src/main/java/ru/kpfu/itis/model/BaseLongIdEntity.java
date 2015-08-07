@@ -1,7 +1,5 @@
 package ru.kpfu.itis.model;
 
-import org.hibernate.annotations.CreationTimestamp;
-
 import javax.persistence.*;
 import java.util.Date;
 
@@ -14,7 +12,6 @@ public abstract class BaseLongIdEntity implements IdentifiedEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @CreationTimestamp
     @Column(name = "CREATE_TIME", nullable = false)
     private Date createTime;
 
@@ -24,6 +21,11 @@ public abstract class BaseLongIdEntity implements IdentifiedEntity {
 
     @Column(name = "FINISH_TIME")
     private Date finishTime;
+
+    public BaseLongIdEntity() {
+        //FIXME
+        prePersist();
+    }
 
 
     public Long getId() {
@@ -66,5 +68,15 @@ public abstract class BaseLongIdEntity implements IdentifiedEntity {
 
     public void setFinishTime(Date finishTime) {
         this.finishTime = finishTime;
+    }
+
+
+    public void prePersist() {
+        if (createTime == null) {
+            createTime = new Date();
+        }
+        if (changeTime == null) {
+            changeTime = new Date();
+        }
     }
 }

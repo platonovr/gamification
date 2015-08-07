@@ -10,10 +10,7 @@ import ru.kpfu.itis.dto.BadgeDto;
 import ru.kpfu.itis.mapper.AccountBadgeMapper;
 import ru.kpfu.itis.model.*;
 import ru.kpfu.itis.security.SecurityService;
-import ru.kpfu.itis.service.AccountBadgeService;
-import ru.kpfu.itis.service.AccountInfoService;
-import ru.kpfu.itis.service.AccountService;
-import ru.kpfu.itis.service.RatingService;
+import ru.kpfu.itis.service.*;
 import ru.kpfu.itis.util.Constant;
 
 import java.util.ArrayList;

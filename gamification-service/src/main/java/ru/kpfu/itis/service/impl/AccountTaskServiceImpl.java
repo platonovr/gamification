@@ -25,6 +25,6 @@ public class AccountTaskServiceImpl implements AccountTaskService {
     @Override
     @Transactional
     public void saveOrUpdate(AccountTask accountTask) {
-        accountTaskDao.saveOrUpdate(accountTask);
+        accountTaskDao.update(accountTask);
     }
 }

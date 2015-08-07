@@ -5,6 +5,6 @@ import ru.kpfu.itis.model.Faculty;
 /**
  * Created by Rigen on 20.07.15.
  */
-public interface FacultyDao extends SimpleDao {
+public interface FacultyDao extends AbstractDao<Faculty, Long> {
     Faculty findByName(String name);
 }

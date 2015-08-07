@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by timur on 23.06.15.
  */
-public interface TaskDao extends SimpleDao {
+public interface TaskDao extends AbstractDao<Task, Long> {
 
     Task submitTask(Task task);
 

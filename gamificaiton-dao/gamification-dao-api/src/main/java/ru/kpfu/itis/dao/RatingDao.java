@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by Rigen on 17.07.15.
  */
-public interface RatingDao extends SimpleDao {
+public interface RatingDao extends AbstractDao<Rating, Long> {
     List<Rating> getRating(Faculty faculty, Integer entranceYear, Double offset, Integer limit);
 
     List<Rating> getRatingOrderedByPoint(Faculty faculty, Integer entranceYear, Double offset, Integer limit);
@@ -23,5 +23,4 @@ public interface RatingDao extends SimpleDao {
 
     void update(Rating entity);
 
-    void save(Rating entity);
 }

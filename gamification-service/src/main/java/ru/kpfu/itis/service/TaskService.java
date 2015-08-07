@@ -6,10 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.kpfu.itis.dto.TaskCategoryDto;
 import ru.kpfu.itis.dto.TaskDto;
 import ru.kpfu.itis.dto.TaskInfoDto;
-import ru.kpfu.itis.model.Account;
-import ru.kpfu.itis.model.AccountTask;
-import ru.kpfu.itis.model.Task;
-import ru.kpfu.itis.model.TaskStatus;
+import ru.kpfu.itis.model.*;
 import ru.kpfu.itis.model.classifier.TaskCategory;
 
 import java.util.List;

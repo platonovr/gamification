@@ -1,8 +1,9 @@
 package ru.kpfu.itis.dao.security;
 
+import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import ru.kpfu.itis.dao.base.AbstractGenericDao;
+import ru.kpfu.itis.dao.base.AbstractDaoImpl;
 import ru.kpfu.itis.model.Account;
 
 /**
@@ -10,19 +11,24 @@ import ru.kpfu.itis.model.Account;
  */
 
 @Repository("securityDao")
-public class SecurityDaoImpl extends AbstractGenericDao
+public class SecurityDaoImpl extends AbstractDaoImpl<Account, Long>
         implements SecurityDao {
+
+    protected SecurityDaoImpl() {
+        super(Account.class);
+    }
 
     @Override
     public Account getAccount(Long accountId) {
-        return getHibernateTemplate().get(Account.class, accountId);
+        return (Account) getCurrentSession().get(Account.class, accountId);
     }
 
     @Override
     @Transactional
     public <T extends Account> T saveAccount(Class<T> accountClass, T account) {
-        getHibernateTemplate().saveOrUpdate(account);
-        return account;
+        Session currentSession = getCurrentSession();
+        currentSession.saveOrUpdate(account);
+        return (T) findById(account.getId());
     }
 
 

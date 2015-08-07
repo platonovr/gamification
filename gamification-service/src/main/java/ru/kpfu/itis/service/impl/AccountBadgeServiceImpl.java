@@ -35,6 +35,6 @@ public class AccountBadgeServiceImpl implements AccountBadgeService {
     @Transactional
     @Override
     public void saveOrUpdate(AccountBadge accountBadge) {
-        accountBadgeDao.saveOrUpdate(accountBadge);
+        accountBadgeDao.update(accountBadge);
     }
 }

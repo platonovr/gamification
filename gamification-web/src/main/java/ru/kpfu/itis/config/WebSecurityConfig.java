@@ -19,7 +19,6 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 import ru.kpfu.itis.model.Account;
 import ru.kpfu.jbl.auth.AuthenticationFilter;
 import ru.kpfu.jbl.auth.config.AuthSecurityModuleConfig;
-import ru.kpfu.jbl.auth.config.AuthWebServiceConfig;
 import ru.kpfu.jbl.auth.config.EncacheTokenServiceConfig;
 import ru.kpfu.jbl.auth.ep.RestAuthenticationEntryPoint;
 import ru.kpfu.jbl.auth.service.TokenService;

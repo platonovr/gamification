@@ -11,13 +11,6 @@
                 org.hibernate.dialect.PostgreSQL9Dialect
             </prop>
 
-            <prop key="transaction.factory_class">
-                org.springframework.orm.hibernate4.SpringTransactionFactory
-            </prop>
-
-            <prop key="transaction.manager_lookup_class">
-                org.springframework.orm.hibernate4.LocalTransactionManagerLookup
-            </prop>
             <prop key="hibernate.show_sql">
                 ${hibernate.showSql}
             </prop>

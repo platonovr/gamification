@@ -18,6 +18,9 @@
         <mapping class="ru.kpfu.itis.model.Rating"/>
         <mapping class="ru.kpfu.itis.model.classifier.SubjectType"/>
         <mapping class="ru.kpfu.itis.model.Subject"/>
+        <!-- FIXME event listeners to PrePersist-->
+        <listener class="ru.kpfu.itis.model.listener.SaveOrUpdateDateListener"/>
+        <listener class="org.hibernate.event.internal.DefaultSaveOrUpdateEventListener"/>
     </session-factory>
 
 </hibernate-configuration>

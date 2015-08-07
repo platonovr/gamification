@@ -6,12 +6,11 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import ru.kpfu.itis.model.Account;
-import ru.kpfu.itis.model.AccountTask;
-import ru.kpfu.itis.model.Task;
-import ru.kpfu.itis.model.TaskStatus;
+import org.springframework.transaction.annotation.Transactional;
+import ru.kpfu.itis.dao.AccountTaskDao;
+import ru.kpfu.itis.dao.TaskDao;
+import ru.kpfu.itis.model.*;
 import ru.kpfu.itis.model.classifier.TaskCategory;
-import ru.kpfu.itis.processing.SimpleService;
 import ru.kpfu.itis.security.SecurityService;
 
 import java.util.Date;
@@ -36,11 +35,14 @@ public class TaskServiceTest {
     private SecurityService securityService;
 
     @Autowired
-    private SimpleService simpleService;
+    private TaskDao taskDao;
 
     private Account testAccount;
 
     private TaskCategory taskCategory;
+
+    @Autowired
+    private AccountTaskDao accountTaskDao;
 
     @Before
     public void setUp() throws Exception {
@@ -50,6 +52,7 @@ public class TaskServiceTest {
 
 
     @Test
+    @Transactional
     public void submittingTask() {
         Account testAccount = TestToolkit.fakeAccount();
         testAccount = securityService.saveAccount(Account.class, testAccount);
@@ -71,7 +74,7 @@ public class TaskServiceTest {
         task.setBadge(null);
         task = taskService.submitTask(task);
 
-        Task submittedTask = simpleService.findById(Task.class, task.getId());
+        Task submittedTask = taskDao.findById(task.getId());
 
         assertNotNull(submittedTask);
 
@@ -88,7 +91,7 @@ public class TaskServiceTest {
         accountTask.setAvailability(false);
         accountTask.setNewStatus(taskStatus);
 
-        simpleService.save(accountTask);
+        accountTaskDao.save(accountTask);
 
         List<Task> tasks = taskService.getTasksByUser(testAccount.getId());
         assertEquals(tasks.size(), 1);

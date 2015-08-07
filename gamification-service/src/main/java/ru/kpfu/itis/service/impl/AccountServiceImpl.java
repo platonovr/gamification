@@ -11,8 +11,6 @@ import ru.kpfu.itis.service.AccountService;
 import ru.kpfu.jbl.auth.domain.AuthUser;
 import ru.kpfu.jbl.auth.response.UserResponse;
 
-import java.io.Serializable;
-
 import static java.util.Optional.ofNullable;
 
 /**
@@ -27,10 +25,11 @@ public class AccountServiceImpl implements AccountService {
     @Transactional
     @Override
     public Account findById(Long id) {
-        return accountDao.findById(Account.class, id);
+        return accountDao.findById(id);
     }
 
     @Override
+    @javax.transaction.Transactional
     public AuthUser findUserByLogin(String s) {
         return accountDao.findByLogin(s);
     }
@@ -40,7 +39,7 @@ public class AccountServiceImpl implements AccountService {
         if (userResponse.getId() == null) {
             return null;
         }
-        Account account = ofNullable(accountDao.findById(Account.class, userResponse.getId())).orElse(accountDao.findByLogin(userResponse.getLogin()));
+        Account account = ofNullable(accountDao.findById(userResponse.getId())).orElse(accountDao.findByLogin(userResponse.getLogin()));
         if (account == null) {
             //TODO proper save user
             account = new Account();
@@ -49,8 +48,8 @@ public class AccountServiceImpl implements AccountService {
             account.setPassword("");
             AccountInfo accountInfo = new AccountInfo();
             accountInfo.setFirstName(userResponse.getName());
-            Serializable id = accountDao.save(account);
-            account = accountDao.findById(Account.class, id);
+            Long id = accountDao.save(account);
+            account = accountDao.findById(id);
         }
         return account;
     }

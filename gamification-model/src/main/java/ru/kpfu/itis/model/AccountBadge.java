@@ -1,7 +1,6 @@
 package ru.kpfu.itis.model;
 
 
-import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -62,7 +61,6 @@ public class AccountBadge extends BaseLongIdEntity {
     }
 
     @Override
-    @CreationTimestamp
     public Date getCreateTime() {
         return super.getCreateTime();
     }

@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by Rigen on 22.06.15.
  */
-public interface AccountBadgeDao extends SimpleDao {
+public interface AccountBadgeDao extends AbstractDao<AccountBadge, Long> {
     List<AccountBadge> findAllBadgesByAccount(Account account);
 
     AccountBadge findByBadgeAndAccount(Badge badge, Account account);

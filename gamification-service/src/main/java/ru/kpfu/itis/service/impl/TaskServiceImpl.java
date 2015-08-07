@@ -42,6 +42,9 @@ public class TaskServiceImpl implements TaskService {
     private TaskCategoryDao taskCategoryDao;
 
     @Autowired
+    private TaskStatusDao taskStatusDao;
+
+    @Autowired
     private AccountDao accountDao;
 
     @Autowired
@@ -72,18 +75,18 @@ public class TaskServiceImpl implements TaskService {
     @Override
     @Transactional
     public Task findByName(String name) {
-        return taskDao.findByField(Task.class, "name", name);
+        return taskDao.findByField("name", name);
     }
 
     @Override
     @Transactional
     public Task findTaskById(Long id) {
-        return taskDao.findById(Task.class, id);
+        return taskDao.findById(id);
     }
 
     @Override
     public List<TaskCategoryDto> getAllCategories() {
-        return taskCategoryDao.fetchAll(TaskCategory.class)
+        return taskCategoryDao.findAll()
                 .parallelStream().<TaskCategoryDto>map(taskCategory ->
                         new TaskCategoryDto(taskCategory.getName(), taskCategory.getTaskCategoryType()))
                 .collect(Collectors.toList());
@@ -92,17 +95,18 @@ public class TaskServiceImpl implements TaskService {
     @Override
     @Transactional
     public TaskCategory save(TaskCategory taskCategory) {
-        return taskCategoryDao.save(taskCategory);
+        Long id = taskCategoryDao.save(taskCategory);
+        return taskCategoryDao.findById(id);
     }
 
     @Override
     @Transactional
     public void setNewStatus(AccountTask accountTask) {
-        accountTask = accountTaskDao.findById(AccountTask.class, accountTask.getId());
-//        Hibernate.initialize(accountTask.getTaskHistory());
+        accountTask = accountTaskDao.findById(accountTask.getId());
         TaskStatus taskStatus = new TaskStatus();
         taskStatus.setAccountTask(accountTask);
         taskStatus.setType(TaskStatus.TaskStatusType.COMPLETED);
+        taskStatusDao.save(taskStatus);
         accountTask.setNewStatus(taskStatus);
     }
 

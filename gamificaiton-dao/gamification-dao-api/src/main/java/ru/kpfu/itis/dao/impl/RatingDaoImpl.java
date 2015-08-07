@@ -1,12 +1,10 @@
 package ru.kpfu.itis.dao.impl;
 
 import org.hibernate.Criteria;
-import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.MatchMode;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.*;
 import org.springframework.stereotype.Repository;
 import ru.kpfu.itis.dao.RatingDao;
+import ru.kpfu.itis.dao.base.AbstractDaoImpl;
 import ru.kpfu.itis.model.Faculty;
 import ru.kpfu.itis.model.Rating;
 import ru.kpfu.itis.model.enums.Role;
@@ -20,7 +18,11 @@ import java.util.StringTokenizer;
  */
 
 @Repository
-public class RatingDaoImpl extends SimpleDaoImpl implements RatingDao {
+public class RatingDaoImpl extends AbstractDaoImpl<Rating, Long> implements RatingDao {
+
+    protected RatingDaoImpl() {
+        super(Rating.class);
+    }
 
     @Override
     public List<Rating> getRating(Faculty faculty, Integer entranceYear, Double offset, Integer limit) {
@@ -35,89 +37,73 @@ public class RatingDaoImpl extends SimpleDaoImpl implements RatingDao {
     @Override
     public List<Rating> getRatingOrderedByField(Faculty faculty, Integer entranceYear, Double offset,
                                                 Integer limit, String orderField, boolean order) {
-        return getHibernateTemplate().execute((aSession) -> {
-            Criteria criteria = aSession.createCriteria(Rating.class)
-                    .createAlias("accountInfo", "account")
-                    .createAlias("account.account", "user")
-                    .createAlias("account.group", "group")
-                    .add(Restrictions.eq("account.entranceYear", entranceYear))
-                    .add(Restrictions.eq("account.faculty", faculty))
-                    .add(Restrictions.eq("user.role", "STUDENT"))
-                    .add(Restrictions.isNotNull("account.group"));
-            if (offset != null)
-                criteria.add(Restrictions.le("point", offset));
-            if (order) {
-                criteria.addOrder(Order.asc(orderField));
-            } else {
-                criteria.addOrder(Order.desc(orderField));
-            }
-            if (limit != null)
-                criteria.setMaxResults(limit);
-            return (List<Rating>) criteria.list();
-        });
+        Criteria criteria = getCurrentSession().createCriteria(Rating.class)
+                .createAlias("accountInfo", "account")
+                .createAlias("account.account", "user")
+                .createAlias("account.group", "group")
+                .add(Restrictions.eq("account.entranceYear", entranceYear))
+                .add(Restrictions.eq("account.faculty", faculty))
+                .add(Restrictions.eq("user.role", "STUDENT"))
+                .add(Restrictions.isNotNull("account.group"));
+        if (offset != null)
+            criteria.add(Restrictions.le("point", offset));
+        if (order) {
+            criteria.addOrder(Order.asc(orderField));
+        } else {
+            criteria.addOrder(Order.desc(orderField));
+        }
+        if (limit != null)
+            criteria.setMaxResults(limit);
+        return (List<Rating>) criteria.list();
     }
 
     @Override
     public List<Rating> search(Faculty faculty, Integer entranceYear,
                                String searchString, Double offset, Integer limit) {
-        return getHibernateTemplate().execute((aSession) -> {
-            Criteria criteria = aSession.createCriteria(Rating.class)
-                    .createAlias("accountInfo", "account")
-                    .createAlias("account.account", "user")
-                    .createAlias("account.group", "group")
-                    .add(Restrictions.eq("account.entranceYear", entranceYear))
-                    .add(Restrictions.eq("account.faculty", faculty))
-                    .add(Restrictions.eq("user.role", Role.STUDENT))
-                    .add(Restrictions.isNotNull("account.group"));
-            if (offset != null)
-                criteria.add(Restrictions.le("point", offset));
+        Criteria criteria = getCurrentSession().createCriteria(Rating.class)
+                .createAlias("accountInfo", "account")
+                .createAlias("account.account", "user")
+                .createAlias("account.group", "group")
+                .add(Restrictions.eq("account.entranceYear", entranceYear))
+                .add(Restrictions.eq("account.faculty", faculty))
+                .add(Restrictions.eq("user.role", Role.STUDENT))
+                .add(Restrictions.isNotNull("account.group"));
+        if (offset != null)
+            criteria.add(Restrictions.le("point", offset));
 
-            if (searchString != null && !searchString.replaceAll("\\s+", " ").equals(" ")) {
-                StringTokenizer stringTokenizer = new StringTokenizer(searchString, " ");
-                ArrayList<Criterion> criterions = new ArrayList<>();
-                Criterion criterion = null;
-                while (stringTokenizer.hasMoreTokens()) {
-                    String token = stringTokenizer.nextToken();
-                    criterion = Restrictions.or(Restrictions.like("account.firstName", token, MatchMode.ANYWHERE),
-                            Restrictions.like("account.middleName", token, MatchMode.ANYWHERE),
-                            Restrictions.like("account.lastName", token, MatchMode.ANYWHERE),
-                            Restrictions.like("group.name", token, MatchMode.ANYWHERE));
-                    criterions.add(criterion);
-                }
+        if (searchString != null && !searchString.replaceAll("\\s+", " ").equals(" ")) {
+            StringTokenizer stringTokenizer = new StringTokenizer(searchString, " ");
+            ArrayList<Criterion> criterions = new ArrayList<>();
+            Criterion criterion = null;
+            while (stringTokenizer.hasMoreTokens()) {
+                String token = stringTokenizer.nextToken();
+                criterion = Restrictions.or(Restrictions.like("account.firstName", token, MatchMode.ANYWHERE),
+                        Restrictions.like("account.middleName", token, MatchMode.ANYWHERE),
+                        Restrictions.like("account.lastName", token, MatchMode.ANYWHERE),
+                        Restrictions.like("group.name", token, MatchMode.ANYWHERE));
+                criterions.add(criterion);
+            }
 
-                if (criterions.size() > 1) {
-                    criterion = Restrictions.and(criterions.get(0), criterions.get(1));
-                    for (int i = 2; i < criterions.size(); i++) {
-                        criterion = Restrictions.and(criterion, criterions.get(i));
-                    }
-                }
-                if (criterion != null) {
-                    criteria.add(criterion);
+            if (criterions.size() > 1) {
+                criterion = Restrictions.and(criterions.get(0), criterions.get(1));
+                for (int i = 2; i < criterions.size(); i++) {
+                    criterion = Restrictions.and(criterion, criterions.get(i));
                 }
             }
-            criteria.addOrder(Order.asc("position"));
-            if (limit != null)
-                criteria.setMaxResults(limit);
-            return (List<Rating>) criteria.list();
-        });
+            if (criterion != null) {
+                criteria.add(criterion);
+            }
+        }
+        criteria.addOrder(Order.asc("position"));
+        if (limit != null)
+            criteria.setMaxResults(limit);
+        return (List<Rating>) criteria.list();
     }
 
     @Override
     public Rating getUserRating(Long accountInfoId) {
-        return getHibernateTemplate().execute((aSession) ->
-                (Rating) aSession.createCriteria(Rating.class)
-                        .add(Restrictions.eq("accountInfo.id", accountInfoId)).uniqueResult());
+        return (Rating) getCurrentSession().createCriteria(Rating.class)
+                .add(Restrictions.eq("accountInfo.id", accountInfoId)).uniqueResult();
     }
-
-    @Override
-    public void update(Rating entity) {
-        getHibernateTemplate().update(entity);
-    }
-
-    @Override
-    public void save(Rating entity) {
-        getHibernateTemplate().save(entity);
-    }
-
 }
 

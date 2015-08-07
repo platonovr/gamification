@@ -6,10 +6,7 @@ import ru.kpfu.itis.model.enums.Role;
 import ru.kpfu.jbl.auth.domain.AuthUser;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by Roman on 22.03.2015.

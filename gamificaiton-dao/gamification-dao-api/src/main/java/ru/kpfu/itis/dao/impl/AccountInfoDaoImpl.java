@@ -5,6 +5,7 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import ru.kpfu.itis.dao.AccountInfoDao;
+import ru.kpfu.itis.dao.base.AbstractDaoImpl;
 import ru.kpfu.itis.model.Account;
 import ru.kpfu.itis.model.AccountInfo;
 
@@ -14,26 +15,28 @@ import java.util.List;
  * Created by Rigen on 22.06.15.
  */
 @Repository
-public class AccountInfoDaoImpl extends SimpleDaoImpl implements AccountInfoDao {
+public class AccountInfoDaoImpl extends AbstractDaoImpl<AccountInfo, Long> implements AccountInfoDao {
+    protected AccountInfoDaoImpl() {
+        super(AccountInfo.class);
+    }
+
     @Override
     public AccountInfo findByAccount(Account account) {
-        return findByField(AccountInfo.class, "account", account);
+        return findByField("account", account);
     }
 
     @Override
     public AccountInfo findByAccountId(Long id) {
-        return getHibernateTemplate().execute((aSession) ->
-                (AccountInfo) aSession.createCriteria(AccountInfo.class)
-                        .add(Restrictions.eq("account.id", id))
-                        .add(Restrictions.isNull("finishTime")).uniqueResult());
+        return (AccountInfo) getCurrentSession().createCriteria(AccountInfo.class)
+                .add(Restrictions.eq("account.id", id))
+                .add(Restrictions.isNull("finishTime")).uniqueResult();
     }
 
     @Override
     public List<AccountInfo> getAllAndSort(AccountInfo accountInfo) {
-        return getHibernateTemplate().execute((aSession) ->
-                (List<AccountInfo>) aSession.createCriteria(AccountInfo.class)
-                        .add(Restrictions.eq("entranceYear", accountInfo.getEntranceYear()))
-                        .add(Restrictions.isNull("finishTime"))
-                        .addOrder(Order.asc("point")).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY).list());
+        return getCurrentSession().createCriteria(AccountInfo.class)
+                .add(Restrictions.eq("entranceYear", accountInfo.getEntranceYear()))
+                .add(Restrictions.isNull("finishTime"))
+                .addOrder(Order.asc("point")).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY).list();
     }
 }

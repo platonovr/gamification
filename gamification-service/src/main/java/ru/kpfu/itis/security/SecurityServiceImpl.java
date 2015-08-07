@@ -24,7 +24,7 @@ public class SecurityServiceImpl implements SecurityService {
 
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public Account getAccount(Long accountId) {
         return securityDao.getAccount(accountId);
     }
