@@ -2,8 +2,8 @@ package ru.kpfu.itis.dao.impl;
 
 import org.hibernate.Criteria;
 import org.hibernate.Query;
-import org.springframework.stereotype.Repository;
 import ru.kpfu.itis.dao.TaskDao;
+import ru.kpfu.itis.dao.base.AbstractGenericDao;
 import ru.kpfu.itis.model.Task;
 import ru.kpfu.itis.model.TaskStatus;
 
@@ -12,8 +12,8 @@ import java.util.List;
 /**
  * Created by timur on 23.06.15.
  */
-@Repository("taskDao")
-public class TaskDaoImpl extends SimpleDaoImpl implements TaskDao {
+public abstract class AbstractTaskDaoImpl extends AbstractGenericDao implements TaskDao {
+
     @Override
     public Task submitTask(Task task) {
         getHibernateTemplate().saveOrUpdate(task);

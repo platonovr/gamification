@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kpfu.itis.dao.AccountDao;
+import ru.kpfu.itis.dao.SimpleDao;
 import ru.kpfu.itis.model.Account;
 import ru.kpfu.itis.model.AccountInfo;
 import ru.kpfu.itis.model.enums.Role;
@@ -22,12 +23,15 @@ import static java.util.Optional.ofNullable;
 public class AccountServiceImpl implements AccountService {
 
     @Autowired
-    AccountDao accountDao;
+    private AccountDao accountDao;
+
+    @Autowired
+    private SimpleDao simpleDao;
 
     @Transactional
     @Override
     public Account findById(Long id) {
-        return accountDao.findById(Account.class, id);
+        return simpleDao.findById(Account.class, id);
     }
 
     @Override
@@ -40,7 +44,7 @@ public class AccountServiceImpl implements AccountService {
         if (userResponse.getId() == null) {
             return null;
         }
-        Account account = ofNullable(accountDao.findById(Account.class, userResponse.getId())).orElse(accountDao.findByLogin(userResponse.getLogin()));
+        Account account = ofNullable(simpleDao.findById(Account.class, userResponse.getId())).orElse(accountDao.findByLogin(userResponse.getLogin()));
         if (account == null) {
             //TODO proper save user
             account = new Account();
@@ -49,8 +53,8 @@ public class AccountServiceImpl implements AccountService {
             account.setPassword("");
             AccountInfo accountInfo = new AccountInfo();
             accountInfo.setFirstName(userResponse.getName());
-            Serializable id = accountDao.save(account);
-            account = accountDao.findById(Account.class, id);
+            Serializable id = simpleDao.save(account);
+            account = simpleDao.findById(Account.class, id);
         }
         return account;
     }

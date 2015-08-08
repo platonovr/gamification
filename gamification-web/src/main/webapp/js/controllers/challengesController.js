@@ -3,9 +3,12 @@ angular.module('gamificationApp').controller('ChallengesController',
         var maxResult = 10;
         $scope.challenges = [];
         $scope.showedBlocks = [];
-        $scope.showedPerformerBlocks = [
-            []
-        ];
+        $scope.mark_dialog = {
+            challenge: null,
+            performer: null,
+            mark: 0
+        };
+
         $scope.autoLoadingDisabled = false;
         $scope.isLoading = false;
         $scope.loadMore = function () {
@@ -22,9 +25,29 @@ angular.module('gamificationApp').controller('ChallengesController',
                         $scope.autoLoadingDisabled = true;
                 })
             }
-        }
-        $scope.checkTask = function (challenge, performer, mark) {
-            TaskService.check(challenge, performer, mark).success(function (data) {
+        };
+
+        var addMarkDialogBox = $("#dialog-message").dialog({
+            autoOpen: false,
+            modal: true,
+            buttons: {
+                "Подтвердить": function () {
+                    $scope.checkTask();
+                }
+            }
+        });
+
+        $scope.showChangeBlock = function (challenge, performer) {
+            $scope.mark_dialog.challenge = challenge;
+            $scope.mark_dialog.performer = performer;
+            addMarkDialogBox.dialog("open");
+        };
+
+
+        $scope.checkTask = function () {
+            var dialog_model = $scope.mark_dialog;
+            TaskService.check(dialog_model.challenge, dialog_model.performer, dialog_model.mark).success(function (data) {
+                addMarkDialogBox.dialog("close");
                 var i = 0;
                 var j = 0;
                 for (i = 0; i < $scope.challenges.length; i++) {
@@ -41,6 +64,6 @@ angular.module('gamificationApp').controller('ChallengesController',
                     }
                 }
                 $scope.challenges[i].performers.splice(j, 1);
-            })
-        }
+            });
+        };
     }]);

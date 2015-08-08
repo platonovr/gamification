@@ -8,7 +8,8 @@ import java.util.List;
 /**
  * Created by Rigen on 17.07.15.
  */
-public interface RatingDao extends SimpleDao {
+public interface RatingDao {
+
     List<Rating> getRating(Faculty faculty, Integer entranceYear, Double offset, Integer limit);
 
     List<Rating> getRatingOrderedByPoint(Faculty faculty, Integer entranceYear, Double offset, Integer limit);

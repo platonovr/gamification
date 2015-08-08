@@ -2,12 +2,10 @@ package ru.kpfu.itis.service;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.transaction.annotation.Transactional;
 import ru.kpfu.itis.dto.TaskCategoryDto;
 import ru.kpfu.itis.dto.TaskDto;
 import ru.kpfu.itis.dto.TaskInfoDto;
 import ru.kpfu.itis.model.Account;
-import ru.kpfu.itis.model.AccountTask;
 import ru.kpfu.itis.model.Task;
 import ru.kpfu.itis.model.TaskStatus;
 import ru.kpfu.itis.model.classifier.TaskCategory;
@@ -31,9 +29,6 @@ public interface TaskService {
     List<TaskCategoryDto> getAllCategories();
 
     TaskCategory save(TaskCategory taskCategory);
-
-    @Transactional
-    void setNewStatus(AccountTask accountTask, TaskStatus taskStatus);
 
     List<Task> getActualTasks();
 
@@ -69,4 +64,12 @@ public interface TaskService {
      * @return http code
      */
     ResponseEntity enroll(Account account, Long taskId);
+
+    /**
+     * @param accountId
+     * @param taskId
+     * @return resposne entity
+     */
+
+    ResponseEntity checkTask(Long taskId, Long accountId, Integer mark);
 }

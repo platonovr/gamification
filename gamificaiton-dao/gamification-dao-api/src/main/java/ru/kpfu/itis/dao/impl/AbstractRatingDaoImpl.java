@@ -1,12 +1,9 @@
 package ru.kpfu.itis.dao.impl;
 
 import org.hibernate.Criteria;
-import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.MatchMode;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
-import org.springframework.stereotype.Repository;
+import org.hibernate.criterion.*;
 import ru.kpfu.itis.dao.RatingDao;
+import ru.kpfu.itis.dao.base.AbstractGenericDao;
 import ru.kpfu.itis.model.Faculty;
 import ru.kpfu.itis.model.Rating;
 import ru.kpfu.itis.model.enums.Role;
@@ -19,8 +16,8 @@ import java.util.StringTokenizer;
  * Created by Rigen on 17.07.15.
  */
 
-@Repository
-public class RatingDaoImpl extends SimpleDaoImpl implements RatingDao {
+@SuppressWarnings("unchecked")
+public abstract class AbstractRatingDaoImpl extends AbstractGenericDao implements RatingDao {
 
     @Override
     public List<Rating> getRating(Faculty faculty, Integer entranceYear, Double offset, Integer limit) {

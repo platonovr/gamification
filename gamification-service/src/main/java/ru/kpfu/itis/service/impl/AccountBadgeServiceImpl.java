@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kpfu.itis.dao.AccountBadgeDao;
+import ru.kpfu.itis.dao.SimpleDao;
 import ru.kpfu.itis.model.Account;
 import ru.kpfu.itis.model.AccountBadge;
 import ru.kpfu.itis.model.Badge;
@@ -18,7 +19,10 @@ import java.util.List;
 public class AccountBadgeServiceImpl implements AccountBadgeService {
 
     @Autowired
-    AccountBadgeDao accountBadgeDao;
+    private SimpleDao simpleDao;
+
+    @Autowired
+    private AccountBadgeDao accountBadgeDao;
 
     @Transactional
     @Override
@@ -35,6 +39,6 @@ public class AccountBadgeServiceImpl implements AccountBadgeService {
     @Transactional
     @Override
     public void saveOrUpdate(AccountBadge accountBadge) {
-        accountBadgeDao.saveOrUpdate(accountBadge);
+        simpleDao.saveOrUpdate(accountBadge);
     }
 }
