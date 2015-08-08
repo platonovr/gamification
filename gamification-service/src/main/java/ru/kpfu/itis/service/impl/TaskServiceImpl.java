@@ -1,6 +1,7 @@
 package ru.kpfu.itis.service.impl;
 
 import org.apache.commons.lang3.Validate;
+import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -180,6 +181,7 @@ public class TaskServiceImpl implements TaskService {
     public ResponseEntity checkTask(Long taskId, Long accountId, Integer mark) {
         AccountTask accountTask = accountTaskDao.findByTaskAndAccount(taskId, accountId);
         if (Objects.nonNull(accountTask)) {
+            Hibernate.initialize(accountTask.getTaskHistory());
             setNewStatus(accountTask, TaskStatus.TaskStatusType.COMPLETED);
             if (mark < 0 || Objects.isNull(mark)) {
                 return new ResponseEntity<>(new ErrorDto(Error.NOT_VALID_DATA), BAD_REQUEST);

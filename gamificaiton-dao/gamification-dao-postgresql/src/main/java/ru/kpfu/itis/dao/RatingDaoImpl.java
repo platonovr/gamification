@@ -1,4 +1,4 @@
-package ru.kpfu.itis;
+package ru.kpfu.itis.dao;
 
 import org.springframework.stereotype.Repository;
 import ru.kpfu.itis.dao.impl.AbstractRatingDaoImpl;
@@ -7,5 +7,5 @@ import ru.kpfu.itis.dao.impl.AbstractRatingDaoImpl;
  * Created by Roman on 08.08.2015.
  */
 @Repository("ratingDao")
-public class RatingDao extends AbstractRatingDaoImpl {
+public class RatingDaoImpl extends AbstractRatingDaoImpl {
 }

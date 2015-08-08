@@ -1,4 +1,4 @@
-package ru.kpfu.itis;
+package ru.kpfu.itis.dao;
 
 import org.springframework.stereotype.Repository;
 import ru.kpfu.itis.dao.impl.AbstractTaskDaoImpl;
