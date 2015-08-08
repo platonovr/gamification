@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/" debug="false">
+
+    <!-- ============================================================================ -->
+    <!-- Логирование в файлы с разбиением на дни, часы, минуты                        -->
+    <!-- ============================================================================ -->
+    <appender name="LogAppender" class="org.apache.log4j.DailyRollingFileAppender">
+        <errorHandler class="org.apache.log4j.helpers.OnlyOnceErrorHandler"/>
+
+        <!-- Желаемый уровень логирования -->
+        <param name="Threshold" value="INFO"/>
+
+        <param name="File" value="${catalina.base}/logs/gamification.log"/>
+
+        <!-- Поведение при запуске приложения (стирать старый лог) -->
+        <param name="Append" value="true"/>
+
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{ISO8601} | %-5p | %C{1}.%M[%L] %x | %m%n"/>
+        </layout>
+    </appender>
+
+    <!-- ============================================================================ -->
+    <!-- Логирование в файлы с разбиением на дни, часы, минуты                        -->
+    <!-- ============================================================================ -->
+    <appender name="LogAppenderForTrace" class="org.apache.log4j.DailyRollingFileAppender">
+        <errorHandler class="org.apache.log4j.helpers.OnlyOnceErrorHandler"/>
+
+        <!-- Желаемый уровень логирования -->
+        <param name="Threshold" value="DEBUG"/>
+
+        <param name="File" value="${catalina.base}/logs/gamification-trace.log"/>
+
+        <!-- Поведение при запуске приложения (стирать старый лог) -->
+        <param name="Append" value="true"/>
+
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{ISO8601} | %-5p | (%t) %C{1}.%M[%L] %x | %m%n"/>
+        </layout>
+    </appender>
+
+
+    <!-- ============================================================================ -->
+    <!-- Консоль                                                                      -->
+    <!-- ============================================================================ -->
+    <appender name="Console" class="org.apache.log4j.ConsoleAppender">
+        <errorHandler class="org.apache.log4j.helpers.OnlyOnceErrorHandler"/>
+        <param name="Threshold" value="INFO"/>
+
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{ISO8601} | %-5p | %C{1}.%M[%L] %x | %m - %X{userName}%n"/>
+        </layout>
+    </appender>
+
+
+    <logger name="org.springframework">
+        <level value="INFO"/>
+    </logger>
+
+    <logger name="org.springframework.security">
+        <level value="INFO"/>
+    </logger>
+
+    <logger name="org.hibernate">
+        <level value="INFO"/>
+    </logger>
+
+    <logger name="org.apache.commons">
+        <level value="INFO"/>
+    </logger>
+
+    <root>
+        <appender-ref ref="LogAppender"/>
+        <appender-ref ref="LogAppenderForTrace"/>
+        <appender-ref ref="Console"/>
+    </root>
+
+</log4j:configuration>

@@ -1,15 +1,15 @@
 package ru.kpfu.itis.dao.impl;
 
 import org.hibernate.criterion.Restrictions;
-import org.springframework.stereotype.Repository;
 import ru.kpfu.itis.dao.AccountTaskDao;
+import ru.kpfu.itis.dao.base.AbstractGenericDao;
 import ru.kpfu.itis.model.AccountTask;
 
 /**
  * Created by Rigen on 02.07.15.
  */
-@Repository
-public class AccountTaskDaoImpl extends SimpleDaoImpl implements AccountTaskDao {
+@SuppressWarnings("unchecked")
+public abstract class AbstractAccountTaskDaoImpl extends AbstractGenericDao implements AccountTaskDao {
 
     @Override
     public AccountTask findByTaskAndAccount(Long taskId, Long accountId) {

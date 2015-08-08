@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.kpfu.itis.dto.*;
 import ru.kpfu.itis.dto.enums.Error;
-import ru.kpfu.itis.model.*;
-import ru.kpfu.itis.model.enums.StudyTaskType;
+import ru.kpfu.itis.model.Account;
+import ru.kpfu.itis.model.TaskStatus;
 import ru.kpfu.itis.security.SecurityService;
 import ru.kpfu.itis.service.*;
 import ru.kpfu.itis.util.Constant;
@@ -117,40 +117,7 @@ public class TaskController {
     public ResponseEntity checkTask(@PathVariable Long taskId,
                                     @PathVariable Long accountId,
                                     @RequestParam Integer mark) {
-        AccountTask accountTask = accountTaskService.findByTaskAndAccount(taskId, accountId);
-        if (accountTask != null) {
-            taskService.setNewStatus(accountTask);
-            accountTask.setMark(mark);
-            //Change progress of linked badges
-            Task task = taskService.findTaskById(taskId);
-            Badge badge = task.getBadge();
-            Account account = accountTask.getAccount();
-            AccountBadge accountBadge = accountBadgeService.findByBadgeAndAccount(badge, account);
-            if (accountBadge == null) {
-                accountBadge = new AccountBadge();
-                accountBadge.setAccount(account);
-                accountBadge.setBadge(badge);
-            }
-            if (task.getStudyType().equals(StudyTaskType.PRACTICE)) {
-                accountBadge.setPractice(accountBadge.getPractice() + mark);
-            } else {
-                accountBadge.setTheory(accountBadge.getTheory() + mark);
-            }
-            accountBadge.computeProgress();
-            accountBadgeService.saveOrUpdate(accountBadge);
-            AccountInfo accountInfo = account.getAccountInfo();
-            Rating rating = ratingService.getUserRating(accountInfo.getId());
-            if (rating != null) {
-                rating.setPoint(rating.getPoint() + mark);
-                ratingService.update(rating);
-            } else {
-                ratingService.createUserRating(accountInfo, Double.valueOf(mark));
-            }
-            ratingService.recalculateRating(accountInfo);
-            return new ResponseEntity<>(OK);
-        } else {
-            return new ResponseEntity<>(new ErrorDto(Error.TASK_NOT_FOUND), NOT_FOUND);
-        }
+        return taskService.checkTask(taskId, accountId, mark);
 
     }
 

@@ -8,7 +8,8 @@ import java.util.List;
 /**
  * Created by Rigen on 22.06.15.
  */
-public interface AccountInfoDao extends SimpleDao {
+public interface AccountInfoDao {
+
     AccountInfo findByAccount(Account account);
 
     AccountInfo findByAccountId(Long id);

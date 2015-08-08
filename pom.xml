@@ -94,6 +94,12 @@
 
             <dependency>
                 <groupId>ru.kpfu.itis</groupId>
+                <artifactId>gamification-dao-postgresql</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>ru.kpfu.itis</groupId>
                 <artifactId>gamification-service</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -416,7 +422,7 @@
         <dependency>
             <groupId>ru.kpfu.jbl.auth</groupId>
             <artifactId>auth-module</artifactId>
-            <version>1.2.0</version>
+            <version>1.3.0</version>
         </dependency>
     </dependencies>
 
@@ -432,6 +438,7 @@
                 <module>gamification-web</module>
                 <module>gamification-service</module>
                 <module>gamificaiton-dao/gamification-dao-api</module>
+                <module>gamificaiton-dao/gamification-dao-postgresql</module>
                 <module>gamification-database</module>
             </modules>
         </profile>

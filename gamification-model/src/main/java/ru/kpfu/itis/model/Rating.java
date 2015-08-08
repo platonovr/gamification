@@ -19,7 +19,7 @@ public class Rating implements Serializable {
     private Integer position;
 
     @Column(name = "POINT")
-    private Double point;
+    private Double point = 0.0;
 
     public AccountInfo getAccountInfo() {
         return accountInfo;
