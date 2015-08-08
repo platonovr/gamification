@@ -1,5 +1,6 @@
 package ru.kpfu.itis.dao.impl;
 
+import org.hibernate.Hibernate;
 import org.hibernate.criterion.Restrictions;
 import ru.kpfu.itis.dao.AccountTaskDao;
 import ru.kpfu.itis.dao.base.AbstractGenericDao;
@@ -13,11 +14,19 @@ public abstract class AbstractAccountTaskDaoImpl extends AbstractGenericDao impl
 
     @Override
     public AccountTask findByTaskAndAccount(Long taskId, Long accountId) {
-        return getHibernateTemplate().execute((aSession) ->
-                (AccountTask) aSession.createCriteria(AccountTask.class)
-                        .add(Restrictions.eq("account.id", accountId))
-                        .add(Restrictions.eq("task.id", taskId))
-                        .add(Restrictions.isNull("finishTime")).uniqueResult());
+        return getHibernateTemplate().execute((aSession) -> {
+            AccountTask accountTask = (AccountTask) aSession.createCriteria(AccountTask.class)
+                    .add(Restrictions.eq("account.id", accountId))
+                    .add(Restrictions.eq("task.id", taskId))
+                    .add(Restrictions.isNull("finishTime")).uniqueResult();
+            //TODO FIXME
+            Hibernate.initialize(accountTask.getTaskHistory());
+            Hibernate.initialize(accountTask.getTask());
+            Hibernate.initialize(accountTask.getTask().getBadge());
+            Hibernate.initialize(accountTask.getAccount());
+            Hibernate.initialize(accountTask.getAccount().getAccountInfo());
+            return accountTask;
+        });
     }
 
     @Override

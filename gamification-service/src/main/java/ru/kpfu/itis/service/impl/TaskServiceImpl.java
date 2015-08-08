@@ -1,7 +1,6 @@
 package ru.kpfu.itis.service.impl;
 
 import org.apache.commons.lang3.Validate;
-import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,10 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kpfu.itis.dao.*;
-import ru.kpfu.itis.dto.ErrorDto;
-import ru.kpfu.itis.dto.TaskCategoryDto;
-import ru.kpfu.itis.dto.TaskDto;
-import ru.kpfu.itis.dto.TaskInfoDto;
+import ru.kpfu.itis.dto.*;
 import ru.kpfu.itis.dto.enums.Error;
 import ru.kpfu.itis.mapper.TaskInfoMapper;
 import ru.kpfu.itis.mapper.TaskMapper;
@@ -181,7 +177,7 @@ public class TaskServiceImpl implements TaskService {
     public ResponseEntity checkTask(Long taskId, Long accountId, Integer mark) {
         AccountTask accountTask = accountTaskDao.findByTaskAndAccount(taskId, accountId);
         if (Objects.nonNull(accountTask)) {
-            Hibernate.initialize(accountTask.getTaskHistory());
+//            Hibernate.initialize(accountTask.getTaskHistory());
             setNewStatus(accountTask, TaskStatus.TaskStatusType.COMPLETED);
             if (mark < 0 || Objects.isNull(mark)) {
                 return new ResponseEntity<>(new ErrorDto(Error.NOT_VALID_DATA), BAD_REQUEST);
@@ -200,13 +196,16 @@ public class TaskServiceImpl implements TaskService {
                     accountBadge.setTheory(accountBadge.getTheory() + mark);
                 }
             }
-            accountBadge.computeProgress();
-            simpleDao.saveOrUpdate(accountBadge);
+            if (accountBadge != null) {
+                accountBadge.computeProgress();
+                simpleDao.saveOrUpdate(accountBadge);
+            }
             AccountInfo accountInfo = account.getAccountInfo();
             Rating rating = ratingDao.getUserRating(accountInfo.getId());
             if (Objects.nonNull(rating)) {
                 rating.setPoint(rating.getPoint() + mark);
-                ratingDao.save(rating);
+                //FIXME
+//                ratingDao.save(rating);
             } else {
                 ratingService.createUserRating(accountInfo, Double.valueOf(mark));
             }

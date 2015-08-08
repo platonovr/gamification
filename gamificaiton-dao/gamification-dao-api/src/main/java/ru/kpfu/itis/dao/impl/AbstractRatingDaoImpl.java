@@ -1,10 +1,7 @@
 package ru.kpfu.itis.dao.impl;
 
 import org.hibernate.Criteria;
-import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.MatchMode;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.*;
 import ru.kpfu.itis.dao.RatingDao;
 import ru.kpfu.itis.dao.base.AbstractGenericDao;
 import ru.kpfu.itis.model.Faculty;

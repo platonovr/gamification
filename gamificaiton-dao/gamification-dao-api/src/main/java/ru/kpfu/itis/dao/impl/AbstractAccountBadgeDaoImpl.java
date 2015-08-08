@@ -26,10 +26,14 @@ public abstract class AbstractAccountBadgeDaoImpl extends AbstractGenericDao imp
 
     @Override
     public AccountBadge findByBadgeAndAccount(Badge badge, Account account) {
-        return getHibernateTemplate().execute((aSession) ->
-                (AccountBadge) aSession.createCriteria(AccountBadge.class)
-                        .add(Restrictions.eq("account.id", account.getId()))
-                        .add(Restrictions.eq("badge.id", badge.getId()))
-                        .add(Restrictions.isNull("finishTime")).uniqueResult());
+        return getHibernateTemplate().execute((aSession) -> {
+            Criteria criteria = aSession.createCriteria(AccountBadge.class)
+                    .add(Restrictions.eq("account.id", account.getId()))
+                    .add(Restrictions.isNull("finishTime"));
+            if (badge != null) {
+                criteria = criteria.add(Restrictions.eq("badge.id", badge.getId()));
+            }
+            return (AccountBadge) criteria.uniqueResult();
+        });
     }
 }
