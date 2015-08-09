@@ -39,7 +39,7 @@ public abstract class AbstractRatingDaoImpl extends AbstractGenericDao implement
                     .createAlias("account.group", "group")
                     .add(Restrictions.eq("account.entranceYear", entranceYear))
                     .add(Restrictions.eq("account.faculty", faculty))
-                    .add(Restrictions.eq("user.role", "STUDENT"))
+                    .add(Restrictions.eq("user.role", Role.STUDENT))
                     .add(Restrictions.isNotNull("account.group"));
             if (offset != null)
                 criteria.add(Restrictions.le("point", offset));
@@ -103,7 +103,7 @@ public abstract class AbstractRatingDaoImpl extends AbstractGenericDao implement
     public Rating getUserRating(Long accountInfoId) {
         return getHibernateTemplate().execute((aSession) ->
                 (Rating) aSession.createCriteria(Rating.class)
-                        .add(Restrictions.eq("accountInfo.id", accountInfoId)).uniqueResult());
+                        .add(Restrictions.eq("accountInfo.id", accountInfoId)).setMaxResults(1).uniqueResult());
     }
 
     @Override
