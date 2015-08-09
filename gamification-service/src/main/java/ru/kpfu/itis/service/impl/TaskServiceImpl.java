@@ -1,6 +1,7 @@
 package ru.kpfu.itis.service.impl;
 
 import org.apache.commons.lang3.Validate;
+import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -177,35 +178,37 @@ public class TaskServiceImpl implements TaskService {
     public ResponseEntity checkTask(Long taskId, Long accountId, Integer mark) {
         AccountTask accountTask = accountTaskDao.findByTaskAndAccount(taskId, accountId);
         if (Objects.nonNull(accountTask)) {
-//            Hibernate.initialize(accountTask.getTaskHistory());
+            Hibernate.initialize(accountTask.getTaskHistory());
             setNewStatus(accountTask, TaskStatus.TaskStatusType.COMPLETED);
+            simpleDao.save(accountTask);
             if (mark < 0 || Objects.isNull(mark)) {
                 return new ResponseEntity<>(new ErrorDto(Error.NOT_VALID_DATA), BAD_REQUEST);
             }
             Task task = accountTask.getTask();
             Account account = accountTask.getAccount();
-            AccountBadge accountBadge = accountBadgeDao.findByBadgeAndAccount(task.getBadge(), account);
-            if (Objects.isNull(accountBadge)) {
-                AccountBadge notExistedAccountBadge = new AccountBadge();
-                notExistedAccountBadge.setAccount(accountTask.getAccount());
-                notExistedAccountBadge.setBadge(task.getBadge());
-            } else {
-                if (StudyTaskType.PRACTICE.equals(task.getStudyType())) {
-                    accountBadge.setPractice(accountBadge.getPractice() + mark);
-                } else if (StudyTaskType.THEORY.equals(task.getStudyType())) {
-                    accountBadge.setTheory(accountBadge.getTheory() + mark);
+            if (task.getBadge() != null) {
+                AccountBadge accountBadge = accountBadgeDao.findByBadgeAndAccount(task.getBadge(), account);
+                if (Objects.isNull(accountBadge)) {
+                    AccountBadge notExistedAccountBadge = new AccountBadge();
+                    notExistedAccountBadge.setAccount(accountTask.getAccount());
+                    notExistedAccountBadge.setBadge(task.getBadge());
+                } else {
+                    if (StudyTaskType.PRACTICE.equals(task.getStudyType())) {
+                        accountBadge.setPractice(accountBadge.getPractice() + mark);
+                    } else if (StudyTaskType.THEORY.equals(task.getStudyType())) {
+                        accountBadge.setTheory(accountBadge.getTheory() + mark);
+                    }
                 }
-            }
-            if (accountBadge != null) {
-                accountBadge.computeProgress();
-                simpleDao.saveOrUpdate(accountBadge);
+                if (accountBadge != null) {
+                    accountBadge.computeProgress();
+                    simpleDao.saveOrUpdate(accountBadge);
+                }
             }
             AccountInfo accountInfo = account.getAccountInfo();
             Rating rating = ratingDao.getUserRating(accountInfo.getId());
             if (Objects.nonNull(rating)) {
                 rating.setPoint(rating.getPoint() + mark);
-                //FIXME
-//                ratingDao.save(rating);
+                ratingDao.save(rating);
             } else {
                 ratingService.createUserRating(accountInfo, Double.valueOf(mark));
             }
@@ -240,8 +243,12 @@ public class TaskServiceImpl implements TaskService {
 
     public void setNewStatus(AccountTask accountTask, TaskStatus.TaskStatusType statusType) {
         TaskStatus taskStatus = new TaskStatus();
+        if (accountTask.getTaskStatus() != null) {
+            taskStatus = accountTask.getTaskStatus();
+        }
         taskStatus.setAccountTask(accountTask);
         taskStatus.setType(statusType);
+        //TODO update time
         accountTask.setNewStatus(taskStatus);
     }
 
