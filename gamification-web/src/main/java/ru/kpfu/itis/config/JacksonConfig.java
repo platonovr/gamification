@@ -1,6 +1,5 @@
 package ru.kpfu.itis.config;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.hibernate4.Hibernate4Module;
 import org.springframework.context.annotation.Bean;
@@ -17,7 +16,6 @@ public class JacksonConfig {
     public MappingJackson2HttpMessageConverter jacksonMessageConverter() {
         MappingJackson2HttpMessageConverter messageConverter = new MappingJackson2HttpMessageConverter();
         ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         objectMapper.registerModule(new Hibernate4Module());
         messageConverter.setObjectMapper(objectMapper);
         return messageConverter;

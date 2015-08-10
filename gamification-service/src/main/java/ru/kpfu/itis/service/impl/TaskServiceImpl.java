@@ -5,6 +5,7 @@ import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.kpfu.itis.dao.*;
 import ru.kpfu.itis.dto.*;
 import ru.kpfu.itis.dto.enums.Error;
+import ru.kpfu.itis.mapper.BadgeMapper;
 import ru.kpfu.itis.mapper.TaskInfoMapper;
 import ru.kpfu.itis.mapper.TaskMapper;
 import ru.kpfu.itis.model.*;
@@ -59,7 +61,20 @@ public class TaskServiceImpl implements TaskService {
     private TaskMapper taskMapper;
 
     @Autowired
-    private TaskInfoMapper taskInfoMapper;
+    @Qualifier("simpleBadgeMapper")
+    private BadgeMapper simpleBadgeMapper;
+
+    @Autowired
+    @Qualifier("badgeMapper")
+    private BadgeMapper badgeMapper;
+
+    @Autowired
+    @Qualifier("studentTaskInfoMapper")
+    private TaskInfoMapper studentTaskInfoMapper;
+
+    @Autowired
+    @Qualifier("adminTaskInfoMapper")
+    private TaskInfoMapper adminTaskInfoMapper;
 
     @Autowired
     private SecurityService securityService;
@@ -122,9 +137,10 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    @Transactional
     public TaskInfoDto findById(Long taskId) {
         Task task = taskDao.findById(taskId);
-        return taskInfoMapper.toDto(task);
+        return studentTaskInfoMapper.toDto(task);
     }
 
     @Override
@@ -143,7 +159,7 @@ public class TaskServiceImpl implements TaskService {
     @Transactional
     public List<TaskInfoDto> getCreatedTasks(Long userId, Integer offset, Integer limit) {
         List<Task> createdTasks = taskDao.getCreatedTasks(userId, offset, limit);
-        return createdTasks.stream().map(taskInfoMapper::toDto).collect(Collectors.toList());
+        return createdTasks.stream().map(adminTaskInfoMapper::toDto).collect(Collectors.toList());
     }
 
     @Override
@@ -218,6 +234,18 @@ public class TaskServiceImpl implements TaskService {
             return new ResponseEntity<>(new ErrorDto(Error.TASK_NOT_FOUND), NOT_FOUND);
         }
 
+    }
+
+    @Override
+    public List<BadgeDto> getAllBadges() {
+        List<Badge> badges = simpleDao.fetchAll(Badge.class);
+        return badges.stream().map(simpleBadgeMapper::toDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public BadgeDto findBadgeById(Long id) {
+        Badge badge = simpleDao.findById(Badge.class, id);
+        return badgeMapper.toDto(badge);
     }
 
 

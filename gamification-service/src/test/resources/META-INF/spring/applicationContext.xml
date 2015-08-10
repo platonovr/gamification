@@ -18,6 +18,7 @@
     <context:component-scan base-package="ru.kpfu.itis.security"/>
 
     <import resource="classpath*:META-INF/spring/*-beans.xml"/>
+    <import resource="classpath*:spring/serviceContext.xml"/>
 
 
     <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">

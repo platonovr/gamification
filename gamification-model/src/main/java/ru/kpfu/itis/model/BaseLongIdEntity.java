@@ -25,6 +25,9 @@ public abstract class BaseLongIdEntity implements IdentifiedEntity {
     @Column(name = "FINISH_TIME")
     private Date finishTime;
 
+    public BaseLongIdEntity() {
+        prePersist();
+    }
 
     public Long getId() {
         return id;
@@ -66,5 +69,15 @@ public abstract class BaseLongIdEntity implements IdentifiedEntity {
 
     public void setFinishTime(Date finishTime) {
         this.finishTime = finishTime;
+    }
+
+
+    public void prePersist() {
+        if (createTime == null) {
+            createTime = new Date();
+        }
+        if (changeTime == null) {
+            changeTime = new Date();
+        }
     }
 }

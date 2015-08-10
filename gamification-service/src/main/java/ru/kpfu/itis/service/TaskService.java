@@ -2,9 +2,7 @@ package ru.kpfu.itis.service;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
-import ru.kpfu.itis.dto.TaskCategoryDto;
-import ru.kpfu.itis.dto.TaskDto;
-import ru.kpfu.itis.dto.TaskInfoDto;
+import ru.kpfu.itis.dto.*;
 import ru.kpfu.itis.model.Account;
 import ru.kpfu.itis.model.Task;
 import ru.kpfu.itis.model.TaskStatus;
@@ -72,4 +70,9 @@ public interface TaskService {
      */
 
     ResponseEntity checkTask(Long taskId, Long accountId, Integer mark);
+
+
+    List<BadgeDto> getAllBadges();
+
+    BadgeDto findBadgeById(Long id);
 }
