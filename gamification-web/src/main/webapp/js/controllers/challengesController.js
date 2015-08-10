@@ -38,9 +38,19 @@ angular.module('gamificationApp').controller('ChallengesController',
         });
 
         $scope.showChangeBlock = function (challenge, performer) {
+            if ($scope.checkConfirmed(challenge, performer.id)) {
+                return false;
+            }
             $scope.mark_dialog.challenge = challenge;
             $scope.mark_dialog.performer = performer;
             addMarkDialogBox.dialog("open");
+            return false;
+        };
+        $scope.checkConfirmed = function (challenge, performer_id) {
+            if (challenge.status_map && challenge.status_map[performer_id]) {
+                return challenge.status_map[performer_id] == 'COMPLETED';
+            }
+            return false;
         };
 
 

@@ -38,7 +38,7 @@ public class TaskMapper implements Mapper<Task, TaskDto> {
 //        task.setCategory(taskCategoryDao.findByName(taskDto.getCategory()));
 //        task.setAuthor(accountDao.findByLogin("admin"));
         task.setName(taskDto.getName());
-        task.setMaxMark(taskDto.getMaxMark());
+        task.setMaxMark(ofNullable(taskDto.getMaxMark()).map(Integer::byteValue).orElse(null));
         task.setDescription(taskDto.getDescription());
         task.setStartDate(taskDto.getStartDate());
         task.setEndDate(taskDto.getDeadline());
@@ -62,10 +62,11 @@ public class TaskMapper implements Mapper<Task, TaskDto> {
             Account currentUser = securityService.getCurrentUser();
             if (currentUser != null && currentUser.getRole().equals(Role.STUDENT)) {
                 AccountTask accountTask = accountTaskDao.findByTaskIdAndAccountId(taskId, currentUser.getId());
-                if (accountTask == null)
+                if (accountTask == null) {
                     taskDto.setStatus("NOT_STARTED");
-                else {
-                    taskDto.setCurrentMark(ofNullable(accountTask.getMark()).map(Integer::byteValue).orElse(null));
+                    taskDto.setCurrentMark(0);
+                } else {
+                    taskDto.setCurrentMark(ofNullable(accountTask.getMark()).orElse(0));
                     TaskStatus taskStatus = accountTask.getTaskStatus();
                     if (isInitialized(taskStatus) && taskStatus != null)
                         taskDto.setStatus(taskStatus.getType().name());
@@ -89,7 +90,7 @@ public class TaskMapper implements Mapper<Task, TaskDto> {
                             badge.getName(), badge.getImage(),
                             badge.getType().name(), badge.getDescription()));
             }
-            taskDto.setMaxMark(task.getMaxMark());
+            taskDto.setMaxMark(Integer.valueOf(task.getMaxMark()));
             taskDto.setStartDate(task.getStartDate());
             taskDto.setDeadline(task.getEndDate());
             Date createTime = task.getCreateTime();

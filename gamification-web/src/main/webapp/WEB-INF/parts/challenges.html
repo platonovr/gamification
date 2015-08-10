@@ -21,7 +21,7 @@
                         <a ng-repeat="group in challenge.groups">{{group}}{{$last?'':', '}}</a>
                     </span>
                 </div>
-                <div ng-show="!!showedBlocks[$index]" class="event_full_info">
+                <div ng-show="!!showedBlocks[$index]" class="event_full_info" style="display: block;">
                     <dl>
                         <dt>Дополнительно:</dt>
                         <dd>{{challenge.description}}</dd>
@@ -43,8 +43,11 @@
                         <dd>
                             <div ng-repeat="performer in challenge.users" class="person">
                                 <span>{{performer.first_name}} {{performer.last_name}}, {{performer.group}}</span>
-                                <span ng-click="showChangeBlock(challenge,performer)"
-                                      class="icon-tick"></span>
+                                <a href ng-click="showChangeBlock(challenge,performer)">
+                                    <span ng-class="checkConfirmed(challenge,performer.id)?'confirmed':''"
+                                          class="icon-tick ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
+                                          role="button"><span class="ui-button-text"></span></span>
+                                </a>
                             </div>
                         </dd>
                     </dl>

@@ -24,6 +24,7 @@ public abstract class AbstractTaskDaoImpl extends AbstractGenericDao implements 
     public Task findById(Long id) {
         return getHibernateTemplate().execute(session -> (Task) session.createQuery("from Task t " +
                 "left join fetch t.taskAccounts tacc " +
+                "left join fetch t.academicGroups ag " +
                 "left join fetch tacc.account taccAcc " +
                 "left join fetch taccAcc.accountInfo " +
                 "left join fetch tacc.taskStatus " +
