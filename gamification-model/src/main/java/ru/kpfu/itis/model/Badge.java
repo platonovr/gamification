@@ -4,6 +4,7 @@ package ru.kpfu.itis.model;
 import ru.kpfu.itis.model.enums.BadgeCategory;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -90,6 +91,9 @@ public class Badge extends BaseLongIdEntity {
     }
 
     public List<Task> getTasks() {
+        if (tasks == null) {
+            tasks = new ArrayList<>();
+        }
         return tasks;
     }
 

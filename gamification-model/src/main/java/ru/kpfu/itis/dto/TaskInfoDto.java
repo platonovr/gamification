@@ -4,8 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.wordnik.swagger.annotations.ApiModel;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by timur on 13.07.15.
@@ -18,6 +17,10 @@ public class TaskInfoDto extends TaskDto {
 
     @JsonProperty("users")
     private List<AccountInfoDto> performers = new ArrayList<>();
+
+    @JsonProperty("status_map")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Map<Long, String> statusMap;
 
     public TaskInfoDto() {
     }
@@ -45,5 +48,13 @@ public class TaskInfoDto extends TaskDto {
 
     public void setGroups(List<String> groups) {
         this.groups = groups;
+    }
+
+    public Map<Long, String> getStatusMap() {
+        return statusMap;
+    }
+
+    public void setStatusMap(Map<Long, String> statusMap) {
+        this.statusMap = statusMap;
     }
 }

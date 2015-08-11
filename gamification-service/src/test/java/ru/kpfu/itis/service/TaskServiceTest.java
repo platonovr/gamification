@@ -6,6 +6,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import ru.kpfu.itis.dao.AccountTaskDao;
 import ru.kpfu.itis.model.Account;
 import ru.kpfu.itis.model.AccountTask;
 import ru.kpfu.itis.model.Task;
@@ -31,16 +32,14 @@ public class TaskServiceTest {
     @Autowired
     private TaskService taskService;
 
+    @Autowired
+    private AccountTaskDao accountTaskDao;
 
     @Autowired
     private SecurityService securityService;
 
     @Autowired
     private SimpleService simpleService;
-
-    private Account testAccount;
-
-    private TaskCategory taskCategory;
 
     @Before
     public void setUp() throws Exception {
@@ -89,6 +88,8 @@ public class TaskServiceTest {
         accountTask.setNewStatus(taskStatus);
 
         simpleService.save(accountTask);
+
+        AccountTask saved = accountTaskDao.findByTaskAndAccount(task.getId(), testAccount.getId());
 
         List<Task> tasks = taskService.getTasksByUser(testAccount.getId());
         assertEquals(tasks.size(), 1);

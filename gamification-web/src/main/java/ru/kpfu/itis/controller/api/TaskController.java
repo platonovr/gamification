@@ -18,6 +18,8 @@ import ru.kpfu.itis.model.*;
 import ru.kpfu.itis.model.enums.ActivityType;
 import ru.kpfu.itis.model.enums.EntityType;
 import ru.kpfu.itis.model.enums.StudyTaskType;
+import ru.kpfu.itis.model.Account;
+import ru.kpfu.itis.model.TaskStatus;
 import ru.kpfu.itis.security.SecurityService;
 import ru.kpfu.itis.service.*;
 import ru.kpfu.itis.util.Constant;
@@ -96,7 +98,6 @@ public class TaskController {
     public ResponseEntity<TaskDto> createTask(@Valid @RequestBody TaskDto taskDto, BindingResult bindingResult) throws BindException {
         if (bindingResult.hasErrors()) throw new BindException(bindingResult);
         taskDto.setId(taskService.save(taskDto).getId());
-        Activity activity = new Activity(EntityType.TASK, ActivityType.NEW, securityService.getCurrentUser(), taskDto.getId());
         return new ResponseEntity<>(taskDto, HttpStatus.CREATED);
     }
 
@@ -163,6 +164,7 @@ public class TaskController {
         } else {
             return new ResponseEntity<>(new ErrorDto(Error.TASK_NOT_FOUND), NOT_FOUND);
         }
+        return taskService.checkTask(taskId, accountId, mark);
 
     }
 

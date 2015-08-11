@@ -1,36 +1,34 @@
 package ru.kpfu.itis.service.impl;
 
 import org.apache.commons.lang3.Validate;
+import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.kpfu.itis.dao.AccountDao;
-import ru.kpfu.itis.dao.AccountTaskDao;
-import ru.kpfu.itis.dao.TaskCategoryDao;
-import ru.kpfu.itis.dao.TaskDao;
-import ru.kpfu.itis.dto.ErrorDto;
-import ru.kpfu.itis.dto.TaskCategoryDto;
-import ru.kpfu.itis.dto.TaskDto;
-import ru.kpfu.itis.dto.TaskInfoDto;
+import ru.kpfu.itis.dao.*;
+import ru.kpfu.itis.dto.*;
 import ru.kpfu.itis.dto.enums.Error;
+import ru.kpfu.itis.mapper.BadgeMapper;
 import ru.kpfu.itis.mapper.TaskInfoMapper;
 import ru.kpfu.itis.mapper.TaskMapper;
-import ru.kpfu.itis.model.Account;
-import ru.kpfu.itis.model.AccountTask;
-import ru.kpfu.itis.model.Task;
-import ru.kpfu.itis.model.TaskStatus;
+import ru.kpfu.itis.model.*;
 import ru.kpfu.itis.model.classifier.TaskCategory;
+import ru.kpfu.itis.model.enums.StudyTaskType;
 import ru.kpfu.itis.security.SecurityService;
+import ru.kpfu.itis.service.RatingService;
 import ru.kpfu.itis.service.TaskService;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
+import static org.springframework.http.HttpStatus.*;
 
 /**
  * Created by timur on 17.06.15.
@@ -45,22 +43,44 @@ public class TaskServiceImpl implements TaskService {
     private TaskDao taskDao;
 
     @Autowired
+    private RatingService ratingService;
+
+    @Autowired
     private AccountTaskDao accountTaskDao;
+
+    @Autowired
+    private AccountBadgeDao accountBadgeDao;
 
     @Autowired
     private TaskCategoryDao taskCategoryDao;
 
     @Autowired
-    private AccountDao accountDao;
+    private SimpleDao simpleDao;
 
     @Autowired
     private TaskMapper taskMapper;
 
     @Autowired
-    private TaskInfoMapper taskInfoMapper;
+    @Qualifier("simpleBadgeMapper")
+    private BadgeMapper simpleBadgeMapper;
+
+    @Autowired
+    @Qualifier("badgeMapper")
+    private BadgeMapper badgeMapper;
+
+    @Autowired
+    @Qualifier("studentTaskInfoMapper")
+    private TaskInfoMapper studentTaskInfoMapper;
+
+    @Autowired
+    @Qualifier("adminTaskInfoMapper")
+    private TaskInfoMapper adminTaskInfoMapper;
 
     @Autowired
     private SecurityService securityService;
+
+    @Autowired
+    private RatingDao ratingDao;
 
     @Override
     @Transactional
@@ -74,25 +94,25 @@ public class TaskServiceImpl implements TaskService {
         Task task = taskMapper.fromDto(taskDto);
         task.setCategory(taskCategoryDao.findByName(taskDto.getCategory()));
         task.setAuthor(securityService.getCurrentUser());
-        taskDao.save(task);
+        simpleDao.save(task);
         return task;
     }
 
     @Override
     @Transactional
     public Task findByName(String name) {
-        return taskDao.findByField(Task.class, "name", name);
+        return simpleDao.findByField(Task.class, "name", name);
     }
 
     @Override
     @Transactional
     public Task findTaskById(Long id) {
-        return taskDao.findById(Task.class, id);
+        return simpleDao.findById(Task.class, id);
     }
 
     @Override
     public List<TaskCategoryDto> getAllCategories() {
-        return taskCategoryDao.fetchAll(TaskCategory.class)
+        return simpleDao.fetchAll(TaskCategory.class)
                 .parallelStream().<TaskCategoryDto>map(taskCategory ->
                         new TaskCategoryDto(taskCategory.getName(), taskCategory.getTaskCategoryType()))
                 .collect(Collectors.toList());
@@ -102,12 +122,6 @@ public class TaskServiceImpl implements TaskService {
     @Transactional
     public TaskCategory save(TaskCategory taskCategory) {
         return taskCategoryDao.save(taskCategory);
-    }
-
-    @Override
-    @Transactional
-    public void setNewStatus(AccountTask accountTask, TaskStatus taskStatus) {
-        accountTask.setNewStatus(taskStatus);
     }
 
     @Override
@@ -123,16 +137,17 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    @Transactional
     public TaskInfoDto findById(Long taskId) {
         Task task = taskDao.findById(taskId);
-        return taskInfoMapper.toDto(task);
+        return studentTaskInfoMapper.toDto(task);
     }
 
     @Override
     @Transactional
     public List<TaskDto> getTasksByUser(Long userId, Integer offset, Integer limit, TaskStatus.TaskStatusType status) {
         List<Task> tasksByUser = taskDao.getTasksByUser(userId, offset, limit, status);
-        return tasksByUser.parallelStream().map(taskMapper::toDto).collect(Collectors.toList());
+        return tasksByUser.stream().map(taskMapper::toDto).collect(Collectors.toList());
     }
 
     @Override
@@ -144,7 +159,7 @@ public class TaskServiceImpl implements TaskService {
     @Transactional
     public List<TaskInfoDto> getCreatedTasks(Long userId, Integer offset, Integer limit) {
         List<Task> createdTasks = taskDao.getCreatedTasks(userId, offset, limit);
-        return createdTasks.stream().map(taskInfoMapper::toDto).collect(Collectors.toList());
+        return createdTasks.stream().map(adminTaskInfoMapper::toDto).collect(Collectors.toList());
     }
 
     @Override
@@ -159,19 +174,78 @@ public class TaskServiceImpl implements TaskService {
         AccountTask accountTask = accountTaskDao.findByTaskAndAccount(taskId, account.getId());
         if (Objects.isNull(accountTask)) {
             AccountTask youngAccountTask = createAccountTask(account, neededTask);
-            accountTaskDao.save(youngAccountTask);
+            simpleDao.save(youngAccountTask);
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
             if (TaskStatus.TaskStatusType.CANCELED.equals(accountTask.getTaskStatus().getType()) && Boolean.TRUE.equals(accountTask.getAvailability())) {
                 TaskStatus newStatus = createNewStatus(accountTask);
                 accountTask.setNewStatus(newStatus);
                 accountTask.setAttemptsCount(accountTask.getAttemptsCount() + 1);
-                accountTaskDao.save(accountTask);
+                simpleDao.save(accountTask);
                 return new ResponseEntity<>(HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(new ErrorDto(Error.TASK_ALREADY_TAKEN), HttpStatus.BAD_REQUEST);
             }
         }
+    }
+
+    @Override
+    @Transactional
+    public ResponseEntity checkTask(Long taskId, Long accountId, Integer mark) {
+        AccountTask accountTask = accountTaskDao.findByTaskAndAccount(taskId, accountId);
+        if (Objects.nonNull(accountTask)) {
+            Hibernate.initialize(accountTask.getTaskHistory());
+            setNewStatus(accountTask, TaskStatus.TaskStatusType.COMPLETED);
+            simpleDao.save(accountTask);
+            if (mark < 0 || Objects.isNull(mark)) {
+                return new ResponseEntity<>(new ErrorDto(Error.NOT_VALID_DATA), BAD_REQUEST);
+            }
+            Task task = accountTask.getTask();
+            Account account = accountTask.getAccount();
+            if (task.getBadge() != null) {
+                AccountBadge accountBadge = accountBadgeDao.findByBadgeAndAccount(task.getBadge(), account);
+                if (Objects.isNull(accountBadge)) {
+                    AccountBadge notExistedAccountBadge = new AccountBadge();
+                    notExistedAccountBadge.setAccount(accountTask.getAccount());
+                    notExistedAccountBadge.setBadge(task.getBadge());
+                } else {
+                    if (StudyTaskType.PRACTICE.equals(task.getStudyType())) {
+                        accountBadge.setPractice(accountBadge.getPractice() + mark);
+                    } else if (StudyTaskType.THEORY.equals(task.getStudyType())) {
+                        accountBadge.setTheory(accountBadge.getTheory() + mark);
+                    }
+                }
+                if (accountBadge != null) {
+                    accountBadge.computeProgress();
+                    simpleDao.saveOrUpdate(accountBadge);
+                }
+            }
+            AccountInfo accountInfo = account.getAccountInfo();
+            Rating rating = ratingDao.getUserRating(accountInfo.getId());
+            if (Objects.nonNull(rating)) {
+                rating.setPoint(rating.getPoint() + mark);
+                ratingDao.save(rating);
+            } else {
+                ratingService.createUserRating(accountInfo, Double.valueOf(mark));
+            }
+            ratingService.recalculateRating(accountInfo);
+            return new ResponseEntity<>(OK);
+        } else {
+            return new ResponseEntity<>(new ErrorDto(Error.TASK_NOT_FOUND), NOT_FOUND);
+        }
+
+    }
+
+    @Override
+    public List<BadgeDto> getAllBadges() {
+        List<Badge> badges = simpleDao.fetchAll(Badge.class);
+        return badges.stream().map(simpleBadgeMapper::toDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public BadgeDto findBadgeById(Long id) {
+        Badge badge = simpleDao.findById(Badge.class, id);
+        return badgeMapper.toDto(badge);
     }
 
 
@@ -193,6 +267,17 @@ public class TaskServiceImpl implements TaskService {
         taskStatus.setCreateTime(new Date());
         taskStatus.setType(TaskStatus.TaskStatusType.ASSIGNED);
         return taskStatus;
+    }
+
+    public void setNewStatus(AccountTask accountTask, TaskStatus.TaskStatusType statusType) {
+        TaskStatus taskStatus = new TaskStatus();
+        if (accountTask.getTaskStatus() != null) {
+            taskStatus = accountTask.getTaskStatus();
+        }
+        taskStatus.setAccountTask(accountTask);
+        taskStatus.setType(statusType);
+        //TODO update time
+        accountTask.setNewStatus(taskStatus);
     }
 
 }

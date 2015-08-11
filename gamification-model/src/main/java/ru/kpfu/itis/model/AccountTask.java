@@ -89,7 +89,6 @@ public class AccountTask extends BaseLongIdEntity {
      * @param taskStatus новый статус
      */
     public void setNewStatus(TaskStatus taskStatus) {
-        // history
         getTaskHistory().add(taskStatus);
         taskStatus.setTaskHistory(this);
 
@@ -118,4 +117,9 @@ public class AccountTask extends BaseLongIdEntity {
     public void setAttemptsCount(Integer attemptsCount) {
         this.attemptsCount = attemptsCount;
     }
+
+    public TaskStatus getOldTaskStatus() {
+        return oldTaskStatus;
+    }
+
 }

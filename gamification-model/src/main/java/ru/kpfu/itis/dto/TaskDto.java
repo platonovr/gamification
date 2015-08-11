@@ -37,11 +37,11 @@ public class TaskDto {
     private BadgeDto badge;
 
     @JsonProperty("current_volume")
-    private Byte currentMark;
+    private Integer currentMark;
 
     @ApiModelProperty(required = true)
     @JsonProperty("max_volume")
-    private Byte maxMark;
+    private Integer maxMark;
 
     @ApiModelProperty(required = true)
     @JsonProperty("date_from")
@@ -66,7 +66,7 @@ public class TaskDto {
 
     public TaskDto(Long id, String name, String description, SubjectDto subject,
                    Integer maxPerformers, String status, String category, String creator,
-                   BadgeDto badge, Byte currentMark, Byte maxMark, Date startDate, Date deadline,
+                   BadgeDto badge, Integer currentMark, Integer maxMark, Date startDate, Date deadline,
                    Date createTime, Date changeTime, List<String> labels) {
         this.id = id;
         this.name = name;
@@ -126,11 +126,15 @@ public class TaskDto {
         this.creator = creator;
     }
 
-    public Byte getMaxMark() {
+    public void setCurrentMark(Integer currentMark) {
+        this.currentMark = currentMark;
+    }
+
+    public Integer getMaxMark() {
         return maxMark;
     }
 
-    public void setMaxMark(Byte maxMark) {
+    public void setMaxMark(Integer maxMark) {
         this.maxMark = maxMark;
     }
 
@@ -198,12 +202,8 @@ public class TaskDto {
         this.labels = labels;
     }
 
-    public Byte getCurrentMark() {
+    public Integer getCurrentMark() {
         return currentMark;
-    }
-
-    public void setCurrentMark(Byte currentMark) {
-        this.currentMark = currentMark;
     }
 
     public SubjectDto getSubject() {

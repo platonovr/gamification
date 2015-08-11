@@ -1,15 +1,16 @@
 package ru.kpfu.itis.dao.impl;
 
 import org.hibernate.criterion.Restrictions;
-import org.springframework.stereotype.Repository;
 import ru.kpfu.itis.dao.FacultyDao;
+import ru.kpfu.itis.dao.base.AbstractGenericDao;
 import ru.kpfu.itis.model.Faculty;
 
 /**
  * Created by Rigen on 20.07.15.
  */
-@Repository
-public class FacultyDaoImpl extends SimpleDaoImpl implements FacultyDao {
+
+@SuppressWarnings("unchecked")
+public abstract class AbstractFacultyDaoImpl extends AbstractGenericDao implements FacultyDao {
 
     @Override
     public Faculty findByName(String name) {

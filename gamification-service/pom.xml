@@ -27,6 +27,11 @@
 
         <dependency>
             <groupId>ru.kpfu.itis</groupId>
+            <artifactId>gamification-dao-postgresql</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>ru.kpfu.itis</groupId>
             <artifactId>gamification-database</artifactId>
         </dependency>
 

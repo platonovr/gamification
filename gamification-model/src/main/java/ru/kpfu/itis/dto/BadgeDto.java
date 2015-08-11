@@ -1,5 +1,6 @@
 package ru.kpfu.itis.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.wordnik.swagger.annotations.ApiModel;
 
 import java.util.List;
@@ -22,6 +23,7 @@ public class BadgeDto {
 
     private String description;
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<TaskDto> challenges;
 
     private AccountBadgeDto status;

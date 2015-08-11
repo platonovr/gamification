@@ -1,8 +1,8 @@
-<div class="container">
+<div class="container" ng-controller="LoginController as app">
     <div class="sign_in_block">
-        <form action="/login">
-            <input type="text" id="login" placeholder="Логин">
-            <input type="password" id="password" placeholder="Пароль">
+        <form ng-submit="app.login()" method="get">
+            <input type="text" ng-model="app.user.username" placeholder="Логин"/>
+            <input type="password" ng-model="app.user.password" placeholder="Пароль">
             <button class="sign_in_btn" type="submit">
                 Войти
                 <span class="icon icon-enter_icon"></span>
