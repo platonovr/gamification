@@ -15,6 +15,8 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.kpfu.itis.dto.*;
 import ru.kpfu.itis.dto.enums.Error;
 import ru.kpfu.itis.model.*;
+import ru.kpfu.itis.model.enums.ActivityType;
+import ru.kpfu.itis.model.enums.EntityType;
 import ru.kpfu.itis.model.enums.StudyTaskType;
 import ru.kpfu.itis.security.SecurityService;
 import ru.kpfu.itis.service.*;
@@ -56,6 +58,9 @@ public class TaskController {
     @Autowired
     private SecurityService securityService;
 
+    @Autowired
+    private ActivityService activityService;
+
     @InitBinder("taskDto")
     private void initBinder(WebDataBinder binder) {
         binder.setValidator(taskValidator);
@@ -91,6 +96,7 @@ public class TaskController {
     public ResponseEntity<TaskDto> createTask(@Valid @RequestBody TaskDto taskDto, BindingResult bindingResult) throws BindException {
         if (bindingResult.hasErrors()) throw new BindException(bindingResult);
         taskDto.setId(taskService.save(taskDto).getId());
+        Activity activity = new Activity(EntityType.TASK, ActivityType.NEW, securityService.getCurrentUser(), taskDto.getId());
         return new ResponseEntity<>(taskDto, HttpStatus.CREATED);
     }
 
@@ -124,10 +130,13 @@ public class TaskController {
             taskStatus.setType(TaskStatus.TaskStatusType.COMPLETED);
             taskService.setNewStatus(accountTask, taskStatus);
             accountTask.setMark(mark);
-            //Change progress of linked badges
-            Task task = taskService.findTaskById(taskId);
-            Badge badge = task.getBadge();
+            //Logging activity
             Account account = accountTask.getAccount();
+            Task task = accountTask.getTask();
+            Activity activity = new Activity(EntityType.TASK, ActivityType.COMPLETE, account, task.getId());
+            activityService.save(activity);
+            //Change progress of linked badges
+            Badge badge = task.getBadge();
             AccountBadge accountBadge = accountBadgeService.findByBadgeAndAccount(badge, account);
             if (accountBadge == null) {
                 accountBadge = new AccountBadge();

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="
+                       http://www.liquibase.org/xml/ns/dbchangelog
+                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd"
+                   logicalFilePath="20150806_2052.xml">
+
+    <property name="autoincrement" dbms="postgresql" value="serial"/>
+    <property name="autoincrement" dbms="h2" value="bigint auto_increment"/>
+
+    <property name="datetime" dbms="mssql" value="datetime"/>
+    <property name="datetime" dbms="postgresql" value="timestamp"/>
+    <property name="datetime" dbms="h2" value="timestamp"/>
+
+    <property name="uuid" dbms="mssql" value="uniqueidentifier"/>
+    <property name="uuid" dbms="postgresql" value="uuid"/>
+    <property name="uuid" dbms="h2" value="uuid"/>
+
+    <changeSet id="createActivityTable" author="rfatkhullin">
+        <createTable tableName="ACTIVITY">
+            <column name="ACTIVITY_ID" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="ENTITY_ID" type="bigint">
+            </column>
+            <column name="ACCOUNT_ID" type="bigint">
+                <constraints foreignKeyName="ACTIVITY_ACCOUNT"
+                             references="ACCOUNT(ACCOUNT_ID)"/>
+            </column>
+            <column name="ACTIVITY_TYPE" type="varchar(64)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ENTITY_TYPE" type="varchar(64)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATE_TIME" type="${datetime}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CHANGE_TIME" type="${datetime}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="FINISH_TIME" type="${datetime}">
+            </column>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>
