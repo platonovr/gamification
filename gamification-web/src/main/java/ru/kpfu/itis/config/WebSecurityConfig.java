@@ -27,7 +27,7 @@ import ru.kpfu.jbl.auth.service.impl.SecurityContextHolderServiceImpl;
 
 @Configuration
 @EnableWebMvcSecurity
-@Import(value = {AuthSecurityModuleConfig.class,  EncacheTokenServiceConfig.class})
+@Import(value = {AuthSecurityModuleConfig.class, EncacheTokenServiceConfig.class})
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
@@ -53,11 +53,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 authorizeRequests().
                 antMatchers("/api/*").permitAll().
                 antMatchers("/registration").permitAll().
-                antMatchers("/api/v1/user/**").hasAnyRole("STUDENT", "ADMIN", "TEACHER").
-                antMatchers("/api/v1/rating/**").hasAnyRole("STUDENT", "ADMIN", "TEACHER").
+//                antMatchers("/api/v1/user/**").hasAnyRole("STUDENT", "ADMIN", "TEACHER", "ANONYMOUS").
+//                antMatchers("/api/v1/rating/**").hasAnyRole("STUDENT", "ADMIN", "TEACHER", "ANONYMOUS").
+//                antMatchers("/api/v1/challenge/**").hasAnyRole("STUDENT", "ADMIN", "TEACHER", "ANONYMOUS").
                 antMatchers("/api/v1/challenge/my").hasAnyRole("ADMIN", "TEACHER").
-                antMatchers("/api/v1/challenge/**").hasAnyRole("STUDENT", "ADMIN", "TEACHER").
-                antMatchers("/api/v1/**").hasAnyRole("STUDENT", "ADMIN", "TEACHER").
+                regexMatchers("/api/v1/challenge/[0-9]+/enroll").hasRole("STUDENT").
+                antMatchers("/api/v1/**").hasAnyRole("STUDENT", "ADMIN", "TEACHER", "ANONYMOUS").
                 and().
                 exceptionHandling()
                 .authenticationEntryPoint(unauthorizedEntryPoint)
@@ -92,7 +93,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public SecurityContextHolderServiceImpl<Account> securityContextHolderService(){
+    public SecurityContextHolderServiceImpl<Account> securityContextHolderService() {
         return new SecurityContextHolderServiceImpl<>(tokenService);
     }
 }

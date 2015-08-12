@@ -20,5 +20,5 @@ public interface TaskDao {
 
     List<Task> getTasksByUser(Long userId, Integer offset, Integer limit, TaskStatus.TaskStatusType status);
 
-    List<Task> getCreatedTasks(Long userId, Integer offset, Integer limit);
+    List<Task> getCreatedTasks(Long userId, Integer offset, Integer limit, String query);
 }

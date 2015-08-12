@@ -20,11 +20,13 @@ public abstract class AbstractAccountTaskDaoImpl extends AbstractGenericDao impl
                     .add(Restrictions.eq("task.id", taskId))
                     .add(Restrictions.isNull("finishTime")).uniqueResult();
             //TODO FIXME
-            Hibernate.initialize(accountTask.getTaskHistory());
-            Hibernate.initialize(accountTask.getTask());
-            Hibernate.initialize(accountTask.getTask().getBadge());
-            Hibernate.initialize(accountTask.getAccount());
-            Hibernate.initialize(accountTask.getAccount().getAccountInfo());
+            if (accountTask != null) {
+                Hibernate.initialize(accountTask.getTaskHistory());
+                Hibernate.initialize(accountTask.getTask());
+                Hibernate.initialize(accountTask.getTask().getBadge());
+                Hibernate.initialize(accountTask.getAccount());
+                Hibernate.initialize(accountTask.getAccount().getAccountInfo());
+            }
             return accountTask;
         });
     }
