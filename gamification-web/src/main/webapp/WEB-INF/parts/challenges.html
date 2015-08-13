@@ -5,7 +5,7 @@
             <button class="search_btn">
                 <span class="icon icon-search_icon"></span>
             </button>
-            <input class="search_input" type="text" id="search" placeholder="Поиск">
+            <input class="search_input" type="text" id="search" placeholder="Поиск" ng-model="queryString" ng-change="searchChallenges()" ng-model-options="{debounce: 700}">
         </form>
         <div infinite-scroll="loadMore()" infinite-scroll-disabled='autoLoadingDisabled' class="events">
             <div class="event" ng-repeat="challenge in challenges">

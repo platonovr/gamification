@@ -11,12 +11,13 @@ angular.module('gamificationApp').service('TaskService', ['$http', 'CONSTANTS', 
             }
         })
     };
-    this.getTasks = function (offset, limit) {
+    this.getTasks = function (offset, limit, query) {
         return $http.get(CONSTANTS.API_URI_PREFIX + CONSTANTS.TASK_URI + '/my', {
             params: {
                 token: AuthInfo.getToken(),
                 offset: offset,
-                limit: limit
+                limit: limit,
+                query: query
             }
         })
     };
