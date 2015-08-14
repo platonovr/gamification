@@ -243,8 +243,10 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    @Transactional
     public BadgeDto findBadgeById(Long id) {
         Badge badge = simpleDao.findById(Badge.class, id);
+        Hibernate.initialize(badge.getTasks());
         return badgeMapper.toDto(badge);
     }
 
