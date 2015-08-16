@@ -14,14 +14,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.kpfu.itis.dto.*;
 import ru.kpfu.itis.dto.enums.Error;
-import ru.kpfu.itis.model.*;
-import ru.kpfu.itis.model.enums.ActivityType;
-import ru.kpfu.itis.model.enums.EntityType;
-import ru.kpfu.itis.model.enums.StudyTaskType;
 import ru.kpfu.itis.model.Account;
 import ru.kpfu.itis.model.TaskStatus;
 import ru.kpfu.itis.security.SecurityService;
-import ru.kpfu.itis.service.*;
+import ru.kpfu.itis.service.ActivityService;
+import ru.kpfu.itis.service.FileService;
+import ru.kpfu.itis.service.TaskService;
 import ru.kpfu.itis.util.Constant;
 import ru.kpfu.itis.validator.TaskValidator;
 
@@ -46,16 +44,8 @@ public class TaskController {
     private FileService fileService;
 
     @Autowired
-    private AccountTaskService accountTaskService;
-
-    @Autowired
-    private AccountBadgeService accountBadgeService;
-
-    @Autowired
     private TaskValidator taskValidator;
 
-    @Autowired
-    private RatingService ratingService;
 
     @Autowired
     private SecurityService securityService;
@@ -98,6 +88,7 @@ public class TaskController {
     public ResponseEntity<TaskDto> createTask(@Valid @RequestBody TaskDto taskDto, BindingResult bindingResult) throws BindException {
         if (bindingResult.hasErrors()) throw new BindException(bindingResult);
         taskDto.setId(taskService.save(taskDto).getId());
+
         return new ResponseEntity<>(taskDto, HttpStatus.CREATED);
     }
 
@@ -124,46 +115,6 @@ public class TaskController {
     public ResponseEntity checkTask(@PathVariable Long taskId,
                                     @PathVariable Long accountId,
                                     @RequestParam Integer mark) {
-        AccountTask accountTask = accountTaskService.findByTaskAndAccount(taskId, accountId);
-        if (accountTask != null) {
-            TaskStatus taskStatus = new TaskStatus();
-            taskStatus.setAccountTask(accountTask);
-            taskStatus.setType(TaskStatus.TaskStatusType.COMPLETED);
-            taskService.setNewStatus(accountTask, taskStatus);
-            accountTask.setMark(mark);
-            //Logging activity
-            Account account = accountTask.getAccount();
-            Task task = accountTask.getTask();
-            Activity activity = new Activity(EntityType.TASK, ActivityType.COMPLETE, account, task.getId());
-            activityService.save(activity);
-            //Change progress of linked badges
-            Badge badge = task.getBadge();
-            AccountBadge accountBadge = accountBadgeService.findByBadgeAndAccount(badge, account);
-            if (accountBadge == null) {
-                accountBadge = new AccountBadge();
-                accountBadge.setAccount(account);
-                accountBadge.setBadge(badge);
-            }
-            if (task.getStudyType().equals(StudyTaskType.PRACTICE)) {
-                accountBadge.setPractice(accountBadge.getPractice() + mark);
-            } else {
-                accountBadge.setTheory(accountBadge.getTheory() + mark);
-            }
-            accountBadge.computeProgress();
-            accountBadgeService.saveOrUpdate(accountBadge);
-            AccountInfo accountInfo = account.getAccountInfo();
-            Rating rating = ratingService.getUserRating(accountInfo.getId());
-            if (rating != null) {
-                rating.setPoint(rating.getPoint() + mark);
-                ratingService.update(rating);
-            } else {
-                ratingService.createUserRating(accountInfo, Double.valueOf(mark));
-            }
-            ratingService.recalculateRating(accountInfo);
-            return new ResponseEntity<>(OK);
-        } else {
-            return new ResponseEntity<>(new ErrorDto(Error.TASK_NOT_FOUND), NOT_FOUND);
-        }
         return taskService.checkTask(taskId, accountId, mark);
 
     }

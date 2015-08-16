@@ -45,4 +45,15 @@
         </createTable>
     </changeSet>
 
+    <changeSet id="AccountBadge_AchievementStatus" author="rfatkhullin">
+        <addColumn tableName="ACCOUNT_BADGE">
+            <column name="ACHIEVEMENT_STATUS" type="varchar(64)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+        <update tableName="ACCOUNT_BADGE">
+            <column name="ACHIEVEMENT_STATUS" value="PERFORM" type="varchar"/>
+        </update>
+    </changeSet>
+
 </databaseChangeLog>

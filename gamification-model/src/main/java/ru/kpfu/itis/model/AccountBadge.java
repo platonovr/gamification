@@ -2,6 +2,7 @@ package ru.kpfu.itis.model;
 
 
 import org.hibernate.annotations.CreationTimestamp;
+import ru.kpfu.itis.model.enums.BadgeAchievementStatus;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -33,8 +34,27 @@ public class AccountBadge extends BaseLongIdEntity {
     @Column(name = "PROGRESS")
     private Double progress = 0.0;
 
+    @Column(name = "ACHIEVEMENT_STATUS", nullable = false)
+    @Enumerated(value = EnumType.STRING)
+    private BadgeAchievementStatus achevementStatus = BadgeAchievementStatus.PERFORM;
+
     public void computeProgress() {
         progress = theory + practice;
+        checkAchievement();
+    }
+
+    private void checkAchievement() {
+        if (progress.equals(badge.getMaxMark() * 1.0)) {
+            achevementStatus = BadgeAchievementStatus.COMPLETE;
+        }
+    }
+
+    public BadgeAchievementStatus getAchevementStatus() {
+        return achevementStatus;
+    }
+
+    public void setAchevementStatus(BadgeAchievementStatus achevementStatus) {
+        this.achevementStatus = achevementStatus;
     }
 
     public Double getTheory() {
