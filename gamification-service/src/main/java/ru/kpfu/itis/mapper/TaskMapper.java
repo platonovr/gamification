@@ -98,7 +98,7 @@ public class TaskMapper implements Mapper<Task, TaskDto> {
             taskDto.setChangeTime(task.getChangeTime());
             //TODO think about task's labels
             if (createTime != null && createTime.getTime() >= new Date().getTime() - threeDaysInMillis) {
-                taskDto.getLabels().add("HOT");
+                taskDto.getLabels().add("NEW");
             }
             return taskDto;
         }
