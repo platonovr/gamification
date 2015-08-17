@@ -24,8 +24,8 @@ public class AccountBadgeServiceImpl implements AccountBadgeService {
     @Autowired
     private AccountBadgeDao accountBadgeDao;
 
-    @Transactional
     @Override
+    @Transactional
     public List<AccountBadge> findAllBadgesByAccount(Account account) {
         return accountBadgeDao.findAllBadgesByAccount(account);
     }

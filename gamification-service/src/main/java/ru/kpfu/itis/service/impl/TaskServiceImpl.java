@@ -247,7 +247,13 @@ public class TaskServiceImpl implements TaskService {
     public BadgeDto findBadgeById(Long id) {
         Badge badge = simpleDao.findById(Badge.class, id);
         Hibernate.initialize(badge.getTasks());
-        return badgeMapper.toDto(badge);
+        Account currentUser = simpleDao.findById(Account.class, securityService.getCurrentUserId());
+        AccountBadge accountBadge = accountBadgeDao.findByBadgeAndAccount(badge, currentUser);
+        if (accountBadge != null) {
+            return badgeMapper.toDto(accountBadge);
+        } else {
+            return badgeMapper.toDto(badge);
+        }
     }
 
 
