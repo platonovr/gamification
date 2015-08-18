@@ -58,13 +58,10 @@ public class ActivityMapper implements Mapper<Activity, ActivityDto> {
         switch (activity.getActivityType()) {
             case TASK_NEW:
                 return messageSource.getMessage("task.creation", taskArgs, null);
-            break;
             case TASK_ENROLL:
                 return messageSource.getMessage("task.start", taskArgs, null);
-            break;
             case TASK_COMPLETE:
                 return messageSource.getMessage("task.end", taskArgs, null);
-            break;
             default:
                 return "";
         }
