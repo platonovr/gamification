@@ -5,9 +5,9 @@ import org.hibernate.Criteria;
 import org.hibernate.Query;
 import ru.kpfu.itis.dao.TaskDao;
 import ru.kpfu.itis.dao.base.AbstractGenericDao;
-import ru.kpfu.itis.model.Task;
-import ru.kpfu.itis.model.TaskStatus;
+import ru.kpfu.itis.model.*;
 
+import java.math.BigInteger;
 import java.util.List;
 
 /**
@@ -58,26 +58,23 @@ public abstract class AbstractTaskDaoImpl extends AbstractGenericDao implements 
     @Override
     public List<Task> getTasksByUser(Long userId, Integer offset, Integer limit, TaskStatus.TaskStatusType status) {
         return getHibernateTemplate().<List<Task>>execute(session -> {
-            Query query;
-            if (status == null) {
-                query = session.createQuery("select task from Task task " +
-                        "left join fetch task.subject " +
-                        "left join task.academicGroups tAcGroupes " +
-                        "left join tAcGroupes.accountInfos tacAccInf " +
-                        "left join task.taskAccounts ttacc " +
-                        "where current_date<=task.endDate and :userId in (tacAccInf.account.id) " +
-                        "and (ttacc is empty or :userId not in (select tacc.id from ttacc.account tacc))" +
-                        "order by task.endDate");
-            } else {
-                query = session.createQuery("select task from Task task " +
-                        "left join fetch task.subject " +
-                        "left join task.taskAccounts ta " +
-                        "left join ta.account taa " +
-                        "left join taa.accountInfo " +
-                        "where current_date<=task.endDate and ta.account.id = :userId and ta.taskStatus.type=:status ")
-                        .setParameter("status", status);
+            String queryHql = "select task from Task task " +
+                    "left join fetch task.subject " +
+                    "left join task.academicGroups tAcGroupes " +
+                    "left join tAcGroupes.accountInfos tacAccInf " +
+                    "left join task.taskAccounts ttacc " +
+                    "where current_date<=task.endDate and (:userId in tacAccInf.account.id " +
+                    "or :userId in (select tacc.id from ttacc.account tacc)) ";
+
+            if (status != null) {
+                queryHql += " and ta.taskStatus.type=:status";
             }
+            queryHql += " order by task.endDate";
+            Query query = session.createQuery(queryHql);
             query.setParameter("userId", userId).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+            if (status != null) {
+                query.setParameter("status", status);
+            }
             if (offset != null) query.setFirstResult(offset);
             if (limit != null) query.setMaxResults(limit);
             return query.list();
@@ -107,6 +104,25 @@ public abstract class AbstractTaskDaoImpl extends AbstractGenericDao implements 
             if (offset != null) query.setFirstResult(offset);
             if (limit != null) query.setMaxResults(limit);
             return query.list();
+        });
+    }
+
+    @Override
+    public boolean isTaskAvailableForUser(Account user, Long taskId) {
+        return getHibernateTemplate().execute(session -> {
+            BigInteger accountTaskCount = (BigInteger) session
+                    .createSQLQuery("SELECT COUNT(*) FROM account_task atask WHERE atask.account_id = :id and atask.task_id = :taskId")
+                    .setParameter("id", user.getId())
+                    .setParameter("taskId", taskId).uniqueResult();
+            AcademicGroup group = user.getAccountInfo().getGroup();
+            BigInteger groupTaskCount = new BigInteger(String.valueOf(0l));
+            if (group != null) {
+                groupTaskCount = (BigInteger) session
+                        .createSQLQuery("SELECT COUNT(*) FROM task_constraint tc WHERE tc.academic_group_id = :group_id and tc.task_id = :taskId")
+                        .setParameter("group_id", group.getId())
+                        .setParameter("taskId", taskId).uniqueResult();
+            }
+            return accountTaskCount.longValue() != 0 || groupTaskCount.longValue() != 0;
         });
     }
 }

@@ -18,7 +18,7 @@ import java.util.List;
 public class Badge extends BaseLongIdEntity {
 
     @Transient
-    public static final Integer MAX_STUDY_MARK = 50;
+    public static final Integer MAX_STUDY_MARK = 100;
 
     @Enumerated(EnumType.STRING)
     private BadgeCategory type;

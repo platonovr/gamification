@@ -19,4 +19,12 @@
         <constructor-arg name="includeTasks" value="true"/>
     </bean>
 
+    <bean id="messageSource"
+          class="org.springframework.context.support.ResourceBundleMessageSource">
+        <property name="basename">
+            <value>activity/messages</value>
+        </property>
+    </bean>
+
+
 </beans>

@@ -17,7 +17,9 @@ import ru.kpfu.itis.dto.enums.Error;
 import ru.kpfu.itis.model.Account;
 import ru.kpfu.itis.model.TaskStatus;
 import ru.kpfu.itis.security.SecurityService;
-import ru.kpfu.itis.service.*;
+import ru.kpfu.itis.service.ActivityService;
+import ru.kpfu.itis.service.FileService;
+import ru.kpfu.itis.service.TaskService;
 import ru.kpfu.itis.util.Constant;
 import ru.kpfu.itis.validator.TaskValidator;
 
@@ -42,19 +44,14 @@ public class TaskController {
     private FileService fileService;
 
     @Autowired
-    private AccountTaskService accountTaskService;
-
-    @Autowired
-    private AccountBadgeService accountBadgeService;
-
-    @Autowired
     private TaskValidator taskValidator;
 
-    @Autowired
-    private RatingService ratingService;
 
     @Autowired
     private SecurityService securityService;
+
+    @Autowired
+    private ActivityService activityService;
 
     @InitBinder("taskDto")
     private void initBinder(WebDataBinder binder) {
@@ -64,8 +61,12 @@ public class TaskController {
     @ApiOperation("get task's information")
     @ApiImplicitParams(value = {@ApiImplicitParam(name = "token", value = "token", required = true, dataType = "string", paramType = "query")})
     @RequestMapping(value = "/{taskId:[1-9]+[0-9]*}", method = RequestMethod.GET)
-    public TaskInfoDto getTaskById(@PathVariable Long taskId) {
-        return taskService.findById(taskId);
+    public ResponseEntity<? super TaskInfoDto> getTaskById(@PathVariable Long taskId) {
+        ErrorDto taskAvailabilityError = taskService.isTaskAvailableForUser(taskId);
+        if (taskAvailabilityError != null) {
+            return new ResponseEntity<>(taskAvailabilityError, FORBIDDEN);
+        }
+        return new ResponseEntity<>(taskService.findById(taskId), OK);
     }
 
     @ApiOperation("get student's tasks")
@@ -83,7 +84,7 @@ public class TaskController {
     public List<TaskInfoDto> getCreatedTasks(@RequestParam(required = false) Integer offset,
                                              @RequestParam(required = false) Integer limit,
                                              @RequestParam(required = false) String query
-                                             ) {
+    ) {
         return taskService.getCreatedTasks(securityService.getCurrentUserId(), offset, limit, query);
     }
 
@@ -93,6 +94,7 @@ public class TaskController {
     public ResponseEntity<TaskDto> createTask(@Valid @RequestBody TaskDto taskDto, BindingResult bindingResult) throws BindException {
         if (bindingResult.hasErrors()) throw new BindException(bindingResult);
         taskDto.setId(taskService.save(taskDto).getId());
+
         return new ResponseEntity<>(taskDto, HttpStatus.CREATED);
     }
 
@@ -141,6 +143,10 @@ public class TaskController {
     @ApiImplicitParams(value = {@ApiImplicitParam(name = "token", value = "token", required = true, dataType = "string", paramType = "query")})
     @RequestMapping(value = "/{taskId:[1-9]+[0-9]*}/enroll", method = RequestMethod.POST)
     public ResponseEntity enroll(@PathVariable Long taskId) {
+        ErrorDto taskAvailabilityError = taskService.isTaskAvailableForUser(taskId);
+        if (taskAvailabilityError != null) {
+            return new ResponseEntity<>(taskAvailabilityError, FORBIDDEN);
+        }
         Account account = securityService.getCurrentUser();
         return taskService.enroll(account, taskId);
     }

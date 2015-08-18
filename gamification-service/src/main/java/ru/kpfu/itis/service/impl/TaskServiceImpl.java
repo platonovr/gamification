@@ -17,9 +17,11 @@ import ru.kpfu.itis.mapper.BadgeMapper;
 import ru.kpfu.itis.mapper.TaskInfoMapper;
 import ru.kpfu.itis.mapper.TaskMapper;
 import ru.kpfu.itis.model.*;
+import ru.kpfu.itis.model.TaskStatus;
 import ru.kpfu.itis.model.classifier.TaskCategory;
-import ru.kpfu.itis.model.enums.StudyTaskType;
+import ru.kpfu.itis.model.enums.*;
 import ru.kpfu.itis.security.SecurityService;
+import ru.kpfu.itis.service.ActivityService;
 import ru.kpfu.itis.service.RatingService;
 import ru.kpfu.itis.service.TaskService;
 
@@ -80,6 +82,9 @@ public class TaskServiceImpl implements TaskService {
     private SecurityService securityService;
 
     @Autowired
+    private ActivityService activityService;
+
+    @Autowired
     private RatingDao ratingDao;
 
     @Override
@@ -93,8 +98,11 @@ public class TaskServiceImpl implements TaskService {
     public Task save(TaskDto taskDto) {
         Task task = taskMapper.fromDto(taskDto);
         task.setCategory(taskCategoryDao.findByName(taskDto.getCategory()));
-        task.setAuthor(securityService.getCurrentUser());
+        Account currentUser = securityService.getCurrentUser();
+        task.setAuthor(currentUser);
         simpleDao.save(task);
+        Activity activity = new Activity(EntityType.TASK, ActivityType.TASK_NEW, currentUser, task.getId());
+        simpleDao.save(activity);
         return task;
     }
 
@@ -175,6 +183,8 @@ public class TaskServiceImpl implements TaskService {
         if (Objects.isNull(accountTask)) {
             AccountTask youngAccountTask = createAccountTask(account, neededTask);
             simpleDao.save(youngAccountTask);
+            Activity activity = new Activity(EntityType.TASK, ActivityType.TASK_ENROLL, account, neededTask.getId());
+            simpleDao.save(activity);
             return new ResponseEntity<>(new TaskEnrollDto(TaskEnrollDto.TaskEnrollStatus.SUCCESS), HttpStatus.OK);
         } else {
             if (TaskStatus.TaskStatusType.CANCELED.equals(accountTask.getTaskStatus().getType()) && Boolean.TRUE.equals(accountTask.getAvailability())) {
@@ -202,23 +212,27 @@ public class TaskServiceImpl implements TaskService {
             }
             Task task = accountTask.getTask();
             Account account = accountTask.getAccount();
+            Activity activity = new Activity(EntityType.TASK, ActivityType.TASK_COMPLETE, account, task.getId());
+            activityService.save(activity);
             if (task.getBadge() != null) {
                 AccountBadge accountBadge = accountBadgeDao.findByBadgeAndAccount(task.getBadge(), account);
                 if (Objects.isNull(accountBadge)) {
                     AccountBadge notExistedAccountBadge = new AccountBadge();
                     notExistedAccountBadge.setAccount(accountTask.getAccount());
                     notExistedAccountBadge.setBadge(task.getBadge());
-                } else {
-                    if (StudyTaskType.PRACTICE.equals(task.getStudyType())) {
-                        accountBadge.setPractice(accountBadge.getPractice() + mark);
-                    } else if (StudyTaskType.THEORY.equals(task.getStudyType())) {
-                        accountBadge.setTheory(accountBadge.getTheory() + mark);
-                    }
+                    accountBadge = notExistedAccountBadge;
                 }
-                if (accountBadge != null) {
-                    accountBadge.computeProgress();
-                    simpleDao.saveOrUpdate(accountBadge);
+                if (StudyTaskType.PRACTICE.equals(task.getStudyType())) {
+                    accountBadge.setPractice(accountBadge.getPractice() + mark);
+                } else if (StudyTaskType.THEORY.equals(task.getStudyType())) {
+                    accountBadge.setTheory(accountBadge.getTheory() + mark);
                 }
+                accountBadge.computeProgress();
+                if (accountBadge.getAchevementStatus() == BadgeAchievementStatus.COMPLETE) {
+                    activity = new Activity(EntityType.BADGE, ActivityType.BADGE_COMPLETE, account, task.getBadge().getId());
+                    simpleDao.save(activity);
+                }
+                simpleDao.saveOrUpdate(accountBadge);
             }
             AccountInfo accountInfo = account.getAccountInfo();
             Rating rating = ratingDao.getUserRating(accountInfo.getId());
@@ -254,6 +268,19 @@ public class TaskServiceImpl implements TaskService {
         } else {
             return badgeMapper.toDto(badge);
         }
+    }
+
+    @Override
+    public ErrorDto isTaskAvailableForUser(Long taskId) {
+        Account currentUser = simpleDao.findById(Account.class, securityService.getCurrentUserId());
+        Task task = simpleDao.findById(Task.class, taskId);
+        if (currentUser == null || task == null) {
+            return new ErrorDto(Error.TASK_NOT_AVAILABLE);
+        }
+        if (!taskDao.isTaskAvailableForUser(currentUser, taskId)) {
+            return new ErrorDto(Error.TASK_NOT_AVAILABLE);
+        }
+        return null;
     }
 
 
