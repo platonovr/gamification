@@ -19,7 +19,7 @@ public class BadgeDto {
 
     private SubjectDto subject;
 
-    private String type;
+    private String category;
 
     private String description;
 
@@ -31,20 +31,20 @@ public class BadgeDto {
     public BadgeDto() {
     }
 
-    public BadgeDto(Long id, String name, String image, String type, String description) {
+    public BadgeDto(Long id, String name, String image, String category, String description) {
         this.id = id;
         this.name = name;
         this.image = image;
-        this.type = type;
+        this.category = category;
         this.description = description;
     }
 
-    public BadgeDto(Long id, String name, String image, SubjectDto subject, String type, String description) {
+    public BadgeDto(Long id, String name, String image, SubjectDto subject, String category, String description) {
         this.id = id;
         this.name = name;
         this.image = image;
         this.subject = subject;
-        this.type = type;
+        this.category = category;
         this.description = description;
     }
 
@@ -80,12 +80,12 @@ public class BadgeDto {
         this.image = image;
     }
 
-    public String getType() {
-        return type;
+    public String getCategory() {
+        return category;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public String getDescription() {

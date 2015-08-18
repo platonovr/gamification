@@ -1,4 +1,4 @@
-<nav class="sidebar_menu">
+<nav class="sidebar_menu" ng-controller="SideBarController as sideBarController">
     <div class="sidebar_menu_top">
         <div class="logo">
             <span class="icon icon-cube_icon"></span>
@@ -13,7 +13,7 @@
         </a>
     </div>
     <div class="sidebar_menu_bottom">
-        <a href="#">
+        <a href="" ng-click="logout()">
             <span class="icon icon-exit_icon"></span>
             <span>Выход</span>
         </a>

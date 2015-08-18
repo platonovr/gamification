@@ -167,8 +167,8 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     @Transactional
-    public List<TaskInfoDto> getCreatedTasks(Long userId, Integer offset, Integer limit) {
-        List<Task> createdTasks = taskDao.getCreatedTasks(userId, offset, limit);
+    public List<TaskInfoDto> getCreatedTasks(Long userId, Integer offset, Integer limit, String query) {
+        List<Task> createdTasks = taskDao.getCreatedTasks(userId, offset, limit, query);
         return createdTasks.stream().map(adminTaskInfoMapper::toDto).collect(Collectors.toList());
     }
 
@@ -185,7 +185,7 @@ public class TaskServiceImpl implements TaskService {
         if (Objects.isNull(accountTask)) {
             AccountTask youngAccountTask = createAccountTask(account, neededTask);
             simpleDao.save(youngAccountTask);
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>(new TaskEnrollDto(TaskEnrollDto.TaskEnrollStatus.SUCCESS), HttpStatus.OK);
         } else {
             if (TaskStatus.TaskStatusType.CANCELED.equals(accountTask.getTaskStatus().getType()) && Boolean.TRUE.equals(accountTask.getAvailability())) {
                 TaskStatus newStatus = createNewStatus(accountTask);
@@ -254,9 +254,17 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    @Transactional
     public BadgeDto findBadgeById(Long id) {
         Badge badge = simpleDao.findById(Badge.class, id);
-        return badgeMapper.toDto(badge);
+        Hibernate.initialize(badge.getTasks());
+        Account currentUser = simpleDao.findById(Account.class, securityService.getCurrentUserId());
+        AccountBadge accountBadge = accountBadgeDao.findByBadgeAndAccount(badge, currentUser);
+        if (accountBadge != null) {
+            return badgeMapper.toDto(accountBadge);
+        } else {
+            return badgeMapper.toDto(badge);
+        }
     }
 
 

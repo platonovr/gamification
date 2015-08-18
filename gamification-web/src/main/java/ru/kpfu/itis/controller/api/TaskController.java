@@ -78,8 +78,10 @@ public class TaskController {
     @ApiImplicitParams(value = {@ApiImplicitParam(name = "token", value = "token", required = true, dataType = "string", paramType = "query")})
     @RequestMapping(value = "/my", method = RequestMethod.GET)
     public List<TaskInfoDto> getCreatedTasks(@RequestParam(required = false) Integer offset,
-                                             @RequestParam(required = false) Integer limit) {
-        return taskService.getCreatedTasks(securityService.getCurrentUserId(), offset, limit);
+                                             @RequestParam(required = false) Integer limit,
+                                             @RequestParam(required = false) String query
+                                             ) {
+        return taskService.getCreatedTasks(securityService.getCurrentUserId(), offset, limit, query);
     }
 
     @ApiOperation(value = "create challenge")
