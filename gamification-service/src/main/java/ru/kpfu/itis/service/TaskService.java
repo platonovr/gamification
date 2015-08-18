@@ -76,4 +76,6 @@ public interface TaskService {
     List<BadgeDto> getAllBadges();
 
     BadgeDto findBadgeById(Long id);
+
+    ErrorDto isTaskAvailableForUser(Long taskId);
 }

@@ -17,10 +17,9 @@ import ru.kpfu.itis.mapper.BadgeMapper;
 import ru.kpfu.itis.mapper.TaskInfoMapper;
 import ru.kpfu.itis.mapper.TaskMapper;
 import ru.kpfu.itis.model.*;
+import ru.kpfu.itis.model.TaskStatus;
 import ru.kpfu.itis.model.classifier.TaskCategory;
-import ru.kpfu.itis.model.enums.ActivityType;
-import ru.kpfu.itis.model.enums.EntityType;
-import ru.kpfu.itis.model.enums.StudyTaskType;
+import ru.kpfu.itis.model.enums.*;
 import ru.kpfu.itis.security.SecurityService;
 import ru.kpfu.itis.service.ActivityService;
 import ru.kpfu.itis.service.RatingService;
@@ -102,8 +101,7 @@ public class TaskServiceImpl implements TaskService {
         Account currentUser = securityService.getCurrentUser();
         task.setAuthor(currentUser);
         simpleDao.save(task);
-
-        Activity activity = new Activity(EntityType.TASK, ActivityType.NEW, currentUser, task.getId());
+        Activity activity = new Activity(EntityType.TASK, ActivityType.TASK_NEW, currentUser, task.getId());
         simpleDao.save(activity);
         return task;
     }
@@ -185,6 +183,8 @@ public class TaskServiceImpl implements TaskService {
         if (Objects.isNull(accountTask)) {
             AccountTask youngAccountTask = createAccountTask(account, neededTask);
             simpleDao.save(youngAccountTask);
+            Activity activity = new Activity(EntityType.TASK, ActivityType.TASK_ENROLL, account, neededTask.getId());
+            simpleDao.save(activity);
             return new ResponseEntity<>(new TaskEnrollDto(TaskEnrollDto.TaskEnrollStatus.SUCCESS), HttpStatus.OK);
         } else {
             if (TaskStatus.TaskStatusType.CANCELED.equals(accountTask.getTaskStatus().getType()) && Boolean.TRUE.equals(accountTask.getAvailability())) {
@@ -212,7 +212,7 @@ public class TaskServiceImpl implements TaskService {
             }
             Task task = accountTask.getTask();
             Account account = accountTask.getAccount();
-            Activity activity = new Activity(EntityType.TASK, ActivityType.COMPLETE, account, task.getId());
+            Activity activity = new Activity(EntityType.TASK, ActivityType.TASK_COMPLETE, account, task.getId());
             activityService.save(activity);
             if (task.getBadge() != null) {
                 AccountBadge accountBadge = accountBadgeDao.findByBadgeAndAccount(task.getBadge(), account);
@@ -228,7 +228,10 @@ public class TaskServiceImpl implements TaskService {
                     accountBadge.setTheory(accountBadge.getTheory() + mark);
                 }
                 accountBadge.computeProgress();
-
+                if (accountBadge.getAchevementStatus() == BadgeAchievementStatus.COMPLETE) {
+                    activity = new Activity(EntityType.BADGE, ActivityType.BADGE_COMPLETE, account, task.getBadge().getId());
+                    simpleDao.save(activity);
+                }
                 simpleDao.saveOrUpdate(accountBadge);
             }
             AccountInfo accountInfo = account.getAccountInfo();
@@ -265,6 +268,19 @@ public class TaskServiceImpl implements TaskService {
         } else {
             return badgeMapper.toDto(badge);
         }
+    }
+
+    @Override
+    public ErrorDto isTaskAvailableForUser(Long taskId) {
+        Account currentUser = simpleDao.findById(Account.class, securityService.getCurrentUserId());
+        Task task = simpleDao.findById(Task.class, taskId);
+        if (currentUser == null || task == null) {
+            return new ErrorDto(Error.TASK_NOT_AVAILABLE);
+        }
+        if (!taskDao.isTaskAvailableForUser(currentUser, taskId)) {
+            return new ErrorDto(Error.TASK_NOT_AVAILABLE);
+        }
+        return null;
     }
 
 

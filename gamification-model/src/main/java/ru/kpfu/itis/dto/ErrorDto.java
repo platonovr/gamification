@@ -20,6 +20,9 @@ public class ErrorDto {
         }
     }
 
+    public ErrorDto() {
+    }
+
     public String getMsg() {
         return msg;
     }

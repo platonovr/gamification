@@ -1,6 +1,7 @@
 package ru.kpfu.itis.service;
 
 import org.springframework.transaction.annotation.Transactional;
+import ru.kpfu.itis.dto.ActivityDto;
 import ru.kpfu.itis.model.Activity;
 
 import java.util.List;
@@ -13,8 +14,6 @@ public interface ActivityService {
     void save(Activity activity);
 
     @Transactional
-    List<Activity> getActivityStream();
+    List<ActivityDto> getActivityStream(Long maxId);
 
-    @Transactional
-    List<Activity> getActivityStreamDao();
 }

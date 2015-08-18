@@ -23,8 +23,8 @@ public class Activity extends BaseLongIdEntity {
     @Enumerated(EnumType.STRING)
     ActivityType activityType;
 
-    @Column(name = "ACCOUNT_ID")
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "account_id", referencedColumnName = "account_id")
     Account account;
 
     @Column(name = "ENTITY_ID")
@@ -38,5 +38,37 @@ public class Activity extends BaseLongIdEntity {
     }
 
     public Activity() {
+    }
+
+    public EntityType getEntityType() {
+        return entityType;
+    }
+
+    public void setEntityType(EntityType entityType) {
+        this.entityType = entityType;
+    }
+
+    public ActivityType getActivityType() {
+        return activityType;
+    }
+
+    public void setActivityType(ActivityType activityType) {
+        this.activityType = activityType;
+    }
+
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
+    }
+
+    public Long getEntityId() {
+        return entityId;
+    }
+
+    public void setEntityId(Long entityId) {
+        this.entityId = entityId;
     }
 }

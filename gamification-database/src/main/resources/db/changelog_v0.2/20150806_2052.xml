@@ -19,13 +19,13 @@
 
     <changeSet id="createActivityTable" author="rfatkhullin">
         <createTable tableName="ACTIVITY">
-            <column name="ACTIVITY_ID" type="bigint" autoIncrement="true">
+            <column name="ACTIVITY_ID"  type="bigint" autoIncrement="true">
                 <constraints primaryKey="true"/>
             </column>
             <column name="ENTITY_ID" type="bigint">
             </column>
             <column name="ACCOUNT_ID" type="bigint">
-                <constraints foreignKeyName="ACTIVITY_ACCOUNT"
+                <constraints foreignKeyName="ACTIVITY_ACCOUNT_FK"
                              references="ACCOUNT(ACCOUNT_ID)"/>
             </column>
             <column name="ACTIVITY_TYPE" type="varchar(64)">
@@ -47,13 +47,14 @@
 
     <changeSet id="AccountBadge_AchievementStatus" author="rfatkhullin">
         <addColumn tableName="ACCOUNT_BADGE">
-            <column name="ACHIEVEMENT_STATUS" type="varchar(64)">
-                <constraints nullable="false"/>
-            </column>
+            <column name="ACHIEVEMENT_STATUS" type="varchar(64)"/>
         </addColumn>
         <update tableName="ACCOUNT_BADGE">
             <column name="ACHIEVEMENT_STATUS" value="PERFORM" type="varchar"/>
         </update>
+        <sql>
+            ALTER TABLE ACCOUNT_BADGE ALTER COLUMN ACHIEVEMENT_STATUS SET NOT NULL
+        </sql>
     </changeSet>
 
 </databaseChangeLog>

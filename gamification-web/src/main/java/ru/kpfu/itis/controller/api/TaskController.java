@@ -61,8 +61,12 @@ public class TaskController {
     @ApiOperation("get task's information")
     @ApiImplicitParams(value = {@ApiImplicitParam(name = "token", value = "token", required = true, dataType = "string", paramType = "query")})
     @RequestMapping(value = "/{taskId:[1-9]+[0-9]*}", method = RequestMethod.GET)
-    public TaskInfoDto getTaskById(@PathVariable Long taskId) {
-        return taskService.findById(taskId);
+    public ResponseEntity<? super TaskInfoDto> getTaskById(@PathVariable Long taskId) {
+        ErrorDto taskAvailabilityError = taskService.isTaskAvailableForUser(taskId);
+        if (taskAvailabilityError != null) {
+            return new ResponseEntity<>(taskAvailabilityError, FORBIDDEN);
+        }
+        return new ResponseEntity<>(taskService.findById(taskId), OK);
     }
 
     @ApiOperation("get student's tasks")
@@ -80,7 +84,7 @@ public class TaskController {
     public List<TaskInfoDto> getCreatedTasks(@RequestParam(required = false) Integer offset,
                                              @RequestParam(required = false) Integer limit,
                                              @RequestParam(required = false) String query
-                                             ) {
+    ) {
         return taskService.getCreatedTasks(securityService.getCurrentUserId(), offset, limit, query);
     }
 
@@ -139,6 +143,10 @@ public class TaskController {
     @ApiImplicitParams(value = {@ApiImplicitParam(name = "token", value = "token", required = true, dataType = "string", paramType = "query")})
     @RequestMapping(value = "/{taskId:[1-9]+[0-9]*}/enroll", method = RequestMethod.POST)
     public ResponseEntity enroll(@PathVariable Long taskId) {
+        ErrorDto taskAvailabilityError = taskService.isTaskAvailableForUser(taskId);
+        if (taskAvailabilityError != null) {
+            return new ResponseEntity<>(taskAvailabilityError, FORBIDDEN);
+        }
         Account account = securityService.getCurrentUser();
         return taskService.enroll(account, taskId);
     }

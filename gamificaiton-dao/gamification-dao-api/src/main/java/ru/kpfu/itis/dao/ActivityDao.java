@@ -11,5 +11,5 @@ import java.util.List;
  */
 public interface ActivityDao {
 
-    List<Activity> getActivityStream(Account account, List<Task> tasks);
+    List<Activity> getActivityStream(Account account, List<Task> tasks, Long lastActivityId);
 }
