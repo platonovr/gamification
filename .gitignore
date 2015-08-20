@@ -9,7 +9,7 @@ gamificaiton-dao/gamification-dao-api/**.iml
 
 database.properties
 config.properties
-*-example.properties
+mongo.properties
 /**/*.iml
 happy-student-model/src/main/resources/database.properties
 auth.service.properties

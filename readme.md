@@ -36,6 +36,11 @@
 ### Модуль авторизации и security
 Для подключения и сборки модуля нужно спулить проект http://jetbrainslab.it.kpfu.ru/ainurminibaev/pretty_student_client.git
 
+
+### Сохранение токенов в монго
+Сделать себе файл mongo.properties куда записано название БД(есть mongo-example.props)
+запустить монго
+
 ??
 
 спулить надо http://jetbrainslab.it.kpfu.ru/ainurminibaev/pretty_student_api.git

@@ -29,7 +29,7 @@ public class SwaggerConfig {
                         "JetBrains email here",
                         "please read the license terms...",
                         "jetBrains.kpfu.ru"))
-                .includePatterns(Constant.API_URI_PREFIX + "/.*", "/api-docs/.*");
+                .includePatterns(Constant.API_URI_PREFIX + "/.*", "/api-docs/.*", "/login", "/logout");
     }
 
 }
