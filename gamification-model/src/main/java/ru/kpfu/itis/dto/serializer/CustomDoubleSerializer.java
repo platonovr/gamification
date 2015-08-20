@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 
 import java.io.IOException;
-import java.text.DecimalFormat;
+import java.util.Locale;
 
 public class CustomDoubleSerializer extends JsonSerializer<Double> {
     @Override
@@ -15,11 +15,11 @@ public class CustomDoubleSerializer extends JsonSerializer<Double> {
             //write the word 'null' if there's no value available
             jgen.writeNull();
         } else {
-            final String pattern = ".##";
-            //final String pattern = "###,###,##0.00";
-            final DecimalFormat myFormatter = new DecimalFormat(pattern);
-            final String output = myFormatter.format(value);
-            jgen.writeNumber(output);
+//            final String pattern = "#.00";
+//            //final String pattern = "###,###,##0.00";
+//            final DecimalFormat myFormatter = new DecimalFormat(pattern);
+//            final String output = myFormatter.format(value);
+            jgen.writeNumber(String.format(Locale.US, "%.2f", value));
         }
     }
 }
