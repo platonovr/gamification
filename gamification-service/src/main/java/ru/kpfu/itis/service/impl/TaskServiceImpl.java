@@ -217,6 +217,7 @@ public class TaskServiceImpl implements TaskService {
             if (task.getBadge() != null) {
                 AccountBadge accountBadge = accountBadgeDao.findByBadgeAndAccount(task.getBadge(), account);
                 if (Objects.isNull(accountBadge)) {
+                    //TODO throw exception create account badge ON enroll
                     AccountBadge notExistedAccountBadge = new AccountBadge();
                     notExistedAccountBadge.setAccount(accountTask.getAccount());
                     notExistedAccountBadge.setBadge(task.getBadge());
@@ -263,11 +264,14 @@ public class TaskServiceImpl implements TaskService {
         Hibernate.initialize(badge.getTasks());
         Account currentUser = simpleDao.findById(Account.class, securityService.getCurrentUserId());
         AccountBadge accountBadge = accountBadgeDao.findByBadgeAndAccount(badge, currentUser);
-        if (accountBadge != null) {
-            return badgeMapper.toDto(accountBadge);
-        } else {
-            return badgeMapper.toDto(badge);
+        if (accountBadge == null) {
+            AccountBadge notExistedAccountBadge = new AccountBadge();
+            notExistedAccountBadge.setAccount(currentUser);
+            notExistedAccountBadge.setBadge(badge);
+            accountBadge = notExistedAccountBadge;
+            simpleDao.save(notExistedAccountBadge);
         }
+        return badgeMapper.toDto(accountBadge);
     }
 
     @Override

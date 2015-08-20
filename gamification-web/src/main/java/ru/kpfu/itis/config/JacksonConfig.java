@@ -1,6 +1,7 @@
 package ru.kpfu.itis.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.datatype.hibernate4.Hibernate4Module;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +18,7 @@ public class JacksonConfig {
         MappingJackson2HttpMessageConverter messageConverter = new MappingJackson2HttpMessageConverter();
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new Hibernate4Module());
+        objectMapper.setNodeFactory(JsonNodeFactory.withExactBigDecimals(true));
         messageConverter.setObjectMapper(objectMapper);
         return messageConverter;
     }

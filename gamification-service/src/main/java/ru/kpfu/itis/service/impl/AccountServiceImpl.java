@@ -7,6 +7,7 @@ import ru.kpfu.itis.dao.AccountDao;
 import ru.kpfu.itis.dao.SimpleDao;
 import ru.kpfu.itis.model.Account;
 import ru.kpfu.itis.model.AccountInfo;
+import ru.kpfu.itis.model.SimpleAuthUser;
 import ru.kpfu.itis.model.enums.Role;
 import ru.kpfu.itis.service.AccountService;
 import ru.kpfu.jbl.auth.domain.AuthUser;
@@ -35,8 +36,10 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    @Transactional
     public AuthUser findUserByLogin(String s) {
-        return accountDao.findByLogin(s);
+        Account account = accountDao.findByLogin(s);
+        return new SimpleAuthUser(account);
     }
 
     @Override
