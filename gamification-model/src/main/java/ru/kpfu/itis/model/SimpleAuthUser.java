@@ -20,6 +20,9 @@ public class SimpleAuthUser implements AuthUser {
         }
     }
 
+    public SimpleAuthUser() {
+    }
+
     @Override
     public String getPassword() {
         return password;
