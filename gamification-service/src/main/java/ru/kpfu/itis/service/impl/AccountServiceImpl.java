@@ -13,6 +13,7 @@ import ru.kpfu.jbl.auth.domain.AuthUser;
 import ru.kpfu.jbl.auth.response.UserResponse;
 
 import java.io.Serializable;
+import java.util.List;
 
 import static java.util.Optional.ofNullable;
 
@@ -32,6 +33,18 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Account findById(Long id) {
         return simpleDao.findById(Account.class, id);
+    }
+
+    @Override
+    @Transactional
+    public List<Account> getTeachers() {
+        return accountDao.getAccountsByRole(Role.TEACHER);
+    }
+
+    @Override
+    @Transactional
+    public List<Account> getStudents() {
+        return accountDao.getAccountsByRole(Role.STUDENT);
     }
 
     @Override

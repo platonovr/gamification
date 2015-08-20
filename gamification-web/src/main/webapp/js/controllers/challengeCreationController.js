@@ -1,12 +1,37 @@
 angular.module('gamificationApp').controller('ChallengeCreationController',
-    ['$scope', '$location', 'CONSTANTS', 'TaskService',
-        function ($scope, $location, CONSTANTS, TaskService) {
+    ['$scope', '$location', '$sce', 'CONSTANTS', 'TaskService',
+        function ($scope, $location, $sce, CONSTANTS, TaskService) {
+
+            $scope.trustAsHtml = function (value) {
+                return $sce.trustAsHtml(value);
+            };
+
+
             $scope.newTask = {};
             $scope.attachments = [];
             $scope.errors = [];
+            $scope.teachers = [];
+            $scope.studyGroups = [];
+            $scope.students = [];
             TaskService.getCategories().success(function (data) {
                 $scope.categories = data
             });
+            TaskService.getTeachers().success(function (data) {
+                $scope.teachers = data;
+            });
+            //TaskService.getDisciplines().success(function (data) {
+            //    $scope.disciplines = data;
+            //});
+
+            //TaskService.getStudyGroups().success(function (data) {
+            //    $scope.studyGroups = data;
+            //});
+
+            TaskService.getStudents().success(function (data) {
+                $scope.students = data;
+            });
+
+
             $scope.createTask = function () {
                 TaskService.createTask($scope.newTask).success(function (data) {
                     $scope.created = true;

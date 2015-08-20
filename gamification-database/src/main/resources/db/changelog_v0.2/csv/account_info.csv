@@ -99,3 +99,4 @@ account_info_id,account_id,first_name, middle_name, last_name, birth_date, phone
 197,197,lola, middleName,arnold,1996-01-01,051-471-1600,2015-01-01 00:00:00,2015-01-01 00:00:00,null,null,lola.arnold@example.com,2012,108,101
 198,198,lola, middleName,hawkins,1996-01-01,041-286-8561,2015-01-01 00:00:00,2015-01-01 00:00:00,null,null,lola.hawkins@example.com,2013,109,101
 199,199,lillian, middleName,snyder,1996-01-01,061-626-1583,2015-01-01 00:00:00,2015-01-01 00:00:00,null,null,lillian.snyder@example.com,2014,110,101
+200,200,Teache, teacher,teacher,1996-01-01,061-626-1583,2015-01-01 00:00:00,2015-01-01 00:00:00,null,null,lillian.snyder@example.com,2014,110,101

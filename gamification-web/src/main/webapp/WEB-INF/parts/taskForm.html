@@ -12,47 +12,55 @@
                 <input id="name" ng-model="newTask.name" ng-change="errors=null">
                 <label style="color: red" ng-show="errors.name!=null">{{errors.name}}</label>
             </div>
-            <!--<label>Название*:<input name="name" ng-model="newTask.name" ng-change="errors=null"></label>-->
-            <div class="field">
-                <label for="subject">Предмет:</label>
-                <input id="subject" ng-model="newTask.subject">
-            </div>
+            <!--<div class="field">-->
+            <!--<label for="subject">Предмет:</label>-->
+            <!--<input id="subject" ng-model="newTask.subject">-->
+            <!--</div>-->
             <div class="field">
                 <label for="category">Категория*:</label>
                 <select name="cat" id="category" ng-model="newTask.category"
-                        ng-options="category.name as category.name for category in categories"
-                        ng-change="errors=null"></select>
-                <label style="color: red" ng-show="errors.category!=null">{{errors.category}}</label>
+                        ng-options="category.id as category.caption for category in categories"
+                        required></select>
+                {{errors.category}}
             </div>
 
-            <div class="field">
-                <label for="teacher">Преподаватель:</label>
-                <input name="creator" ng-model="newTask.creator" id="teacher">
+            <div class="form-group">
+                <label>Преподаватель</label>
+                <ui-select theme="bootstrap"
+                           ng-model="newTask.creator"
+                           style="margin-bottom: 5px;"
+                           required>
+                    <ui-select-match placeholder="Фамилия">{{$select.selected.lastName}}
+                    </ui-select-match>
+                    <ui-select-choices repeat="teacher in teachers">
+                        <div ng-bind-html="trustAsHtml((teacher.lastName | highlight: $select.search))"></div>
+                    </ui-select-choices>
+                </ui-select>
             </div>
-            <div class="field">
-                <label for="group">Курсы/группы:</label>
-                <input id="group" class="ui-autocomplete-input" ng-model="newTask.groups"
-                       ng-list autocomplete="off">
+            <!--<div class="field">-->
+            <!--<label for="group">Курсы/группы:</label>-->
+            <!--<input id="group" class="ui-autocomplete-input" ng-model="newTask.groups"-->
+            <!--ng-list autocomplete="off">-->
 
-                <div class="group_elements">
-                    <div ng-repeat="group in newTask.groups" class="group_element">
-                        <span>{{group}}</span>
-                        <span class="close_elem icon-close" ng-click="newTask.groups.remove($index)"></span>
-                    </div>
-                </div>
-            </div>
-            <div class="field">
-                <label for="worker">Исполнитель:</label>
-                <input type="text" id="worker" class="ui-autocomplete-input"
-                       ng-model="newTask.performerNames" ng-list autocomplete="off">
+            <!--<div class="group_elements">-->
+            <!--<div ng-repeat="group in newTask.groups" class="group_element">-->
+            <!--<span>{{group}}</span>-->
+            <!--<span class="close_elem icon-close" ng-click="newTask.groups.remove($index)"></span>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--<div class="field">-->
+            <!--<label for="worker">Исполнитель:</label>-->
+            <!--<input type="text" id="worker" class="ui-autocomplete-input"-->
+            <!--ng-model="newTask.performerNames" ng-list autocomplete="off">-->
 
-                <div class="worker_elements">
-                    <div ng-repeat="performer in newTask.performerNames" class="worker_element">
-                        <span>{{performer}}</span>
-                        <span class="close_elem icon-close" ng-click="newTask.performerNames.remove($index)"></span>
-                    </div>
-                </div>
-            </div>
+            <!--<div class="worker_elements">-->
+            <!--<div ng-repeat="performer in newTask.performerNames" class="worker_element">-->
+            <!--<span>{{performer}}</span>-->
+            <!--<span class="close_elem icon-close" ng-click="newTask.performerNames.remove($index)"></span>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--</div>-->
             <div class="field">
                 <label for="mark">Оценка*:</label>
                 <span class="addition">(максимальный балл)</span>

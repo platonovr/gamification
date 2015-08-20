@@ -6,7 +6,7 @@
                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd"
                    logicalFilePath="20150728_2217.xml">
 
-    <changeSet id="updateAccountAndRating" author="rfatkhullin">
+    <changeSet id="updateAccountAndRating" author="rfatkhullin" runOnChange="true">
         <loadUpdateData tableName="ACCOUNT" file="db/changelog_v0.2/csv/account.csv" primaryKey="ACCOUNT_ID"/>
         <loadUpdateData tableName="ACCOUNT_INFO" file="db/changelog_v0.2/csv/account_info.csv"
                         primaryKey="ACCOUNT_INFO_ID"/>

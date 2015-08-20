@@ -1,6 +1,7 @@
 package ru.kpfu.itis.service.impl;
 
 import org.apache.commons.lang3.Validate;
+import org.apache.cxf.common.util.CollectionUtils;
 import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,14 +18,17 @@ import ru.kpfu.itis.mapper.BadgeMapper;
 import ru.kpfu.itis.mapper.TaskInfoMapper;
 import ru.kpfu.itis.mapper.TaskMapper;
 import ru.kpfu.itis.model.*;
-import ru.kpfu.itis.model.TaskStatus;
 import ru.kpfu.itis.model.classifier.TaskCategory;
-import ru.kpfu.itis.model.enums.*;
+import ru.kpfu.itis.model.enums.ActivityType;
+import ru.kpfu.itis.model.enums.BadgeAchievementStatus;
+import ru.kpfu.itis.model.enums.EntityType;
+import ru.kpfu.itis.model.enums.StudyTaskType;
 import ru.kpfu.itis.security.SecurityService;
 import ru.kpfu.itis.service.ActivityService;
 import ru.kpfu.itis.service.RatingService;
 import ru.kpfu.itis.service.TaskService;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -120,10 +124,16 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public List<TaskCategoryDto> getAllCategories() {
-        return simpleDao.fetchAll(TaskCategory.class)
-                .parallelStream().<TaskCategoryDto>map(taskCategory ->
-                        new TaskCategoryDto(taskCategory.getName(), taskCategory.getTaskCategoryType()))
-                .collect(Collectors.toList());
+        List<TaskCategory> taskCategories = simpleDao.fetchAll(TaskCategory.class);
+        List<TaskCategoryDto> categoryDtos = new ArrayList<>();
+        if (CollectionUtils.isEmpty(taskCategories)) {
+            return categoryDtos;
+        }
+        for (TaskCategory taskCategory : taskCategories) {
+            categoryDtos.add(new TaskCategoryDto(taskCategory.getId(), taskCategory.getName(), taskCategory.getTaskCategoryType(), taskCategory.getTaskCategoryType().getCaption()));
+        }
+        return categoryDtos;
+
     }
 
     @Override

@@ -18,6 +18,7 @@ public class JacksonConfig {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new Hibernate4Module());
         messageConverter.setObjectMapper(objectMapper);
+        messageConverter.setPrefixJson(false);
         return messageConverter;
     }
 

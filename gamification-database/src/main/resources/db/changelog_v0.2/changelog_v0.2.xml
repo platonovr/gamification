@@ -11,4 +11,19 @@
     <include file="20150803_0930.xml" relativeToChangelogFile="true"/>
     <include file="20150806_2052.xml" relativeToChangelogFile="true"/>
 
+    <changeSet id="100500" author="rplatonov">
+        <sql>
+            INSERT INTO account(account_id, login, password, role, create_time,change_time)
+            VALUES (200,'teacher','5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8','TEACHER',now(),now())
+        </sql>
+    </changeSet>
+
+    <changeSet id="100501" author="rplatonov">
+        <sql>
+            INSERT INTO account_info (account_info_id,account_id, first_name, middle_name, last_name,
+            birth_date, phone_number, create_time, change_time)
+            VALUES (200,200,'Салим','Салимович','Салимов',now(),'89177777777', now(),now())
+        </sql>
+    </changeSet>
+
 </databaseChangeLog>

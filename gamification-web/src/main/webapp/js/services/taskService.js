@@ -1,14 +1,11 @@
 angular.module('gamificationApp').service('TaskService', ['$http', 'CONSTANTS', 'Upload', 'AuthInfo', function ($http, CONSTANTS, Upload, AuthInfo) {
     this.createTask = function (newTask) {
-        return $http.post(CONSTANTS.API_URI_PREFIX + CONSTANTS.TASK_URI + "?token=" + AuthInfo.getToken(), newTask)
+        return $http.post(CONSTANTS.API_URI_PREFIX + CONSTANTS.TASK_URI, newTask);
     };
     this.uploadAttachment = function (taskId, attachment) {
         return Upload.upload({
             url: CONSTANTS.API_URI_PREFIX + CONSTANTS.TASK_URI + '/' + taskId + '/attachments',
-            file: attachment,
-            params: {
-                token: AuthInfo.getToken()
-            }
+            file: attachment
         })
     };
     this.getTasks = function (offset, limit, query) {
@@ -21,6 +18,15 @@ angular.module('gamificationApp').service('TaskService', ['$http', 'CONSTANTS', 
             }
         })
     };
+
+    this.getTeachers = function () {
+        return $http.get(CONSTANTS.API_URI_PREFIX + CONSTANTS.DICTIONARIES + '/teachers');
+    };
+
+    this.getStudents = function () {
+        return $http.get(CONSTANTS.API_URI_PREFIX + CONSTANTS.DICTIONARIES + '/students');
+    };
+
     this.getCategories = function () {
         return $http.get(CONSTANTS.API_URI_PREFIX + CONSTANTS.TASK_URI + '/categories', {
             params: {

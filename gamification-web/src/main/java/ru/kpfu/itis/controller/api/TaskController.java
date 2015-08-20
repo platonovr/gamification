@@ -7,8 +7,6 @@ import com.wordnik.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindException;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,7 +21,6 @@ import ru.kpfu.itis.service.TaskService;
 import ru.kpfu.itis.util.Constant;
 import ru.kpfu.itis.validator.TaskValidator;
 
-import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 
@@ -90,12 +87,10 @@ public class TaskController {
 
     @ApiOperation(value = "create challenge")
     @ApiImplicitParams(value = {@ApiImplicitParam(name = "token", value = "token", required = true, dataType = "string", paramType = "query")})
-    @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<TaskDto> createTask(@Valid @RequestBody TaskDto taskDto, BindingResult bindingResult) throws BindException {
-        if (bindingResult.hasErrors()) throw new BindException(bindingResult);
-        taskDto.setId(taskService.save(taskDto).getId());
-
-        return new ResponseEntity<>(taskDto, HttpStatus.CREATED);
+    @RequestMapping(method = RequestMethod.POST, consumes = {"application/json;charset=UTF-8"}, produces = {"application/json;charset=UTF-8"})
+    public ResponseEntity<TaskDto> createTask(@RequestBody TaskDto newTask) {
+        newTask.setId(taskService.save(newTask).getId());
+        return new ResponseEntity<>(newTask, HttpStatus.CREATED);
     }
 
     @ApiOperation("upload challenge's attachment")
