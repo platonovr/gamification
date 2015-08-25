@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="
+                       http://www.liquibase.org/xml/ns/dbchangelog
+                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd"
+                   logicalFilePath="20150825_11201.xml">
+
+
+    <changeSet id="20150825_11201" author="aminibaev">
+        <sql>
+            INSERT INTO account(account_id, login, password, role, create_time,change_time)
+            VALUES (201,'anonymous','5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8','ANONYMOUS',now(),now())
+        </sql>
+    </changeSet>
+
+    <changeSet id="20150825_11202" author="aminibaev">
+        <sql>
+            INSERT INTO account_info (account_info_id,account_id, first_name, middle_name, last_name,
+            birth_date, phone_number, create_time, change_time)
+            VALUES (201,201,'Анонимный','','Пользователь',now(),'89177777777', now(),now())
+        </sql>
+    </changeSet>
+</databaseChangeLog>
