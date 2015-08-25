@@ -88,8 +88,8 @@ public class TaskController {
 
     @ApiOperation(value = "create challenge")
     @ApiImplicitParams(value = {@ApiImplicitParam(name = "token", value = "token", required = true, dataType = "string", paramType = "query")})
-    @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<TaskDto> createTask(@RequestBody TaskDto newTask) {
+    @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public ResponseEntity<TaskDto> createTask(@ModelAttribute TaskDto newTask) {
         newTask.setId(taskService.save(newTask).getId());
         return new ResponseEntity<>(newTask, HttpStatus.CREATED);
     }

@@ -99,4 +99,3 @@ account_id,login,password,role,create_time,change_time,finish_time
 197,greenbutterfly592,5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8,STUDENT,2015-01-01 00:00:00,2015-01-01 00:00:00,null
 198,whitemeercat507,5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8,STUDENT,2015-01-01 00:00:00,2015-01-01 00:00:00,null
 199,bluegoose402,5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8,STUDENT,2015-01-01 00:00:00,2015-01-01 00:00:00,null
-200,teacher,5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8,TEACHER,2015-01-01 00:00:00,2015-01-01 00:00:00,null
