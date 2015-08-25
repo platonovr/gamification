@@ -5,12 +5,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kpfu.itis.dao.AccountDao;
 import ru.kpfu.itis.dao.SimpleDao;
-import ru.kpfu.itis.model.Account;
-import ru.kpfu.itis.model.AccountInfo;
-import ru.kpfu.itis.model.SimpleAuthUser;
+import ru.kpfu.itis.model.*;
 import ru.kpfu.itis.model.enums.Role;
 import ru.kpfu.itis.service.AccountService;
 import ru.kpfu.jbl.auth.domain.AuthUser;
+import ru.kpfu.jbl.auth.provider.encoders.PasswordEncoder;
 import ru.kpfu.jbl.auth.response.UserResponse;
 
 import java.io.Serializable;
@@ -29,6 +28,10 @@ public class AccountServiceImpl implements AccountService {
     @Autowired
     private SimpleDao simpleDao;
 
+    //only with web module
+    @Autowired(required = false)
+    PasswordEncoder passwordEncoder;
+
     @Transactional
     @Override
     public Account findById(Long id) {
@@ -39,7 +42,51 @@ public class AccountServiceImpl implements AccountService {
     @Transactional
     public AuthUser findUserByLogin(String s) {
         Account account = accountDao.findByLogin(s);
+        if (account == null) {
+            if (s != null && s.startsWith("anonymous")) {
+                account = createAnonymousUser(s);
+                simpleDao.save(account);
+            }
+        }
+        if (account == null) {
+            return null;
+        }
         return new SimpleAuthUser(account);
+    }
+
+    /**
+     * Created anonymous user with login pattern anonymousGROUP_ID
+     *
+     * @param login
+     * @return
+     */
+    @Override
+    public Account createAnonymousUser(String login) {
+        Long academicGroupId;
+        try {
+            academicGroupId = Long.valueOf(login.replaceAll("[\\D]", ""));
+        } catch (Exception e) {
+            return null;
+        }
+        AcademicGroup academicGroup = simpleDao.findById(AcademicGroup.class, academicGroupId);
+        if (academicGroup == null) {
+            return null;
+        }
+
+        Account account = new Account();
+        account.setLogin(login);
+        if (passwordEncoder != null) {
+            account.setPassword(passwordEncoder.encode("password", ""));
+            //TODO set salt
+        } else {
+            account.setPassword("");
+        }
+        account.setRole(Role.ANONYMOUS);
+        AccountInfo accountInfo = new AccountInfo();
+        accountInfo.setGroup(academicGroup);
+        accountInfo.setAccount(account);
+        account.setAccountInfo(accountInfo);
+        return account;
     }
 
     @Override

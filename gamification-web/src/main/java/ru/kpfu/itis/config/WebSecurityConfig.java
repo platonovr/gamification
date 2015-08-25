@@ -13,10 +13,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.servlet.configuration.EnableWebMvcSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.web.AuthenticationEntryPoint;
-import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-import ru.kpfu.itis.model.Account;
 import ru.kpfu.itis.model.SimpleAuthUser;
 import ru.kpfu.jbl.auth.AuthenticationFilter;
 import ru.kpfu.jbl.auth.config.*;
@@ -28,7 +25,7 @@ import ru.kpfu.jbl.auth.service.impl.SecurityContextHolderServiceImpl;
 
 @Configuration
 @EnableWebMvcSecurity
-@Import(value = {AuthSecurityModuleConfig.class, MongoTokenServiceConfig.class, SpringMongoConfig.class})
+@Import(value = {AuthSecurityModuleConfig.class, ShaProvidersConfig.class, MongoTokenServiceConfig.class, SpringMongoConfig.class})
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
@@ -71,7 +68,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //                antMatchers("/api/v1/rating/**").hasAnyRole("STUDENT", "ADMIN", "TEACHER", "ANONYMOUS").
 //                antMatchers("/api/v1/challenge/**").hasAnyRole("STUDENT", "ADMIN", "TEACHER", "ANONYMOUS").
         antMatchers("/api/v1/challenge/my").hasAnyRole("ADMIN", "TEACHER").
-                regexMatchers("/api/v1/challenge/[0-9]+/enroll").hasRole("STUDENT").
+                antMatchers("/api/v1/groups/**").permitAll().
+                antMatchers("/api/v1/challenge/{\\d+}/enroll").hasRole("STUDENT").
                 antMatchers("/api/v1/**").hasAnyRole("STUDENT", "ADMIN", "TEACHER", "ANONYMOUS").
                 and().
                 exceptionHandling()
