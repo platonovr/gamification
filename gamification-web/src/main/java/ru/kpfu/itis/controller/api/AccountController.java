@@ -36,7 +36,6 @@ public class AccountController {
     @Autowired
     private AccountProfileMapper accountProfileMapper;
 
-
     @ApiOperation(httpMethod = "GET", value = "get user's profile")
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ApiImplicitParams(value = {@ApiImplicitParam(name = "token", value = "token", required = true, dataType = "string", paramType = "query")})

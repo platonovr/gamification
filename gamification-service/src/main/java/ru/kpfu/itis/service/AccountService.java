@@ -9,4 +9,5 @@ import ru.kpfu.jbl.auth.service.UserServiceAuth;
 public interface AccountService extends UserServiceAuth {
     Account findById(Long id);
 
+    Account createAnonymousUser(String login);
 }
