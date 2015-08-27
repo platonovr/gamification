@@ -1,5 +1,6 @@
 package ru.kpfu.itis.service.impl;
 
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,7 +28,9 @@ public class AccountBadgeServiceImpl implements AccountBadgeService {
     @Override
     @Transactional
     public List<AccountBadge> findAllBadgesByAccount(Account account) {
-        return accountBadgeDao.findAllBadgesByAccount(account);
+        List<AccountBadge> allBadgesByAccount = accountBadgeDao.findAllBadgesByAccount(account);
+        allBadgesByAccount.stream().filter(it -> it.getBadge() != null).forEach(it -> Hibernate.initialize(it.getBadge().getTasks()));
+        return allBadgesByAccount;
     }
 
     @Transactional
