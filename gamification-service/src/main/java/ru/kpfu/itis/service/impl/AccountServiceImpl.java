@@ -5,14 +5,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kpfu.itis.dao.AccountDao;
 import ru.kpfu.itis.dao.SimpleDao;
+import ru.kpfu.itis.dto.AccountProfileDto;
+import ru.kpfu.itis.mapper.AccountProfileMapper;
 import ru.kpfu.itis.model.*;
 import ru.kpfu.itis.model.enums.Role;
-import ru.kpfu.itis.service.AccountService;
+import ru.kpfu.itis.service.*;
 import ru.kpfu.jbl.auth.domain.AuthUser;
 import ru.kpfu.jbl.auth.provider.encoders.PasswordEncoder;
 import ru.kpfu.jbl.auth.response.UserResponse;
 
 import java.io.Serializable;
+import java.util.List;
 
 import static java.util.Optional.ofNullable;
 
@@ -31,6 +34,16 @@ public class AccountServiceImpl implements AccountService {
     //only with web module
     @Autowired(required = false)
     PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private AccountInfoService accountInfoService;
+    @Autowired
+    private AccountBadgeService accountBadgeService;
+    @Autowired
+    private RatingService ratingService;
+
+    @Autowired
+    private AccountProfileMapper accountProfileMapper;
 
     @Transactional
     @Override
@@ -87,6 +100,27 @@ public class AccountServiceImpl implements AccountService {
         accountInfo.setAccount(account);
         account.setAccountInfo(accountInfo);
         return account;
+    }
+
+    @Override
+    @Transactional
+    public AccountProfileDto getUserProfile(Long id) {
+        Account account = findById(id);
+        if (account == null) {
+            return null;
+        }
+        AccountInfo accountInfo = accountInfoService.findByAccount(account);
+        if (accountInfo == null) {
+            return null;
+        }
+        List<AccountBadge> badges = accountBadgeService.findAllBadgesByAccount(account);
+        Rating rating = ratingService.getUserRating(accountInfo.getId());
+        if (rating == null) {
+            ratingService.createUserRating(accountInfo, 0.0);
+            ratingService.recalculateRating(accountInfo);
+            rating = ratingService.getUserRating(accountInfo.getId());
+        }
+        return accountProfileMapper.map(account, accountInfo, badges, rating);
     }
 
     @Override

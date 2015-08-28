@@ -67,7 +67,7 @@ public abstract class AbstractTaskDaoImpl extends AbstractGenericDao implements 
                     "or :userId in (select tacc.id from ttacc.account tacc)) ";
 
             if (status != null) {
-                queryHql += " and ta.taskStatus.type=:status";
+                queryHql += " and ttacc.taskStatus.type=:status";
             }
             queryHql += " order by task.endDate";
             Query query = session.createQuery(queryHql);

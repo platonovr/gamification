@@ -1,5 +1,6 @@
 package ru.kpfu.itis.service;
 
+import ru.kpfu.itis.dto.AccountProfileDto;
 import ru.kpfu.itis.model.Account;
 import ru.kpfu.jbl.auth.service.UserServiceAuth;
 
@@ -10,4 +11,6 @@ public interface AccountService extends UserServiceAuth {
     Account findById(Long id);
 
     Account createAnonymousUser(String login);
+
+    AccountProfileDto getUserProfile(Long id);
 }
