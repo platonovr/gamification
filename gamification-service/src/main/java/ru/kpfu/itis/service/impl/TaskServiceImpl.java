@@ -202,14 +202,15 @@ public class TaskServiceImpl implements TaskService {
     @Override
     @Transactional
     public ResponseEntity checkTask(Long taskId, Long accountId, Integer mark) {
+        if (mark < 0 || Objects.isNull(mark)) {
+            return new ResponseEntity<>(new ErrorDto(Error.NOT_VALID_DATA), BAD_REQUEST);
+        }
         AccountTask accountTask = accountTaskDao.findByTaskAndAccount(taskId, accountId);
         if (Objects.nonNull(accountTask)) {
             Hibernate.initialize(accountTask.getTaskHistory());
             setNewStatus(accountTask, TaskStatus.TaskStatusType.COMPLETED);
+            accountTask.setMark(mark);
             simpleDao.save(accountTask);
-            if (mark < 0 || Objects.isNull(mark)) {
-                return new ResponseEntity<>(new ErrorDto(Error.NOT_VALID_DATA), BAD_REQUEST);
-            }
             Task task = accountTask.getTask();
             Account account = accountTask.getAccount();
             Activity activity = new Activity(EntityType.TASK, ActivityType.TASK_COMPLETE, account, task.getId());
