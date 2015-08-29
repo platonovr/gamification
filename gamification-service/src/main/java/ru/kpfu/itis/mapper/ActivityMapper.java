@@ -41,12 +41,12 @@ public class ActivityMapper implements Mapper<Activity, ActivityDto> {
         switch (activity.getEntityType()) {
             case BADGE:
                 Badge badge = simpleDao.findById(Badge.class, activity.getEntityId());
-                Object[] args = {accountInfo.getFirstName(), accountInfo.getLastName(), badge.getName()};
+                Object[] args = {badge.getName()};
                 msg = getMsgForBadge(activity, args);
                 break;
             case TASK:
                 Task task = simpleDao.findById(Task.class, activity.getEntityId());
-                Object[] taskArgs = {accountInfo.getFirstName(), accountInfo.getLastName(), task.getName()};
+                Object[] taskArgs = {task.getName()};
                 msg = getMsgForTask(activity, taskArgs);
                 break;
         }
