@@ -77,7 +77,7 @@ public class TaskMapper implements Mapper<Task, TaskDto> {
                 taskDto.setCategory(ofNullable(category).map(TaskCategory::getName).orElse(null));
             Account author = task.getAuthor();
             if (isInitialized(author))
-                taskDto.setCreator(ofNullable(author).map(Account::getLogin).orElse(null));
+                taskDto.setCreator(new AccountDtoMapper().apply(author));
             Badge badge = task.getBadge();
             if (isInitialized(badge) && badge != null) {
                 Subject badgeSubject = badge.getSubject();

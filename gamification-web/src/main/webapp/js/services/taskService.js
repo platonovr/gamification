@@ -2,7 +2,12 @@ angular.module('gamificationApp').service('TaskService', ['$http', 'CONSTANTS', 
     this.createTask = function (newTask) {
         return $http({
             url: CONSTANTS.API_URI_PREFIX + CONSTANTS.TASK_URI,
-            dataType: 'application/json',
+            params: {
+                token: AuthInfo.getToken()
+            },
+            headers: {
+                'Content-Type': 'application/json'
+            },
             method: 'POST',
             data: newTask
         });
@@ -28,7 +33,7 @@ angular.module('gamificationApp').service('TaskService', ['$http', 'CONSTANTS', 
         return $http.get(CONSTANTS.API_URI_PREFIX + CONSTANTS.DICTIONARIES + '/teachers');
     };
 
-    this.getStudents = function () {
+    this.getPerformers = function () {
         return $http.get(CONSTANTS.API_URI_PREFIX + CONSTANTS.DICTIONARIES + '/students');
     };
 
@@ -39,6 +44,14 @@ angular.module('gamificationApp').service('TaskService', ['$http', 'CONSTANTS', 
             }
         })
     };
+
+    this.getCoursesAndGroups = function () {
+        return $http.get(CONSTANTS.API_URI_PREFIX + CONSTANTS.DICTIONARIES + '/getCoursesAndGroups');
+    };
+
+    this.getDisciplines = function () {
+        return $http.get(CONSTANTS.API_URI_PREFIX + CONSTANTS.DICTIONARIES + '/disciplines');
+    };
     this.check = function (challenge, performer, mark) {
         var params = {
             token: AuthInfo.getToken(),
@@ -48,3 +61,5 @@ angular.module('gamificationApp').service('TaskService', ['$http', 'CONSTANTS', 
             '/user/' + performer.id, params);
     };
 }]);
+
+
