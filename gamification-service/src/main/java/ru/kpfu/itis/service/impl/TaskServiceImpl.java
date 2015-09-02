@@ -99,15 +99,15 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     @Transactional
-    public Task save(TaskDto taskDto) {
-        Task task = taskMapper.fromDto(taskDto);
-        task.setCategory(taskCategoryDao.findByName(taskDto.getCategory()));
-        Account currentUser = securityService.getCurrentUser();
-        task.setAuthor(currentUser);
-        simpleDao.save(task);
-        Activity activity = new Activity(EntityType.TASK, ActivityType.TASK_NEW, currentUser, task.getId());
-        simpleDao.save(activity);
-        return task;
+    public Task save(TaskEditorDto taskDto) {
+        Task task; // taskMapper.fromDto(taskDto);
+//        task.setCategory(taskCategoryDao.findByName(taskDto.getCategory()));
+//        Account currentUser = securityService.getCurrentUser();
+//        task.setAuthor(currentUser);
+//        simpleDao.save(task);
+//        Activity activity = new Activity(EntityType.TASK, ActivityType.TASK_NEW, currentUser, task.getId());
+//        simpleDao.save(activity);
+        return null;
     }
 
     @Override

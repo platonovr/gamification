@@ -7,6 +7,7 @@ import ru.kpfu.itis.dao.SimpleDao;
 import ru.kpfu.itis.model.IdentifiedEntity;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Service("simpleService")
 public class SimpleServiceImpl implements SimpleService {
@@ -39,6 +40,12 @@ public class SimpleServiceImpl implements SimpleService {
     @Override
     public <E extends IdentifiedEntity> E load(Class<E> aClass, Serializable aId) {
         return simpleDao.loadById(aClass, aId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public <D> List<D> fetchAll(Class<D> aClass) {
+        return simpleDao.fetchAll(aClass);
     }
 
 }

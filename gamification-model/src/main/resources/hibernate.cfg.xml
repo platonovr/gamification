@@ -19,6 +19,7 @@
         <mapping class="ru.kpfu.itis.model.classifier.SubjectType"/>
         <mapping class="ru.kpfu.itis.model.Subject"/>
         <mapping class="ru.kpfu.itis.model.Activity"/>
+        <mapping class="ru.kpfu.itis.model.StudyCourse"/>
     </session-factory>
 
 </hibernate-configuration>

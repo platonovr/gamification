@@ -12,19 +12,32 @@
                 <input id="name" ng-model="newTask.name" ng-change="errors=null">
                 <label style="color: red" ng-show="errors.name!=null">{{errors.name}}</label>
             </div>
-            <!--<div class="field">-->
-            <!--<label for="subject">Предмет:</label>-->
-            <!--<input id="subject" ng-model="newTask.subject">-->
-            <!--</div>-->
             <div class="field">
-                <label for="category">Категория*:</label>
-                <select name="cat" id="category" ng-model="newTask.category"
-                        ng-options="category.id as category.caption for category in categories"
-                        required></select>
-                {{errors.category}}
+                <label>Предмет</label>
+                <ui-select name="subject"
+                           theme="bootstrap"
+                           ng-model="newTask.subject">
+                    <ui-select-match placeholder="Введите название предмета">{{$select.selected.name}}
+                    </ui-select-match>
+                    <ui-select-choices repeat="discipline in disciplines">
+                        <div ng-bind-html="trustAsHtml((discipline.name | highlight: $select.search))"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div class="field">
+                <label>Категория</label>
+                <ui-select name="category"
+                           theme="bootstrap"
+                           ng-model="newTask.category">
+                    <ui-select-match placeholder="Введите название категории">{{$select.selected.caption }}
+                    </ui-select-match>
+                    <ui-select-choices repeat="category in categories">
+                        <div ng-bind-html="trustAsHtml((category.caption | highlight: $select.search))"></div>
+                    </ui-select-choices>
+                </ui-select>
             </div>
 
-            <div class="form-group">
+            <div class="field">
                 <label>Преподаватель</label>
                 <ui-select theme="bootstrap"
                            ng-model="newTask.creator"
@@ -37,30 +50,36 @@
                     </ui-select-choices>
                 </ui-select>
             </div>
-            <!--<div class="field">-->
-            <!--<label for="group">Курсы/группы:</label>-->
-            <!--<input id="group" class="ui-autocomplete-input" ng-model="newTask.groups"-->
-            <!--ng-list autocomplete="off">-->
+            <div class="field">
+                <label>Курсы/группы</label>
+                <ui-select theme="bootstrap"
+                           ng-model="newTask.coursesAndGroups"
+                           multiple="true"
+                           style="margin-bottom: 5px;margin-left: 100px;width: 80%;"
+                           required>
+                    <ui-select-match placeholder="Введите номер">{{$item.number}}
+                    </ui-select-match>
+                    <ui-select-choices repeat="cag in coursesAndGroups">
+                        <div ng-bind-html="trustAsHtml((cag.number | highlight: $select.search))"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
 
-            <!--<div class="group_elements">-->
-            <!--<div ng-repeat="group in newTask.groups" class="group_element">-->
-            <!--<span>{{group}}</span>-->
-            <!--<span class="close_elem icon-close" ng-click="newTask.groups.remove($index)"></span>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--<div class="field">-->
-            <!--<label for="worker">Исполнитель:</label>-->
-            <!--<input type="text" id="worker" class="ui-autocomplete-input"-->
-            <!--ng-model="newTask.performerNames" ng-list autocomplete="off">-->
+            <div class="field">
+                <label>Исполнители</label>
+                <ui-select theme="bootstrap"
+                           ng-model="newTask.performers"
+                           multiple="true"
+                           style="margin-bottom: 5px;margin-left: 100px;width: 80%;">
+                    <ui-select-match placeholder="Введите имя">{{$item.fullNameWithGroup}}
+                    </ui-select-match>
+                    <ui-select-choices repeat="performer in performers">
+                        <div ng-bind-html="trustAsHtml((performer.fullNameWithGroup | highlight: $select.search))"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
 
-            <!--<div class="worker_elements">-->
-            <!--<div ng-repeat="performer in newTask.performerNames" class="worker_element">-->
-            <!--<span>{{performer}}</span>-->
-            <!--<span class="close_elem icon-close" ng-click="newTask.performerNames.remove($index)"></span>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--</div>-->
+
             <div class="field">
                 <label for="mark">Оценка*:</label>
                 <span class="addition">(максимальный балл)</span>
@@ -70,15 +89,14 @@
             </div>
 
             <div class="field">
-                <label for="date">Начинается:</label>
-                <input ng-model="newTask.date_from" type="date" ng-change="errors=null" id="date">
+                <label for="startDate">Начинается:</label>
+                <input ng-model="newTask.date_from" type="date" ng-change="errors=null" id="startDate">
                 <label style="color: red" ng-show="errors.startDate!=null">{{errors.startDate}}</label>
             </div>
 
             <div class="field">
-                <label for="date">Заканчивается:</label>
-                <input ng-model="newTask.date_to" type="date" ng-change="errors=null" id="date">
-                <label style="color: red" ng-show="errors.deadline!=null">{{errors.deadline}}</label>
+                <label for="endDate">Заканчивается:</label>
+                <input ng-model="newTask.date_to" type="date" ng-change="errors=null" id="endDate">
             </div>
 
             <div class="field">

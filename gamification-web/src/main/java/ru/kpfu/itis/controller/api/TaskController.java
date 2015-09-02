@@ -8,12 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.kpfu.itis.dto.*;
 import ru.kpfu.itis.dto.enums.Error;
 import ru.kpfu.itis.model.Account;
+import ru.kpfu.itis.model.Task;
 import ru.kpfu.itis.model.TaskStatus;
 import ru.kpfu.itis.security.SecurityService;
 import ru.kpfu.itis.service.ActivityService;
@@ -51,10 +51,10 @@ public class TaskController {
     @Autowired
     private ActivityService activityService;
 
-    @InitBinder("taskDto")
-    private void initBinder(WebDataBinder binder) {
-        binder.setValidator(taskValidator);
-    }
+//    @InitBinder("taskDto")
+//    private void initBinder(WebDataBinder binder) {
+//        binder.setValidator(taskValidator);
+//    }
 
     @ApiOperation("get task's information")
     @ApiImplicitParams(value = {@ApiImplicitParam(name = "token", value = "token", required = true, dataType = "string", paramType = "query")})
@@ -88,9 +88,9 @@ public class TaskController {
 
     @ApiOperation(value = "create challenge")
     @ApiImplicitParams(value = {@ApiImplicitParam(name = "token", value = "token", required = true, dataType = "string", paramType = "query")})
-    @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public ResponseEntity<TaskDto> createTask(@ModelAttribute TaskDto newTask) {
-        newTask.setId(taskService.save(newTask).getId());
+    @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<TaskEditorDto> createTask(@RequestBody TaskEditorDto newTask) {
+        Task task = taskService.save(newTask);
         return new ResponseEntity<>(newTask, HttpStatus.CREATED);
     }
 

@@ -39,7 +39,9 @@ public abstract class AbstractAccountDaoImpl extends AbstractGenericDao implemen
                     public List<Account> doInHibernate(Session session) throws HibernateException {
                         return session.createQuery(
                                 " from Account acc " +
-                                        " join  fetch acc.accountInfo " +
+                                        " join  fetch acc.accountInfo ai " +
+                                        " left join  fetch ai.group g " +
+                                        " left join  fetch g.course " +
                                         " where  acc.role = :neededType"
                         ).setParameter("neededType", type)
                                 .setReadOnly(true)

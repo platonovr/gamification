@@ -22,9 +22,15 @@ public class AccountDtoMapper implements Function<Account, AccountDto> {
         if (Objects.isNull(accountInfo)) {
             return accountDto;
         }
-        accountDto.setFirstName(accountInfo.getFirstName() != null ? accountInfo.getFirstName() : "");
-        accountDto.setLastName(accountInfo.getLastName() != null ? accountInfo.getLastName() : "");
-        accountDto.setMiddleName(accountInfo.getMiddleName() != null ? accountInfo.getMiddleName() : "");
+        String firstName = accountInfo.getFirstName() != null ? accountInfo.getFirstName() : "";
+        accountDto.setFirstName(firstName);
+        String lastName = accountInfo.getLastName() != null ? accountInfo.getLastName() : "";
+        accountDto.setLastName(lastName);
+        String middleName = accountInfo.getMiddleName() != null ? accountInfo.getMiddleName() : "";
+        accountDto.setMiddleName(middleName);
+        String groupNumber = accountInfo.getGroup() != null ? accountInfo.getGroup().getName() : "";
+        StringBuilder result = new StringBuilder(firstName).append(" ").append(lastName).append(" ").append(middleName).append(" ").append(groupNumber);
+        accountDto.setFullNameWithGroup(result.toString());
         return accountDto;
     }
 }

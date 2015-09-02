@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="
+                       http://www.liquibase.org/xml/ns/dbchangelog
+                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd"
+                   logicalFilePath="20150806_2052.xml">
+
+    <changeSet id="1.0" author="rplatonov">
+        <preConditions onError="MARK_RAN" onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="STUDY_COURSE"/>
+            </not>
+        </preConditions>
+        <createTable tableName="STUDY_COURSE">
+            <column name="STUDY_COURSE_ID" type="${autoincrement}">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="NUMBER" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATE_TIME" type="${datetime}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CHANGE_TIME" type="${datetime}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="FINISH_TIME" type="${datetime}">
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="1.1" author="rplatonov">
+        <preConditions onFail="MARK_RAN" onError="MARK_RAN">
+            <not>
+                <columnExists tableName="ACADEMIC_GROUP" columnName="STUDY_COURSE_ID"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="ACADEMIC_GROUP">
+            <column name="STUDY_COURSE_ID" type="int">
+                <constraints references="STUDY_COURSE(STUDY_COURSE_ID)"
+                             foreignKeyName="AcademicGroup_StudyCourse"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+
+</databaseChangeLog>

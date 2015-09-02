@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -32,7 +33,7 @@ public class TaskDto extends ErrorDto {
     @ApiModelProperty(required = true)
     private String category;
 
-    private String creator;
+    private AccountDto creator;
 
     private BadgeDto badge;
 
@@ -61,12 +62,16 @@ public class TaskDto extends ErrorDto {
 
     private List<String> labels = new LinkedList<>();
 
+    private List<AccountInfoDto> performers = new ArrayList<>();
+
+    private List<CourseOrGroupDto> coursesAndGroups = new ArrayList<>();
+
     public TaskDto() {
     }
 
 
     public TaskDto(Long id, String name, String description, SubjectDto subject,
-                   Integer maxPerformers, String status, String category, String creator,
+                   Integer maxPerformers, String status, String category, AccountDto creator,
                    BadgeDto badge, Integer currentMark, Integer maxMark, Date startDate, Date deadline,
                    Date createTime, Date changeTime, List<String> labels) {
         this.id = id;
@@ -119,12 +124,28 @@ public class TaskDto extends ErrorDto {
         this.category = category;
     }
 
-    public String getCreator() {
+    public AccountDto getCreator() {
         return creator;
     }
 
-    public void setCreator(String creator) {
+    public void setCreator(AccountDto creator) {
         this.creator = creator;
+    }
+
+    public List<AccountInfoDto> getPerformers() {
+        return performers;
+    }
+
+    public void setPerformers(List<AccountInfoDto> performers) {
+        this.performers = performers;
+    }
+
+    public List<CourseOrGroupDto> getCoursesAndGroups() {
+        return coursesAndGroups;
+    }
+
+    public void setCoursesAndGroups(List<CourseOrGroupDto> coursesAndGroups) {
+        this.coursesAndGroups = coursesAndGroups;
     }
 
     public void setCurrentMark(Integer currentMark) {

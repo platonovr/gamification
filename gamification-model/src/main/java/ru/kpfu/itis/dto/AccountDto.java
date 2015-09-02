@@ -13,6 +13,8 @@ public class AccountDto {
 
     private String middleName;
 
+    private String fullNameWithGroup;
+
     private String role;
 
     public Long getId() {
@@ -53,5 +55,13 @@ public class AccountDto {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public String getFullNameWithGroup() {
+        return fullNameWithGroup;
+    }
+
+    public void setFullNameWithGroup(String fullNameWithGroup) {
+        this.fullNameWithGroup = fullNameWithGroup;
     }
 }
