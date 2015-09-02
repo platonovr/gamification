@@ -253,9 +253,17 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    @Transactional
     public List<BadgeDto> getAllBadges() {
         List<Badge> badges = simpleDao.fetchAll(Badge.class);
-        return badges.stream().map(simpleBadgeMapper::toDto).collect(Collectors.toList());
+        //TODO clean code
+        return badges
+                .stream()
+                .map(it -> {
+                    BadgeDto badgeDto = findBadgeById(it.getId());
+                    badgeDto.setChallenges(null);
+                    return badgeDto;
+                }).collect(Collectors.toList());
     }
 
     @Override
