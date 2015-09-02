@@ -7,13 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import ru.kpfu.itis.dao.AccountTaskDao;
-import ru.kpfu.itis.model.Account;
-import ru.kpfu.itis.model.AccountTask;
-import ru.kpfu.itis.model.Task;
-import ru.kpfu.itis.model.TaskStatus;
+import ru.kpfu.itis.model.*;
 import ru.kpfu.itis.model.classifier.TaskCategory;
 import ru.kpfu.itis.processing.SimpleService;
-import ru.kpfu.itis.security.SecurityService;
 
 import java.util.Date;
 import java.util.List;
@@ -36,9 +32,6 @@ public class TaskServiceTest {
     private AccountTaskDao accountTaskDao;
 
     @Autowired
-    private SecurityService securityService;
-
-    @Autowired
     private SimpleService simpleService;
 
     @Before
@@ -51,7 +44,7 @@ public class TaskServiceTest {
     @Test
     public void submittingTask() {
         Account testAccount = TestToolkit.fakeAccount();
-        testAccount = securityService.saveAccount(Account.class, testAccount);
+        simpleService.save(testAccount);
         assertNotNull(testAccount);
         TaskCategory taskCategory = TestToolkit.fakeTaskCategory();
         taskCategory = taskService.save(taskCategory);

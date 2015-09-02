@@ -1,5 +1,6 @@
 package ru.kpfu.itis.mapper;
 
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.kpfu.itis.dao.AccountDao;
@@ -71,6 +72,7 @@ public class BadgeMapper implements Mapper<Badge, BadgeDto> {
                     badge.getType().name(), badge.getDescription());
         }
         if (includeTasks) {
+            Hibernate.initialize(badge.getTasks());
             badgeDto.setChallenges(badge.getTasks().stream().map(simpleTaskMapper::toDto).collect(Collectors.toList()));
         }
         return badgeDto;

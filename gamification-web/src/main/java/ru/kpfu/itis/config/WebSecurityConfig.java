@@ -13,21 +13,19 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.servlet.configuration.EnableWebMvcSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.web.AuthenticationEntryPoint;
-import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-import ru.kpfu.itis.model.Account;
+import ru.kpfu.itis.model.SimpleAuthUser;
 import ru.kpfu.jbl.auth.AuthenticationFilter;
-import ru.kpfu.jbl.auth.config.AuthSecurityModuleConfig;
-import ru.kpfu.jbl.auth.config.AuthWebServiceConfig;
-import ru.kpfu.jbl.auth.config.EncacheTokenServiceConfig;
+import ru.kpfu.jbl.auth.config.*;
+import ru.kpfu.jbl.auth.ep.LogoutRequestHandler;
 import ru.kpfu.jbl.auth.ep.RestAuthenticationEntryPoint;
+import ru.kpfu.jbl.auth.ep.WriteLogoutSuccessHandler;
 import ru.kpfu.jbl.auth.service.TokenService;
 import ru.kpfu.jbl.auth.service.impl.SecurityContextHolderServiceImpl;
 
 @Configuration
 @EnableWebMvcSecurity
-@Import(value = {AuthSecurityModuleConfig.class, EncacheTokenServiceConfig.class})
+@Import(value = {AuthSecurityModuleConfig.class, ShaProvidersConfig.class, MongoTokenServiceConfig.class, SpringMongoConfig.class})
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
@@ -41,13 +39,26 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     TokenService tokenService;
 
+    @Autowired
+    RestAuthenticationEntryPoint restAuthenticationEntryPoint;
+
+    @Autowired
+    LogoutRequestHandler logoutRequestHandler;
+
+    @Autowired
+    WriteLogoutSuccessHandler writeLogoutSuccessHandler;
+
     private ObjectMapper mapper;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        AuthenticationEntryPoint unauthorizedEntryPoint = unauthorizedEntryPoint(mapper);
         http.
-                csrf().disable().
+                csrf().disable()
+                .logout()
+                .logoutUrl("/logout")
+                .logoutSuccessHandler(writeLogoutSuccessHandler)
+                .addLogoutHandler(logoutRequestHandler)
+                .and().
                 sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).
                 and().
                 authorizeRequests().
@@ -56,13 +67,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //                antMatchers("/api/v1/user/**").hasAnyRole("STUDENT", "ADMIN", "TEACHER", "ANONYMOUS").
 //                antMatchers("/api/v1/rating/**").hasAnyRole("STUDENT", "ADMIN", "TEACHER", "ANONYMOUS").
 //                antMatchers("/api/v1/challenge/**").hasAnyRole("STUDENT", "ADMIN", "TEACHER", "ANONYMOUS").
-                antMatchers("/api/v1/challenge/my").hasAnyRole("ADMIN", "TEACHER").
-                regexMatchers("/api/v1/challenge/[0-9]+/enroll").hasRole("STUDENT").
+        antMatchers("/api/v1/challenge/my").hasAnyRole("ADMIN", "TEACHER").
+                antMatchers("/api/v1/groups/**").permitAll().
+                antMatchers("/api/v1/challenge/{\\d+}/enroll").hasRole("STUDENT").
                 antMatchers("/api/v1/**").hasAnyRole("STUDENT", "ADMIN", "TEACHER", "ANONYMOUS").
                 and().
                 exceptionHandling()
-                .authenticationEntryPoint(unauthorizedEntryPoint)
-                .accessDeniedHandler((AccessDeniedHandler) unauthorizedEntryPoint);
+                .authenticationEntryPoint(restAuthenticationEntryPoint)
+                .accessDeniedHandler(restAuthenticationEntryPoint);
 
         http.addFilterBefore(new AuthenticationFilter(authenticationManager(), mapper), BasicAuthenticationFilter.class);
     }
@@ -80,20 +92,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
-    @Bean
-    public AuthenticationEntryPoint unauthorizedEntryPoint(ObjectMapper mapper) {
-        RestAuthenticationEntryPoint restAuthenticationEntryPoint = new RestAuthenticationEntryPoint();
-        restAuthenticationEntryPoint.setMsgMapper(mapper);
-        return restAuthenticationEntryPoint;
-    }
-
     @Autowired
     public void setMapper(ObjectMapper mapper) {
         this.mapper = mapper;
     }
 
     @Bean
-    public SecurityContextHolderServiceImpl<Account> securityContextHolderService() {
+    public SecurityContextHolderServiceImpl<SimpleAuthUser> securityContextHolderService() {
         return new SecurityContextHolderServiceImpl<>(tokenService);
     }
 }

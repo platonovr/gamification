@@ -212,14 +212,15 @@ public class TaskServiceImpl implements TaskService {
     @Override
     @Transactional
     public ResponseEntity checkTask(Long taskId, Long accountId, Integer mark) {
+        if (mark < 0 || Objects.isNull(mark)) {
+            return new ResponseEntity<>(new ErrorDto(Error.NOT_VALID_DATA), BAD_REQUEST);
+        }
         AccountTask accountTask = accountTaskDao.findByTaskAndAccount(taskId, accountId);
         if (Objects.nonNull(accountTask)) {
             Hibernate.initialize(accountTask.getTaskHistory());
             setNewStatus(accountTask, TaskStatus.TaskStatusType.COMPLETED);
+            accountTask.setMark(mark);
             simpleDao.save(accountTask);
-            if (mark < 0 || Objects.isNull(mark)) {
-                return new ResponseEntity<>(new ErrorDto(Error.NOT_VALID_DATA), BAD_REQUEST);
-            }
             Task task = accountTask.getTask();
             Account account = accountTask.getAccount();
             Activity activity = new Activity(EntityType.TASK, ActivityType.TASK_COMPLETE, account, task.getId());
@@ -227,6 +228,7 @@ public class TaskServiceImpl implements TaskService {
             if (task.getBadge() != null) {
                 AccountBadge accountBadge = accountBadgeDao.findByBadgeAndAccount(task.getBadge(), account);
                 if (Objects.isNull(accountBadge)) {
+                    //TODO throw exception create account badge ON enroll
                     AccountBadge notExistedAccountBadge = new AccountBadge();
                     notExistedAccountBadge.setAccount(accountTask.getAccount());
                     notExistedAccountBadge.setBadge(task.getBadge());
@@ -261,9 +263,17 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    @Transactional
     public List<BadgeDto> getAllBadges() {
         List<Badge> badges = simpleDao.fetchAll(Badge.class);
-        return badges.stream().map(simpleBadgeMapper::toDto).collect(Collectors.toList());
+        //TODO clean code
+        return badges
+                .stream()
+                .map(it -> {
+                    BadgeDto badgeDto = findBadgeById(it.getId());
+                    badgeDto.setChallenges(null);
+                    return badgeDto;
+                }).collect(Collectors.toList());
     }
 
     @Override
@@ -273,11 +283,14 @@ public class TaskServiceImpl implements TaskService {
         Hibernate.initialize(badge.getTasks());
         Account currentUser = simpleDao.findById(Account.class, securityService.getCurrentUserId());
         AccountBadge accountBadge = accountBadgeDao.findByBadgeAndAccount(badge, currentUser);
-        if (accountBadge != null) {
-            return badgeMapper.toDto(accountBadge);
-        } else {
-            return badgeMapper.toDto(badge);
+        if (accountBadge == null) {
+            AccountBadge notExistedAccountBadge = new AccountBadge();
+            notExistedAccountBadge.setAccount(currentUser);
+            notExistedAccountBadge.setBadge(badge);
+            accountBadge = notExistedAccountBadge;
+            simpleDao.save(notExistedAccountBadge);
         }
+        return badgeMapper.toDto(accountBadge);
     }
 
     @Override

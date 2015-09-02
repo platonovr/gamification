@@ -2,7 +2,9 @@ package ru.kpfu.itis.dto;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.wordnik.swagger.annotations.ApiModel;
+import ru.kpfu.itis.dto.serializer.CustomDoubleSerializer;
 
 import java.util.Date;
 
@@ -21,10 +23,13 @@ public class AccountBadgeDto {
     @JsonProperty(value = "badge_id")
     private Long badgeId;
 
+    @JsonSerialize(using = CustomDoubleSerializer.class)
     private Double theory = 0.0;
 
+    @JsonSerialize(using = CustomDoubleSerializer.class)
     private Double practice = 0.0;
 
+    @JsonSerialize(using = CustomDoubleSerializer.class)
     private Double progress = 0.0;
 
     private Date date;
