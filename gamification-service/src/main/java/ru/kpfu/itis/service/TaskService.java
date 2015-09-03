@@ -1,8 +1,9 @@
 package ru.kpfu.itis.service;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
+import org.springframework.transaction.annotation.Transactional;
 import ru.kpfu.itis.dto.*;
+import ru.kpfu.itis.mapper.BadgeMapper;
 import ru.kpfu.itis.model.Account;
 import ru.kpfu.itis.model.Task;
 import ru.kpfu.itis.model.TaskStatus;
@@ -17,7 +18,6 @@ public interface TaskService {
 
     Task submitTask(Task task);
 
-    @Secured({"ADMIN", "TEACHER"})
     Task save(TaskDto taskDto);
 
     Task findByName(String name);
@@ -76,6 +76,9 @@ public interface TaskService {
     List<BadgeDto> getAllBadges();
 
     BadgeDto findBadgeById(Long id);
+
+    @Transactional
+    BadgeDto findBadgeById(Long id, BadgeMapper badgeMapper);
 
     ErrorDto isTaskAvailableForUser(Long taskId);
 }

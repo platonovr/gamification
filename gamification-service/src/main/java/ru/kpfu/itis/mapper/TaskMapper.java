@@ -1,6 +1,7 @@
 package ru.kpfu.itis.mapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import ru.kpfu.itis.dao.AccountTaskDao;
 import ru.kpfu.itis.dto.BadgeDto;
@@ -9,6 +10,7 @@ import ru.kpfu.itis.model.*;
 import ru.kpfu.itis.model.classifier.TaskCategory;
 import ru.kpfu.itis.model.enums.Role;
 import ru.kpfu.itis.security.SecurityService;
+import ru.kpfu.itis.service.TaskService;
 
 import java.util.Date;
 
@@ -31,6 +33,13 @@ public class TaskMapper implements Mapper<Task, TaskDto> {
 
     @Autowired
     private SecurityService securityService;
+
+    @Autowired
+    TaskService taskService;
+
+    @Autowired
+    @Qualifier("simpleBadgeMapper")
+    BadgeMapper badgeMapper;
 
     @Override
     public Task fromDto(TaskDto taskDto) {
@@ -79,16 +88,9 @@ public class TaskMapper implements Mapper<Task, TaskDto> {
             if (isInitialized(author))
                 taskDto.setCreator(ofNullable(author).map(Account::getLogin).orElse(null));
             Badge badge = task.getBadge();
-            if (isInitialized(badge) && badge != null) {
-                Subject badgeSubject = badge.getSubject();
-                if (isInitialized(badgeSubject) && badgeSubject != null)
-                    taskDto.setBadge(new BadgeDto(badge.getId(),
-                            badge.getName(), badge.getImage(), subjectMapper.toDto(badgeSubject),
-                            badge.getType().name(), badge.getDescription()));
-                else
-                    taskDto.setBadge(new BadgeDto(badge.getId(),
-                            badge.getName(), badge.getImage(),
-                            badge.getType().name(), badge.getDescription()));
+            if (badge != null) {
+                BadgeDto badgeDto = taskService.findBadgeById(badge.getId(), badgeMapper);
+                taskDto.setBadge(badgeDto);
             }
             taskDto.setMaxMark(Integer.valueOf(task.getMaxMark()));
             taskDto.setStartDate(task.getStartDate());

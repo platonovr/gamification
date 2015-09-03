@@ -256,19 +256,21 @@ public class TaskServiceImpl implements TaskService {
     @Transactional
     public List<BadgeDto> getAllBadges() {
         List<Badge> badges = simpleDao.fetchAll(Badge.class);
-        //TODO clean code
         return badges
                 .stream()
-                .map(it -> {
-                    BadgeDto badgeDto = findBadgeById(it.getId());
-                    badgeDto.setChallenges(null);
-                    return badgeDto;
-                }).collect(Collectors.toList());
+                .map(it -> findBadgeById(it.getId(), simpleBadgeMapper))
+                .collect(Collectors.toList());
     }
 
     @Override
     @Transactional
     public BadgeDto findBadgeById(Long id) {
+        return findBadgeById(id, badgeMapper);
+    }
+
+    @Override
+    @Transactional
+    public BadgeDto findBadgeById(Long id, BadgeMapper badgeMapper) {
         Badge badge = simpleDao.findById(Badge.class, id);
         Hibernate.initialize(badge.getTasks());
         Account currentUser = simpleDao.findById(Account.class, securityService.getCurrentUserId());
