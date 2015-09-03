@@ -77,11 +77,11 @@ public class BadgeMapper implements Mapper<Badge, BadgeDto> {
             Hibernate.initialize(badge.getTasks());
             badgeDto.setChallenges(badge.getTasks()
                     .stream()
+                    .map(simpleTaskMapper::toDto)
                     .map(task -> {
                         task.setBadge(null);
                         return task;
                     })
-                    .map(simpleTaskMapper::toDto)
                     .collect(Collectors.toList()));
         }
         return badgeDto;

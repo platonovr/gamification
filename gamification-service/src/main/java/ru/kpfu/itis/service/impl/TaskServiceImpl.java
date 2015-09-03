@@ -157,11 +157,11 @@ public class TaskServiceImpl implements TaskService {
         List<Task> tasksByUser = taskDao.getTasksByUser(userId, offset, limit, status);
         return tasksByUser
                 .stream()
+                .map(taskMapper::toDto)
                 .map(it -> {
                     it.setBadge(null);
                     return it;
                 })
-                .map(taskMapper::toDto)
                 .collect(Collectors.toList());
     }
 
