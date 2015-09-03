@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kpfu.itis.dao.ActivityDao;
 import ru.kpfu.itis.dao.SimpleDao;
+import ru.kpfu.itis.dao.TaskDao;
 import ru.kpfu.itis.dto.ActivityDto;
 import ru.kpfu.itis.mapper.ActivityMapper;
 import ru.kpfu.itis.model.Account;
@@ -12,7 +13,6 @@ import ru.kpfu.itis.model.Activity;
 import ru.kpfu.itis.model.Task;
 import ru.kpfu.itis.security.SecurityService;
 import ru.kpfu.itis.service.ActivityService;
-import ru.kpfu.itis.service.TaskService;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,9 +30,9 @@ public class ActivityServiceImpl implements ActivityService {
     @Autowired
     SecurityService securityService;
     @Autowired
-    TaskService taskService;
-    @Autowired
     ActivityMapper activityMapper;
+    @Autowired
+    TaskDao taskDao;
 
     @Override
     @Transactional
@@ -44,7 +44,7 @@ public class ActivityServiceImpl implements ActivityService {
     @Transactional
     public List<ActivityDto> getActivityStream(Long lastActivityId) {
         Account account = securityService.getCurrentUser();
-        List<Task> tasks = taskService.getTasksByUser(account.getId());
+        List<Task> tasks = taskDao.getTasksByUser(account.getId(), null, null, null);
         return activityDao.getActivityStream(account, tasks, lastActivityId)
                 .stream()
                 .map(activityMapper::toDto)

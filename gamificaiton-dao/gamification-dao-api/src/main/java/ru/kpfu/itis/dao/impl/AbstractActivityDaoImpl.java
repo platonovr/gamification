@@ -3,7 +3,6 @@ package ru.kpfu.itis.dao.impl;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-import org.springframework.stereotype.Repository;
 import ru.kpfu.itis.dao.ActivityDao;
 import ru.kpfu.itis.dao.base.AbstractGenericDao;
 import ru.kpfu.itis.model.Account;
@@ -18,7 +17,6 @@ import java.util.List;
 /**
  * Created by Rigen on 20.07.15.
  */
-@Repository
 public abstract class AbstractActivityDaoImpl extends AbstractGenericDao implements ActivityDao {
 
     @Override

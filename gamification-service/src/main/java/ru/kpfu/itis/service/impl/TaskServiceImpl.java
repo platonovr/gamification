@@ -155,7 +155,14 @@ public class TaskServiceImpl implements TaskService {
     @Transactional
     public List<TaskDto> getTasksByUser(Long userId, Integer offset, Integer limit, TaskStatus.TaskStatusType status) {
         List<Task> tasksByUser = taskDao.getTasksByUser(userId, offset, limit, status);
-        return tasksByUser.stream().map(taskMapper::toDto).collect(Collectors.toList());
+        return tasksByUser
+                .stream()
+                .map(it -> {
+                    it.setBadge(null);
+                    return it;
+                })
+                .map(taskMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
