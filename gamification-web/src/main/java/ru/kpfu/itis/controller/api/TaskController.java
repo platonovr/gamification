@@ -90,7 +90,7 @@ public class TaskController {
     @ApiImplicitParams(value = {@ApiImplicitParam(name = "token", value = "token", required = true, dataType = "string", paramType = "query")})
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<TaskEditorDto> createTask(@RequestBody TaskEditorDto newTask) {
-        Task task = taskService.save(newTask);
+        Task task = taskService.save(securityService.getCurrentUser(), newTask);
         return new ResponseEntity<>(newTask, HttpStatus.CREATED);
     }
 

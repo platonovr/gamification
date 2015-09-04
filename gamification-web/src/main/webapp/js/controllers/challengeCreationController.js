@@ -18,7 +18,7 @@ angular.module('gamificationApp').controller('ChallengeCreationController',
                 coursesAndGroups: [],
                 description: undefined,
                 performers: [],
-                maxVolume: 0
+                maxMark: 0
 
             };
             $scope.attachments = [];

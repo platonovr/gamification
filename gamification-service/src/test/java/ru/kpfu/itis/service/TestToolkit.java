@@ -35,7 +35,7 @@ public final class TestToolkit {
         task.setName("taskName");
         task.setDescription("description");
         task.setType(Task.TaskType.PERSONAL);
-        task.setMaxMark((byte) 1);
+        task.setMaxMark(1);
         task.setParticipantsCount(10);
         return task;
     }

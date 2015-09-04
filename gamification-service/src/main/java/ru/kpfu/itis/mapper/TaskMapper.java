@@ -38,7 +38,7 @@ public class TaskMapper implements Mapper<Task, TaskDto> {
 //        task.setCategory(taskCategoryDao.findByName(taskDto.getCategory()));
 //        task.setAuthor(accountDao.findByLogin("admin"));
         task.setName(taskDto.getName());
-        task.setMaxMark(ofNullable(taskDto.getMaxMark()).map(Integer::byteValue).orElse(null));
+        task.setMaxMark(taskDto.getMaxMark());
         task.setDescription(taskDto.getDescription());
         task.setStartDate(taskDto.getStartDate());
         task.setEndDate(taskDto.getDeadline());

@@ -16,7 +16,7 @@ public interface TaskService {
 
     Task submitTask(Task task);
 
-    Task save(TaskEditorDto taskDto);
+    Task save(Account account, TaskEditorDto taskDto);
 
     Task findByName(String name);
 
@@ -47,6 +47,7 @@ public interface TaskService {
      * @implNote implement me, example of task method
      */
     void stub();
+
     /**
      * @param userId admin or teacher id
      * @param query

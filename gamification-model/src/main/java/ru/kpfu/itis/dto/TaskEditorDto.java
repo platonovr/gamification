@@ -18,7 +18,7 @@ public class TaskEditorDto {
 
     private AccountDto creator;
 
-    private Integer maxVolume;
+    private Integer maxMark;
 
     private Date date_from;
 
@@ -112,11 +112,11 @@ public class TaskEditorDto {
         this.performers = performers;
     }
 
-    public Integer getMaxVolume() {
-        return maxVolume;
+    public Integer getMaxMark() {
+        return maxMark;
     }
 
-    public void setMaxVolume(Integer maxVolume) {
-        this.maxVolume = maxVolume;
+    public void setMaxMark(Integer maxMark) {
+        this.maxMark = maxMark;
     }
 }

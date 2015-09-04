@@ -38,17 +38,17 @@
             </div>
 
             <div class="field">
-                <label>Преподаватель</label>
-                <ui-select theme="bootstrap"
-                           ng-model="newTask.creator"
-                           style="margin-bottom: 5px;"
-                           required>
-                    <ui-select-match placeholder="Фамилия">{{$select.selected.lastName}}
-                    </ui-select-match>
-                    <ui-select-choices repeat="teacher in teachers">
-                        <div ng-bind-html="trustAsHtml((teacher.lastName | highlight: $select.search))"></div>
-                    </ui-select-choices>
-                </ui-select>
+                <!--<label>Преподаватель</label>-->
+                <!--<ui-select theme="bootstrap"-->
+                <!--ng-model="newTask.creator"-->
+                <!--style="margin-bottom: 5px;"-->
+                <!--required>-->
+                <!--<ui-select-match placeholder="Фамилия">{{$select.selected.lastName}}-->
+                <!--</ui-select-match>-->
+                <!--<ui-select-choices repeat="teacher in teachers">-->
+                <!--<div ng-bind-html="trustAsHtml((teacher.lastName | highlight: $select.search))"></div>-->
+                <!--</ui-select-choices>-->
+                <!--</ui-select>-->
             </div>
             <div class="field">
                 <label>Курсы/группы</label>
@@ -83,7 +83,7 @@
             <div class="field">
                 <label for="mark">Оценка*:</label>
                 <span class="addition">(максимальный балл)</span>
-                <input id="mark" name="maxMark" ng-model="newTask.max_volume" type="number" min="1"
+                <input id="mark" name="maxMark" ng-model="newTask.maxMark" type="number" min="1"
                        ng-change="errors=null">
                 <label style="color: red" ng-show="errors.maxMark!=null">{{errors.maxMark}}</label>
             </div>

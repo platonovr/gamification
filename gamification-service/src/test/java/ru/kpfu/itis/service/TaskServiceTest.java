@@ -7,7 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import ru.kpfu.itis.dao.AccountTaskDao;
-import ru.kpfu.itis.model.*;
+import ru.kpfu.itis.model.Account;
+import ru.kpfu.itis.model.AccountTask;
+import ru.kpfu.itis.model.Task;
+import ru.kpfu.itis.model.TaskStatus;
 import ru.kpfu.itis.model.classifier.TaskCategory;
 import ru.kpfu.itis.processing.SimpleService;
 
@@ -53,7 +56,7 @@ public class TaskServiceTest {
         Task task = new Task();
         task.setAuthor(testAccount);
         task.setParticipantsCount(10);
-        task.setMaxMark((byte) 5);
+        task.setMaxMark(5);
         task.setName("XO");
         task.setDescription("desctiption");
         task.setCategory(taskCategory);

@@ -13,4 +13,8 @@
         </update>
     </changeSet>
 
+    <changeSet id="1" author="rplatonov">
+        <modifyDataType tableName="TASK" columnName="MAX_MARK" newDataType="int"/>
+    </changeSet>
+
 </databaseChangeLog>

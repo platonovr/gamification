@@ -7,16 +7,16 @@ public class CourseOrGroupDto {
 
     private Long id;
 
-    private boolean isGroup;
+    private boolean group;
 
     private String number;
 
     public boolean isGroup() {
-        return isGroup;
+        return group;
     }
 
     public void setIsGroup(boolean isGroup) {
-        this.isGroup = isGroup;
+        this.group = isGroup;
     }
 
     public String getNumber() {
