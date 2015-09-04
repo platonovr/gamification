@@ -1,7 +1,6 @@
 package ru.kpfu.itis.service.impl;
 
 import org.apache.commons.lang3.Validate;
-import org.apache.cxf.common.util.CollectionUtils;
 import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import ru.kpfu.itis.dao.*;
 import ru.kpfu.itis.dto.*;
 import ru.kpfu.itis.dto.enums.Error;
