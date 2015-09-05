@@ -30,8 +30,8 @@ public abstract class AbstractActivityDaoImpl extends AbstractGenericDao impleme
             Criteria criteria = aSession.createCriteria(Activity.class)
                     .add(Restrictions.ne("account", account));
             if (ids.size() > 0) {
-                criteria = criteria.add(Restrictions.not(Restrictions.and(Restrictions.ne("entityType", EntityType.TASK),
-                        Restrictions.ne("activityType", ActivityType.TASK_NEW),
+                criteria = criteria.add(Restrictions.not(Restrictions.and(Restrictions.eq("entityType", EntityType.TASK),
+                        Restrictions.eq("activityType", ActivityType.TASK_NEW),
                         Restrictions.not(Restrictions.in("entityId", ids)))));
             }
             if (lastActivityId != null) {
