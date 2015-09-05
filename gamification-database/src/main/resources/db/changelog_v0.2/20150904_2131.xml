@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="
+                       http://www.liquibase.org/xml/ns/dbchangelog
+                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd"
+                   logicalFilePath="20150904_2131.xml">
+
+
+    <changeSet id="insert_data" author="rfatkhullin">
+        <loadUpdateData tableName="SUBJECT" primaryKey="SUBJECT_ID" file="db/changelog_v0.2/csv/subject.csv"/>
+        <loadUpdateData tableName="BADGE" primaryKey="BADGE_ID" file="db/changelog_v0.2/csv/badge.csv"/>
+        <loadUpdateData tableName="ACCOUNT_BADGE" primaryKey="ACCOUNT_BADGE_ID" file="db/changelog_v0.2/csv/account_badge.csv"/>
+        <loadUpdateData tableName="ACTIVITY" primaryKey="ACTIVITY_ID" file="db/changelog_v0.2/csv/activity.csv"/>
+    </changeSet>
+</databaseChangeLog>
