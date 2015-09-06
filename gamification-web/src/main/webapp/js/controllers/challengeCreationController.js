@@ -72,4 +72,6 @@ angular.module('gamificationApp').controller('ChallengeCreationController',
                     $scope.errors = data.errors;
                 })
             }
-        }]);
+        }
+    ])
+;
