@@ -6,7 +6,9 @@ import ru.kpfu.itis.model.EnumedDictionary;
  * Created by timur on 15.06.15.
  */
 public enum TaskCategoryType implements EnumedDictionary {
-    STUDY("Учебное"), SCIENCE("Наука"), SPORTS("Спорт"), NONSTUDY("Внеучебное");
+    STUDY("Учебное"),
+
+    NONSTUDY("Внеучебное");
 
     private String caption;
 
