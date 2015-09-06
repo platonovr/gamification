@@ -20,17 +20,17 @@ import java.util.StringTokenizer;
 public abstract class AbstractRatingDaoImpl extends AbstractGenericDao implements RatingDao {
 
     @Override
-    public List<Rating> getRating(Faculty faculty, Integer entranceYear, Double offset, Integer limit) {
+    public List<Rating> getRating(Faculty faculty, Integer entranceYear, Integer offset, Integer limit) {
         return getRatingOrderedByField(faculty, entranceYear, offset, limit, "position", true);
     }
 
     @Override
-    public List<Rating> getRatingOrderedByPoint(Faculty faculty, Integer entranceYear, Double offset, Integer limit) {
+    public List<Rating> getRatingOrderedByPoint(Faculty faculty, Integer entranceYear, Integer offset, Integer limit) {
         return getRatingOrderedByField(faculty, entranceYear, offset, limit, "point", false);
     }
 
     @Override
-    public List<Rating> getRatingOrderedByField(Faculty faculty, Integer entranceYear, Double offset,
+    public List<Rating> getRatingOrderedByField(Faculty faculty, Integer entranceYear, Integer offset,
                                                 Integer limit, String orderField, boolean order) {
         return getHibernateTemplate().execute((aSession) -> {
             Criteria criteria = aSession.createCriteria(Rating.class)
@@ -41,8 +41,6 @@ public abstract class AbstractRatingDaoImpl extends AbstractGenericDao implement
                     .add(Restrictions.eq("account.faculty", faculty))
                     .add(Restrictions.eq("user.role", Role.STUDENT))
                     .add(Restrictions.isNotNull("account.group"));
-            if (offset != null)
-                criteria.add(Restrictions.le("point", offset));
             if (order) {
                 criteria.addOrder(Order.asc(orderField));
             } else {
@@ -50,13 +48,15 @@ public abstract class AbstractRatingDaoImpl extends AbstractGenericDao implement
             }
             if (limit != null)
                 criteria.setMaxResults(limit);
+            if (offset != null)
+                criteria.setFirstResult(offset);
             return (List<Rating>) criteria.list();
         });
     }
 
     @Override
     public List<Rating> search(Faculty faculty, Integer entranceYear,
-                               String searchString, Double offset, Integer limit) {
+                               String searchString, Integer offset, Integer limit) {
         return getHibernateTemplate().execute((aSession) -> {
             Criteria criteria = aSession.createCriteria(Rating.class)
                     .createAlias("accountInfo", "account")
@@ -66,8 +66,7 @@ public abstract class AbstractRatingDaoImpl extends AbstractGenericDao implement
                     .add(Restrictions.eq("account.faculty", faculty))
                     .add(Restrictions.eq("user.role", Role.STUDENT))
                     .add(Restrictions.isNotNull("account.group"));
-            if (offset != null)
-                criteria.add(Restrictions.le("point", offset));
+
 
             if (searchString != null && !searchString.replaceAll("\\s+", " ").equals(" ")) {
                 StringTokenizer stringTokenizer = new StringTokenizer(searchString, " ");
@@ -95,6 +94,8 @@ public abstract class AbstractRatingDaoImpl extends AbstractGenericDao implement
             criteria.addOrder(Order.asc("position"));
             if (limit != null)
                 criteria.setMaxResults(limit);
+            if (offset != null)
+                criteria.setFirstResult(offset);
             return (List<Rating>) criteria.list();
         });
     }

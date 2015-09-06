@@ -1,7 +1,9 @@
 package ru.kpfu.itis.service;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import ru.kpfu.itis.dto.*;
+import ru.kpfu.itis.mapper.BadgeMapper;
 import ru.kpfu.itis.model.Account;
 import ru.kpfu.itis.model.Task;
 import ru.kpfu.itis.model.TaskStatus;
@@ -47,7 +49,6 @@ public interface TaskService {
      * @implNote implement me, example of task method
      */
     void stub();
-
     /**
      * @param userId admin or teacher id
      * @param query
@@ -75,6 +76,9 @@ public interface TaskService {
     List<BadgeDto> getAllBadges();
 
     BadgeDto findBadgeById(Long id);
+
+    @Transactional
+    BadgeDto findBadgeById(Long id, BadgeMapper badgeMapper);
 
     ErrorDto isTaskAvailableForUser(Long taskId);
 }

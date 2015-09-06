@@ -32,7 +32,7 @@ public class RatingController {
     @ApiImplicitParams(value = {@ApiImplicitParam(name = "token", value = "token", required = true, dataType = "string", paramType = "query")})
     @ResponseBody
     public ResponseEntity<List<RatingDto>> getRating(@RequestParam(value = "search_string", required = false) String searchString,
-                                                     @RequestParam(required = false) Double offset,
+                                                     @RequestParam(required = false) Integer offset,
                                                      @RequestParam(required = false) Integer limit) {
         AccountInfo accountInfo = securityService.getCurrentUser().getAccountInfo();
         if (accountInfo == null) {
