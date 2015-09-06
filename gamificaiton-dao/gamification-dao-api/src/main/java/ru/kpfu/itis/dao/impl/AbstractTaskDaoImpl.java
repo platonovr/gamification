@@ -2,7 +2,10 @@ package ru.kpfu.itis.dao.impl;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Criteria;
+import org.hibernate.HibernateException;
 import org.hibernate.Query;
+import org.hibernate.Session;
+import org.springframework.orm.hibernate4.HibernateCallback;
 import ru.kpfu.itis.dao.TaskDao;
 import ru.kpfu.itis.dao.base.AbstractGenericDao;
 import ru.kpfu.itis.model.AcademicGroup;
@@ -40,6 +43,20 @@ public abstract class AbstractTaskDaoImpl extends AbstractGenericDao implements 
                 "where t.id=:id")
                 .setParameter("id", id)
                 .uniqueResult());
+    }
+
+    @Override
+    public Task findByName(String name) {
+        return getHibernateTemplate().execute(new HibernateCallback<Task>() {
+            @Override
+            public Task doInHibernate(Session session) throws HibernateException {
+                return (Task) session.createQuery(" from Task t " +
+                        " where t.name = :name")
+                        .setParameter("name", name)
+                        .setReadOnly(true)
+                        .uniqueResult();
+            }
+        });
     }
 
     @Override

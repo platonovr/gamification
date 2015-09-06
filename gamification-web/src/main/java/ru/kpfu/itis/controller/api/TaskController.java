@@ -89,9 +89,11 @@ public class TaskController {
     @ApiOperation(value = "create challenge")
     @ApiImplicitParams(value = {@ApiImplicitParam(name = "token", value = "token", required = true, dataType = "string", paramType = "query")})
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<TaskEditorDto> createTask(@RequestBody TaskEditorDto newTask) {
+    public ResponseEntity<TaskDto> createTask(@RequestBody TaskEditorDto newTask) {
         Task task = taskService.save(securityService.getCurrentUser(), newTask);
-        return new ResponseEntity<>(newTask, HttpStatus.CREATED);
+        TaskDto taskDto = new TaskDto();
+        taskDto.setId(task.getId());
+        return new ResponseEntity<>(taskDto, HttpStatus.CREATED);
     }
 
     @ApiOperation("upload challenge's attachment")

@@ -15,7 +15,10 @@ angular.module('gamificationApp').service('TaskService', ['$http', 'CONSTANTS', 
     this.uploadAttachment = function (taskId, attachment) {
         return Upload.upload({
             url: CONSTANTS.API_URI_PREFIX + CONSTANTS.TASK_URI + '/' + taskId + '/attachments',
-            file: attachment
+            file: attachment,
+            params: {
+                token: AuthInfo.getToken()
+            }
         })
     };
     this.getTasks = function (offset, limit, query) {

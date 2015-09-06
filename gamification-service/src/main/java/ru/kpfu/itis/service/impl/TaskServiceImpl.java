@@ -104,6 +104,9 @@ public class TaskServiceImpl implements TaskService {
             if (StringUtils.isEmpty(taskDto.getName())) {
                 throw new IllegalStateException("Name of task not presented");
             }
+            if (Objects.nonNull(taskDao.findByName(taskDto.getName()))) {
+                throw new IllegalStateException("Задание с таким именем уже существует");
+            }
             task.setName(taskDto.getName());
             task.setCreateTime(new Date());
 

@@ -15,6 +15,8 @@ public interface TaskDao {
 
     Task findById(Long id);
 
+    Task findByName(String name);
+
     List<Task> getActualTasks();
 
     List<Task> getTasksByUser(Long userId);
