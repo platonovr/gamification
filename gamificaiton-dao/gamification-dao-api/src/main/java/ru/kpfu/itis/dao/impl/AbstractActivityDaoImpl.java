@@ -35,7 +35,7 @@ public abstract class AbstractActivityDaoImpl extends AbstractGenericDao impleme
                         Restrictions.not(Restrictions.in("entityId", ids)))));
             }
             if (lastActivityId != null) {
-                criteria = criteria.add(Restrictions.gt("id", lastActivityId));
+                criteria = criteria.add(Restrictions.lt("id", lastActivityId));
             }
             criteria = criteria.addOrder(Order.desc("changeTime"));
             return (List<Activity>) criteria
