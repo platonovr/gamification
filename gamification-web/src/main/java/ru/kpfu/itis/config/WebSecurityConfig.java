@@ -17,8 +17,9 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 import ru.kpfu.itis.model.SimpleAuthUser;
 import ru.kpfu.jbl.auth.AuthenticationFilter;
 import ru.kpfu.jbl.auth.config.AuthSecurityModuleConfig;
-import ru.kpfu.jbl.auth.config.EncacheTokenServiceConfig;
+import ru.kpfu.jbl.auth.config.MongoTokenServiceConfig;
 import ru.kpfu.jbl.auth.config.ShaProvidersConfig;
+import ru.kpfu.jbl.auth.config.SpringMongoConfig;
 import ru.kpfu.jbl.auth.ep.LogoutRequestHandler;
 import ru.kpfu.jbl.auth.ep.RestAuthenticationEntryPoint;
 import ru.kpfu.jbl.auth.ep.WriteLogoutSuccessHandler;
@@ -27,7 +28,7 @@ import ru.kpfu.jbl.auth.service.impl.SecurityContextHolderServiceImpl;
 
 @Configuration
 @EnableWebMvcSecurity
-@Import(value = {AuthSecurityModuleConfig.class, ShaProvidersConfig.class, EncacheTokenServiceConfig.class})
+@Import(value = {AuthSecurityModuleConfig.class, ShaProvidersConfig.class, MongoTokenServiceConfig.class, SpringMongoConfig.class})
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
