@@ -14,8 +14,6 @@ import ru.kpfu.itis.service.AccountBadgeService;
 
 import java.util.stream.Collectors;
 
-import static org.hibernate.Hibernate.isInitialized;
-
 /**
  * Created by ainurminibaev on 10.08.15.
  */
@@ -64,7 +62,7 @@ public class BadgeMapper implements Mapper<Badge, BadgeDto> {
         }
         Subject badgeSubject = badge.getSubject();
         BadgeDto badgeDto;
-        if (isInitialized(badgeSubject) && badgeSubject != null) {
+        if (badgeSubject != null) {
             badgeDto = new BadgeDto(badge.getId(),
                     badge.getName(), badge.getImage(), subjectMapper.toDto(badgeSubject),
                     badge.getType().name(), badge.getDescription());

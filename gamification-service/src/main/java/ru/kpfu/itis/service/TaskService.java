@@ -18,7 +18,7 @@ public interface TaskService {
 
     Task submitTask(Task task);
 
-    Task save(TaskDto taskDto);
+    Task save(Account account, TaskEditorDto taskDto);
 
     Task findByName(String name);
 

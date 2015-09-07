@@ -6,15 +6,14 @@ import com.wordnik.swagger.annotations.ApiImplicitParams;
 import com.wordnik.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindException;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.kpfu.itis.dto.*;
 import ru.kpfu.itis.dto.enums.Error;
 import ru.kpfu.itis.model.Account;
+import ru.kpfu.itis.model.Task;
 import ru.kpfu.itis.model.TaskStatus;
 import ru.kpfu.itis.security.SecurityService;
 import ru.kpfu.itis.service.ActivityService;
@@ -23,7 +22,6 @@ import ru.kpfu.itis.service.TaskService;
 import ru.kpfu.itis.util.Constant;
 import ru.kpfu.itis.validator.TaskValidator;
 
-import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 
@@ -53,10 +51,10 @@ public class TaskController {
     @Autowired
     private ActivityService activityService;
 
-    @InitBinder("taskDto")
-    private void initBinder(WebDataBinder binder) {
-        binder.setValidator(taskValidator);
-    }
+//    @InitBinder("taskDto")
+//    private void initBinder(WebDataBinder binder) {
+//        binder.setValidator(taskValidator);
+//    }
 
     @ApiOperation("get task's information")
     @ApiImplicitParams(value = {@ApiImplicitParam(name = "token", value = "token", required = true, dataType = "string", paramType = "query")})
@@ -90,11 +88,11 @@ public class TaskController {
 
     @ApiOperation(value = "create challenge")
     @ApiImplicitParams(value = {@ApiImplicitParam(name = "token", value = "token", required = true, dataType = "string", paramType = "query")})
-    @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<TaskDto> createTask(@Valid @RequestBody TaskDto taskDto, BindingResult bindingResult) throws BindException {
-        if (bindingResult.hasErrors()) throw new BindException(bindingResult);
-        taskDto.setId(taskService.save(taskDto).getId());
-
+    @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<TaskDto> createTask(@RequestBody TaskEditorDto newTask) {
+        Task task = taskService.save(securityService.getCurrentUser(), newTask);
+        TaskDto taskDto = new TaskDto();
+        taskDto.setId(task.getId());
         return new ResponseEntity<>(taskDto, HttpStatus.CREATED);
     }
 
