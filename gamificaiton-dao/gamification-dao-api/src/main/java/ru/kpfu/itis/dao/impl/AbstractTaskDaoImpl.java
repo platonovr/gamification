@@ -83,7 +83,7 @@ public abstract class AbstractTaskDaoImpl extends AbstractGenericDao implements 
             if (status != null) {
                 queryHql += " and ttacc.taskStatus.type=:status";
             }
-            queryHql += " order by task.startDate DESC";
+            queryHql += " order by task.createdTime DESC";
             Query query = session.createQuery(queryHql);
             query.setParameter("userId", userId).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
             if (status != null) {
