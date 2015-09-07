@@ -1,0 +1,6 @@
+badge_id,name,description,image,type,create_time,change_time,finish_time,max_mark,subject_id
+10,'Программирование','Теперь ты программист!','/images/badges/java.png','COMMON',2015-01-01 00:00:00,2015-01-01 00:00:00,null,100,10
+11,'Базы данных','Выдержал самый долгий экзамен','/images/badges/sql.png','COMMON',2015-01-01 00:00:00,2015-01-01 00:00:00,null,100,11
+12,'БЖД','Выживет','/images/badges/warning.png','COMMON',2015-01-01 00:00:00,2015-01-01 00:00:00,null,100,12
+13,'Студвесна','За участие в студвесне!','/images/badges/spring.png','SPECIAL',2015-01-01 00:00:00,2015-01-01 00:00:00,null,1,NULL
+14,'Золотая сессия','Сдал все экзамены на отлично!','/images/badges/firework.jpg','SPECIAL',2015-01-01 00:00:00,2015-01-01 00:00:00,null,100,NULL
