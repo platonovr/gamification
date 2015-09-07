@@ -6,9 +6,9 @@
                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd"
                    logicalFilePath="20150907_1000.xml">
 
-    <changeSet id="20150907_1000" author="aminibaev">
+    <changeSet id="20150907_1000" author="aminibaev" runOnChange="true">
         <sql>
-        INSERT INTO account_info (account_info_id, account_id, first_name, middle_name, last_name, birth_date, phone_number, create_time, change_time, finish_time, photo, email, entrance_year, academic_group_id, faculty_id) VALUES (202, 5, 'Преподавательный', 'Учитель', 'Предметович', '2015-09-06', '', NOW(), NOW(), null, null, null, null, 101, 101);
+            SELECT 1;
         </sql>
     </changeSet>
 
