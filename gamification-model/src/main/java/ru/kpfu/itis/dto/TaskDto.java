@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -61,10 +60,6 @@ public class TaskDto extends ErrorDto {
     private Date changeTime;
 
     private List<String> labels = new LinkedList<>();
-
-    private List<AccountInfoDto> performers = new ArrayList<>();
-
-    private List<CourseOrGroupDto> coursesAndGroups = new ArrayList<>();
 
     public TaskDto() {
     }
@@ -130,22 +125,6 @@ public class TaskDto extends ErrorDto {
 
     public void setCreator(AccountDto creator) {
         this.creator = creator;
-    }
-
-    public List<AccountInfoDto> getPerformers() {
-        return performers;
-    }
-
-    public void setPerformers(List<AccountInfoDto> performers) {
-        this.performers = performers;
-    }
-
-    public List<CourseOrGroupDto> getCoursesAndGroups() {
-        return coursesAndGroups;
-    }
-
-    public void setCoursesAndGroups(List<CourseOrGroupDto> coursesAndGroups) {
-        this.coursesAndGroups = coursesAndGroups;
     }
 
     public void setCurrentMark(Integer currentMark) {
