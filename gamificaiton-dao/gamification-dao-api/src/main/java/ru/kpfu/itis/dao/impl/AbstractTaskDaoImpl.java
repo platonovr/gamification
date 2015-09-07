@@ -1,22 +1,14 @@
 package ru.kpfu.itis.dao.impl;
 
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.Criteria;
-import org.hibernate.HibernateException;
-import org.hibernate.Query;
-import org.hibernate.Session;
+import org.hibernate.*;
 import org.springframework.orm.hibernate4.HibernateCallback;
 import ru.kpfu.itis.dao.TaskDao;
 import ru.kpfu.itis.dao.base.AbstractGenericDao;
-import ru.kpfu.itis.model.AcademicGroup;
-import ru.kpfu.itis.model.Account;
-import ru.kpfu.itis.model.Task;
-import ru.kpfu.itis.model.TaskStatus;
+import ru.kpfu.itis.model.*;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by timur on 23.06.15.
@@ -88,21 +80,18 @@ public abstract class AbstractTaskDaoImpl extends AbstractGenericDao implements 
                     "where current_date<=task.endDate and (:userId in tacAccInf.account.id " +
                     "or :userId in (select tacc.id from ttacc.account tacc)) ";
 
+            if (status != null) {
+                queryHql += " and ttacc.taskStatus.type=:status";
+            }
             queryHql += " order by task.startDate DESC";
             Query query = session.createQuery(queryHql);
             query.setParameter("userId", userId).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+            if (status != null) {
+                query.setParameter("status", status);
+            }
             if (offset != null) query.setFirstResult(offset);
             if (limit != null) query.setMaxResults(limit);
-            List<Task> resultList = new ArrayList<Task>();
-            List<Task> allTasks = new ArrayList<Task>(query.list());
-            for (Task task : allTasks) {
-                if (task.getTaskAccounts().isEmpty()) {
-                    resultList.add(task);
-                } else {
-                    resultList.addAll(task.getTaskAccounts().stream().filter(accountTask -> TaskStatus.TaskStatusType.ASSIGNED.equals(accountTask.getTaskStatus().getType())).map(accountTask -> task).collect(Collectors.toList()));
-                }
-            }
-            return resultList;
+            return query.list();
         });
     }
 
