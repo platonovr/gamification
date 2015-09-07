@@ -12,5 +12,29 @@
         <loadUpdateData tableName="BADGE" primaryKey="BADGE_ID" file="db/changelog_v0.2/csv/badge.csv"/>
         <loadUpdateData tableName="ACCOUNT_BADGE" primaryKey="ACCOUNT_BADGE_ID" file="db/changelog_v0.2/csv/account_badge.csv"/>
         <loadUpdateData tableName="ACTIVITY" primaryKey="ACTIVITY_ID" file="db/changelog_v0.2/csv/activity.csv"/>
+        <update tableName="TASK">
+            <column name="PARTICIPANTS_COUNT" value="27"/>
+            <where>participants_count is null</where>
+        </update>
+        <update tableName="TASK">
+            <column name="BADGE_ID" value="11"/>
+            <where>badge_id is null</where>
+        </update>
+        <update tableName="TASK">
+            <column name="SUBJECT_ID" value="11"/>
+            <where>subject_id is null</where>
+        </update>
+        <update tableName="CLASSIFIER">
+            <column name="TYPE" value="STUDY" type="varchar"/>
+            <where>type is null</where>
+        </update>
+        <update tableName="CLASSIFIER">
+            <column name="DESCRIPTION" value="Some description" type="varchar"/>
+            <where>description is null</where>
+        </update>
+        <update tableName="BADGE">
+            <column name="SUBJECT_ID" value="10"/>
+            <where>subject_id is null and type = 'COMMON'</where>
+        </update>
     </changeSet>
 </databaseChangeLog>
