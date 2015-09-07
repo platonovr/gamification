@@ -11,8 +11,8 @@ import ru.kpfu.itis.model.Task;
 import ru.kpfu.itis.model.enums.ActivityType;
 import ru.kpfu.itis.model.enums.EntityType;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by Rigen on 20.07.15.
@@ -22,10 +22,7 @@ public abstract class AbstractActivityDaoImpl extends AbstractGenericDao impleme
     @Override
     public List<Activity> getActivityStream(Account account, List<Task> tasks, Long lastActivityId) {
         //TODO get task ids only
-        List<Long> ids = new ArrayList<>();
-        for (Task task : tasks) {
-            ids.add(task.getId());
-        }
+        List<Long> ids = tasks.stream().map(Task::getId).collect(Collectors.toList());
         return getHibernateTemplate().execute((aSession) -> {
             Criteria criteria = aSession.createCriteria(Activity.class)
                     .add(Restrictions.ne("account", account));
