@@ -12,13 +12,13 @@ import java.util.List;
  * Created by Rigen on 17.07.15.
  */
 public interface RatingService {
-    List<Rating> getRating(Faculty faculty, Integer entranceYear, Double offset, Integer limit);
+    List<Rating> getRating(Faculty faculty, Integer entranceYear, Integer offset, Integer limit);
 
-    List<Rating> getRating(AccountInfo accountInfo, Double offset, Integer limit);
+    List<Rating> getRating(AccountInfo accountInfo, Integer offset, Integer limit);
 
-    List<RatingDto> getRatingDtos(Faculty faculty, Integer entranceYear, Double offset, Integer limit);
+    List<RatingDto> getRatingDtos(Faculty faculty, Integer entranceYear, Integer offset, Integer limit);
 
-    List<RatingDto> getRatingDtos(AccountInfo accountInfo, Double offset, Integer limit);
+    List<RatingDto> getRatingDtos(AccountInfo accountInfo, Integer offset, Integer limit);
 
     Rating getUserRating(Long accountInfoId);
 
@@ -31,10 +31,10 @@ public interface RatingService {
 
     @Transactional
     List<Rating> search(Faculty faculty, Integer entranceYear,
-                        String searchString, Double offset, Integer limit);
+                        String searchString, Integer offset, Integer limit);
 
     @Transactional
-    List<RatingDto> searchDto(AccountInfo accountInfo, String searchString, Double offset, Integer limit);
+    List<RatingDto> searchDto(AccountInfo accountInfo, String searchString, Integer offset, Integer limit);
 
     @Transactional
     void update(Rating rating);

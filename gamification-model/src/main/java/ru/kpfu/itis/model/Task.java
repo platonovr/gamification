@@ -45,7 +45,7 @@ public class Task extends BaseLongIdEntity {
     private Integer participantsCount;
 
     @Column(name = "MAX_MARK", nullable = false)
-    private Byte maxMark;
+    private Integer maxMark;
 
     @Column(name = "DESCRIPTION")
     private String description;
@@ -68,7 +68,7 @@ public class Task extends BaseLongIdEntity {
     @JoinTable(name = "task_constraint",
             joinColumns = @JoinColumn(name = "task_id", nullable = false),
             inverseJoinColumns = @JoinColumn(name = "academic_group_id", nullable = false))
-    private Set<AcademicGroup> academicGroups;
+    private Set<AcademicGroup> academicGroups = new HashSet<>();
 
     public Badge getBadge() {
         return badge;
@@ -118,11 +118,11 @@ public class Task extends BaseLongIdEntity {
         this.participantsCount = participantsCount;
     }
 
-    public Byte getMaxMark() {
+    public Integer getMaxMark() {
         return maxMark;
     }
 
-    public void setMaxMark(Byte maxMark) {
+    public void setMaxMark(Integer maxMark) {
         this.maxMark = maxMark;
     }
 
@@ -180,6 +180,14 @@ public class Task extends BaseLongIdEntity {
 
     public void setSubject(Subject subject) {
         this.subject = subject;
+    }
+
+    public boolean addAccountTask(AccountTask accountTask) {
+        return this.getTaskAccounts().add(accountTask);
+    }
+
+    public boolean addAcademicGroup(AcademicGroup academicGroup) {
+        return this.getAcademicGroups().add(academicGroup);
     }
 
     public enum TaskType implements EnumedDictionary {

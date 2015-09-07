@@ -47,7 +47,7 @@ public class TaskMapper implements Mapper<Task, TaskDto> {
 //        task.setCategory(taskCategoryDao.findByName(taskDto.getCategory()));
 //        task.setAuthor(accountDao.findByLogin("admin"));
         task.setName(taskDto.getName());
-        task.setMaxMark(ofNullable(taskDto.getMaxMark()).map(Integer::byteValue).orElse(null));
+        task.setMaxMark(taskDto.getMaxMark());
         task.setDescription(taskDto.getDescription());
         task.setStartDate(taskDto.getStartDate());
         task.setEndDate(taskDto.getDeadline());
@@ -86,7 +86,7 @@ public class TaskMapper implements Mapper<Task, TaskDto> {
                 taskDto.setCategory(ofNullable(category).map(TaskCategory::getName).orElse(null));
             Account author = task.getAuthor();
             if (isInitialized(author))
-                taskDto.setCreator(ofNullable(author).map(Account::getLogin).orElse(null));
+                taskDto.setCreator(new AccountDtoMapper().apply(author));
             Badge badge = task.getBadge();
             if (badge != null) {
                 BadgeDto badgeDto = taskService.findBadgeById(badge.getId(), badgeMapper);

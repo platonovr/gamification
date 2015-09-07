@@ -3,6 +3,7 @@ package ru.kpfu.itis.controller.api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -49,5 +50,11 @@ public class ErrorController {
                                         Locale.getDefault())).collect(Collectors.toList())));
         return new ModelAndView(new MappingJackson2JsonView(), "errors", errorsMap);
 //        return new ModelAndView(new MappingJackson2JsonView(), "errors", fieldErrors);
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public void handle(HttpMessageNotReadableException e) {
+        throw e;
     }
 }

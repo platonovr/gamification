@@ -32,7 +32,7 @@ public class TaskDto extends ErrorDto {
     @ApiModelProperty(required = true)
     private String category;
 
-    private String creator;
+    private AccountDto creator;
 
     private BadgeDto badge;
 
@@ -66,7 +66,7 @@ public class TaskDto extends ErrorDto {
 
 
     public TaskDto(Long id, String name, String description, SubjectDto subject,
-                   Integer maxPerformers, String status, String category, String creator,
+                   Integer maxPerformers, String status, String category, AccountDto creator,
                    BadgeDto badge, Integer currentMark, Integer maxMark, Date startDate, Date deadline,
                    Date createTime, Date changeTime, List<String> labels) {
         this.id = id;
@@ -119,11 +119,11 @@ public class TaskDto extends ErrorDto {
         this.category = category;
     }
 
-    public String getCreator() {
+    public AccountDto getCreator() {
         return creator;
     }
 
-    public void setCreator(String creator) {
+    public void setCreator(AccountDto creator) {
         this.creator = creator;
     }
 

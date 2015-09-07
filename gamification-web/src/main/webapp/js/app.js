@@ -9,7 +9,12 @@ Array.prototype.remove = function (from, to) {
 
 (function () {
     var app = angular.module('gamificationApp',
-        ['ngRoute', 'ngFileUpload', 'infinite-scroll', 'LocalStorageModule']);
+        ['ngRoute',
+            'ngFileUpload',
+            'infinite-scroll',
+            'LocalStorageModule',
+            'ui.select'
+        ]);
 
 
     angular.module('infinite-scroll').value('THROTTLE_MILLISECONDS', 250);
@@ -18,7 +23,8 @@ Array.prototype.remove = function (from, to) {
     app.constant('CONSTANTS', {
         API_URI_PREFIX: "/api/v1",
         TASK_URI: "/challenge",
-        LOGIN_URI: "/login"
+        LOGIN_URI: "/login",
+        DICTIONARIES: "/dictionaries"
     });
 
     app.config(function ($routeProvider, $locationProvider) {

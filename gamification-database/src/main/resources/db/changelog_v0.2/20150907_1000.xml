@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="
+                       http://www.liquibase.org/xml/ns/dbchangelog
+                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd"
+                   logicalFilePath="20150907_1000.xml">
+
+    <changeSet id="20150907_1000" author="aminibaev" runOnChange="true">
+        <sql>
+            SELECT 1;
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

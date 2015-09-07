@@ -13,3 +13,4 @@ mongo.properties
 /**/*.iml
 happy-student-model/src/main/resources/database.properties
 auth.service.properties
+.DS_Store

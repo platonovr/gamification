@@ -28,6 +28,10 @@ public class AcademicGroup extends BaseLongIdEntity {
     @ManyToMany(mappedBy = "academicGroups")
     private Set<Task> tasks = new HashSet<>();
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "STUDY_COURSE_ID")
+    private StudyCourse course;
+
     public String getName() {
         return name;
     }
@@ -58,5 +62,13 @@ public class AcademicGroup extends BaseLongIdEntity {
 
     public void setTasks(Set<Task> tasks) {
         this.tasks = tasks;
+    }
+
+    public StudyCourse getCourse() {
+        return course;
+    }
+
+    public void setCourse(StudyCourse course) {
+        this.course = course;
     }
 }

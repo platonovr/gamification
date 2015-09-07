@@ -29,7 +29,7 @@ public class RatingServiceImpl implements RatingService {
 
     @Transactional
     @Override
-    public List<Rating> getRating(Faculty faculty, Integer entranceYear, Double offset, Integer limit) {
+    public List<Rating> getRating(Faculty faculty, Integer entranceYear, Integer offset, Integer limit) {
         if (faculty == null || entranceYear == null)
             return null;
         return ratingDao.getRating(faculty, entranceYear, offset, limit);
@@ -37,7 +37,7 @@ public class RatingServiceImpl implements RatingService {
 
     @Transactional
     @Override
-    public List<Rating> getRating(AccountInfo accountInfo, Double offset, Integer limit) {
+    public List<Rating> getRating(AccountInfo accountInfo, Integer offset, Integer limit) {
         if (accountInfo == null)
             return null;
         return ratingDao.getRating(accountInfo.getFaculty(), accountInfo.getEntranceYear(), offset, limit);
@@ -45,7 +45,7 @@ public class RatingServiceImpl implements RatingService {
 
     @Transactional
     @Override
-    public List<RatingDto> getRatingDtos(Faculty faculty, Integer entranceYear, Double offset, Integer limit) {
+    public List<RatingDto> getRatingDtos(Faculty faculty, Integer entranceYear, Integer offset, Integer limit) {
         if (faculty == null || entranceYear == null)
             return null;
         return ratingDao.getRating(faculty, entranceYear, offset, limit).parallelStream()
@@ -54,7 +54,7 @@ public class RatingServiceImpl implements RatingService {
 
     @Transactional
     @Override
-    public List<RatingDto> getRatingDtos(AccountInfo accountInfo, Double offset, Integer limit) {
+    public List<RatingDto> getRatingDtos(AccountInfo accountInfo, Integer offset, Integer limit) {
         if (accountInfo == null)
             return null;
         return ratingDao.getRating(accountInfo.getFaculty(), accountInfo.getEntranceYear(), offset, limit).parallelStream()
@@ -104,13 +104,13 @@ public class RatingServiceImpl implements RatingService {
     @Transactional
     @Override
     public List<Rating> search(Faculty faculty, Integer entranceYear,
-                               String searchString, Double offset, Integer limit) {
+                               String searchString, Integer offset, Integer limit) {
         return ratingDao.search(faculty, entranceYear, searchString, offset, limit);
     }
 
     @Transactional
     @Override
-    public List<RatingDto> searchDto(AccountInfo accountInfo, String searchString, Double offset, Integer limit) {
+    public List<RatingDto> searchDto(AccountInfo accountInfo, String searchString, Integer offset, Integer limit) {
         return ratingDao.search(accountInfo.getFaculty(), accountInfo.getEntranceYear(),
                 searchString, offset, limit).parallelStream().map(ratingMapper::toDto).collect(Collectors.toList());
     }

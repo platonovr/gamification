@@ -135,7 +135,7 @@
 
     <changeSet id="5" author="rplatonov">
         <createTable tableName="ACCOUNT_TASK">
-            <column name="ACCOUNT_TASK_ID" type="bigint" autoIncrement="true">
+            <column name="ACCOUNT_TASK_ID" type="${autoincrement}">
                 <constraints primaryKey="true"/>
             </column>
             <column name="ACCOUNT_ID" type="bigint">
@@ -273,7 +273,7 @@
             </column>
         </createTable>
     </changeSet>
-    
+
     <changeSet id="11" author="tkasatkin">
         <createTable tableName="TASK_CONSTRAINT">
             <column name="TASK_ID" type="bigint">

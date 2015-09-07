@@ -1,8 +1,8 @@
 package ru.kpfu.itis.dao.impl;
 
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.Criteria;
-import org.hibernate.Query;
+import org.hibernate.*;
+import org.springframework.orm.hibernate4.HibernateCallback;
 import ru.kpfu.itis.dao.TaskDao;
 import ru.kpfu.itis.dao.base.AbstractGenericDao;
 import ru.kpfu.itis.model.*;
@@ -38,6 +38,20 @@ public abstract class AbstractTaskDaoImpl extends AbstractGenericDao implements 
     }
 
     @Override
+    public Task findByName(String name) {
+        return getHibernateTemplate().execute(new HibernateCallback<Task>() {
+            @Override
+            public Task doInHibernate(Session session) throws HibernateException {
+                return (Task) session.createQuery(" from Task t " +
+                        " where t.name = :name")
+                        .setParameter("name", name)
+                        .setReadOnly(true)
+                        .uniqueResult();
+            }
+        });
+    }
+
+    @Override
     public List<Task> getActualTasks() {
         return getHibernateTemplate().<List<Task>>execute(session -> session.createQuery("from Task task " +
                 " where task.finishTime is null")
@@ -69,7 +83,7 @@ public abstract class AbstractTaskDaoImpl extends AbstractGenericDao implements 
             if (status != null) {
                 queryHql += " and ttacc.taskStatus.type=:status";
             }
-            queryHql += " order by task.startDate DESC";
+            queryHql += " order by task.createTime DESC";
             Query query = session.createQuery(queryHql);
             query.setParameter("userId", userId).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
             if (status != null) {

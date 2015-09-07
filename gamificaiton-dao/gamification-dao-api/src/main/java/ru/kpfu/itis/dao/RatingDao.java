@@ -10,15 +10,15 @@ import java.util.List;
  */
 public interface RatingDao {
 
-    List<Rating> getRating(Faculty faculty, Integer entranceYear, Double offset, Integer limit);
+    List<Rating> getRating(Faculty faculty, Integer entranceYear, Integer offset, Integer limit);
 
-    List<Rating> getRatingOrderedByPoint(Faculty faculty, Integer entranceYear, Double offset, Integer limit);
+    List<Rating> getRatingOrderedByPoint(Faculty faculty, Integer entranceYear, Integer offset, Integer limit);
 
-    List<Rating> getRatingOrderedByField(Faculty faculty, Integer entranceYear, Double offset,
+    List<Rating> getRatingOrderedByField(Faculty faculty, Integer entranceYear, Integer offset,
                                          Integer limit, String orderField, boolean order);
 
     List<Rating> search(Faculty faculty, Integer entranceYear,
-                        String searchString, Double offset, Integer limit);
+                        String searchString, Integer offset, Integer limit);
 
     Rating getUserRating(Long accountInfoId);
 

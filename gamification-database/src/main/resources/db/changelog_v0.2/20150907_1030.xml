@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="
+                       http://www.liquibase.org/xml/ns/dbchangelog
+                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd"
+                   logicalFilePath="20150907_1000.xml">
+
+    <changeSet id="20150907_1030" author="aminibaev" runOnChange="true">
+        <sql>
+            DELETE FROM account_info where account_id = 5;
+            DELETE FROM account where account_id = 5;
+            DELETE FROM account_info where account_info_id = 202;
+            INSERT INTO account (account_id, login, password, role, create_time, change_time, finish_time) VALUES (5, 'teacher', '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8', 'TEACHER', '2015-01-01 01:00:00.000000', '2015-01-01 01:00:00.000000', null);
+            INSERT INTO account_info (account_info_id, account_id, first_name, middle_name, last_name, birth_date, phone_number, create_time, change_time, finish_time, photo, email, entrance_year, academic_group_id, faculty_id) VALUES (202, 5, 'Преподавательный', 'Учитель', 'Предметович', '2015-09-06', '', NOW(), NOW(), null, null, null, null, 101, 101);
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

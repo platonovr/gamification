@@ -1,6 +1,7 @@
 package ru.kpfu.itis.service.impl;
 
 import org.apache.commons.lang3.Validate;
+import org.apache.commons.lang3.time.DateUtils;
 import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import ru.kpfu.itis.dao.*;
 import ru.kpfu.itis.dto.*;
 import ru.kpfu.itis.dto.enums.Error;
@@ -17,17 +20,17 @@ import ru.kpfu.itis.mapper.BadgeMapper;
 import ru.kpfu.itis.mapper.TaskInfoMapper;
 import ru.kpfu.itis.mapper.TaskMapper;
 import ru.kpfu.itis.model.*;
-import ru.kpfu.itis.model.TaskStatus;
 import ru.kpfu.itis.model.classifier.TaskCategory;
-import ru.kpfu.itis.model.enums.*;
+import ru.kpfu.itis.model.enums.ActivityType;
+import ru.kpfu.itis.model.enums.BadgeAchievementStatus;
+import ru.kpfu.itis.model.enums.EntityType;
+import ru.kpfu.itis.model.enums.StudyTaskType;
 import ru.kpfu.itis.security.SecurityService;
 import ru.kpfu.itis.service.ActivityService;
 import ru.kpfu.itis.service.RatingService;
 import ru.kpfu.itis.service.TaskService;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpStatus.*;
@@ -95,15 +98,64 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     @Transactional
-    public Task save(TaskDto taskDto) {
-        Task task = taskMapper.fromDto(taskDto);
-        task.setCategory(taskCategoryDao.findByName(taskDto.getCategory()));
-        Account currentUser = securityService.getCurrentUser();
-        task.setAuthor(currentUser);
-        simpleDao.save(task);
-        Activity activity = new Activity(EntityType.TASK, ActivityType.TASK_NEW, currentUser, task.getId());
-        simpleDao.save(activity);
-        return task;
+    public Task save(Account account, TaskEditorDto taskDto) {
+        if (taskDto.getId() < 0) {
+            Task task = new Task();
+            if (StringUtils.isEmpty(taskDto.getName())) {
+                throw new IllegalStateException("Name of task not presented");
+            }
+            if (Objects.nonNull(taskDao.findByName(taskDto.getName()))) {
+                throw new IllegalStateException("Задание с таким именем уже существует");
+            }
+            task.setName(taskDto.getName());
+            task.setCreateTime(new Date());
+
+            task.setStartDate(DateUtils.truncate(taskDto.getDate_from(), Calendar.DATE));
+            task.setEndDate(DateUtils.truncate(taskDto.getDate_to(), Calendar.DATE));
+            task.setDescription(taskDto.getDescription() != null ? taskDto.getDescription() : "");
+            task.setMaxMark(taskDto.getMaxMark());
+
+            Account creator = null;
+            AccountDto creatorDto = taskDto.getCreator();
+            if (Objects.nonNull(creatorDto)) {
+                creator = simpleDao.findById(Account.class, creatorDto.getId());
+            }
+
+            task.setAuthor(creator != null ? creator : account);
+
+            Subject taskSubject = simpleDao.findById(Subject.class, taskDto.getSubject().getId());
+            if (Objects.isNull(taskSubject)) {
+                throw new IllegalStateException("Subject not founded");
+            }
+            task.setSubject(taskSubject);
+
+            TaskCategory category = simpleDao.findById(TaskCategory.class, taskDto.getCategory().getId());
+            if (Objects.isNull(category)) {
+                throw new IllegalStateException("Category of task not presented");
+            }
+            task.setCategory(category);
+
+            List<CourseOrGroupDto> courseOrGroupDtos = taskDto.getCoursesAndGroups();
+            Set<AcademicGroup> academicGroups = new HashSet<>();
+            for (CourseOrGroupDto courseOrGroupDto : courseOrGroupDtos) {
+                if (courseOrGroupDto.isGroup()) {
+                    AcademicGroup academicGroup = simpleDao.findById(AcademicGroup.class, courseOrGroupDto.getId());
+                    academicGroups.add(academicGroup);
+                } else {
+                    StudyCourse course = simpleDao.findById(StudyCourse.class, courseOrGroupDto.getId());
+                    academicGroups.addAll(course.getAcademicGroups().stream().collect(Collectors.toList()));
+                }
+            }
+            academicGroups.forEach(task::addAcademicGroup);
+
+            List<AccountDto> performers = taskDto.getPerformers();
+            extractPermformers(performers, task);
+
+
+            return taskDao.submitTask(task);
+
+        }
+        return null;
     }
 
     @Override
@@ -120,10 +172,16 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public List<TaskCategoryDto> getAllCategories() {
-        return simpleDao.fetchAll(TaskCategory.class)
-                .parallelStream().<TaskCategoryDto>map(taskCategory ->
-                        new TaskCategoryDto(taskCategory.getName(), taskCategory.getTaskCategoryType()))
-                .collect(Collectors.toList());
+        List<TaskCategory> taskCategories = simpleDao.fetchAll(TaskCategory.class);
+        List<TaskCategoryDto> categoryDtos = new ArrayList<>();
+        if (CollectionUtils.isEmpty(taskCategories)) {
+            return categoryDtos;
+        }
+        for (TaskCategory taskCategory : taskCategories) {
+            categoryDtos.add(new TaskCategoryDto(taskCategory.getId(), taskCategory.getName(), taskCategory.getTaskCategoryType(), taskCategory.getTaskCategoryType().getCaption()));
+        }
+        return categoryDtos;
+
     }
 
     @Override
@@ -337,4 +395,35 @@ public class TaskServiceImpl implements TaskService {
         accountTask.setNewStatus(taskStatus);
     }
 
+
+    private void extractPermformers(List<AccountDto> performers, Task task) {
+        List<Account> accounts = new ArrayList<>();
+        for (AccountDto performer : performers) {
+            accounts.add(simpleDao.findById(Account.class, performer.getId()));
+        }
+        for (Account account : accounts) {
+            createAccountTaskLink(task, account);
+        }
+    }
+
+    private void createAccountTaskLink(Task task, Account account) {
+        AccountTask accountTask = new AccountTask();
+        accountTask.setTask(task);
+        accountTask.setCreateTime(new Date());
+        accountTask.setMark(0);
+        accountTask.setAvailability(true);
+        accountTask.setAccount(account);
+
+        TaskStatus taskStatus = getNewTaskStatus(TaskStatus.TaskStatusType.ASSIGNED);
+
+        accountTask.setNewStatus(taskStatus);
+        task.addAccountTask(accountTask);
+    }
+
+    private TaskStatus getNewTaskStatus(TaskStatus.TaskStatusType statusType) {
+        TaskStatus taskStatus = new TaskStatus();
+        taskStatus.setType(statusType);
+        taskStatus.setCreateTime(new Date());
+        return taskStatus;
+    }
 }
