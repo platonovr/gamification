@@ -20,7 +20,7 @@ public class TaskInfoDto extends TaskDto {
 
     @JsonProperty("status_map")
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Map<Long, String> statusMap;
+    private Map<Long, StatusMark> statusMap;
 
     public TaskInfoDto() {
     }
@@ -50,11 +50,37 @@ public class TaskInfoDto extends TaskDto {
         this.groups = groups;
     }
 
-    public Map<Long, String> getStatusMap() {
+    public Map<Long, StatusMark> getStatusMap() {
         return statusMap;
     }
 
-    public void setStatusMap(Map<Long, String> statusMap) {
+    public void setStatusMap(Map<Long, StatusMark> statusMap) {
         this.statusMap = statusMap;
+    }
+
+    public static class StatusMark {
+        private String status;
+        private Integer mark;
+
+        public StatusMark(String status, Integer mark) {
+            this.status = status;
+            this.mark = mark;
+        }
+
+        public String getStatus() {
+            return status;
+        }
+
+        public void setStatus(String status) {
+            this.status = status;
+        }
+
+        public Integer getMark() {
+            return mark;
+        }
+
+        public void setMark(Integer mark) {
+            this.mark = mark;
+        }
     }
 }

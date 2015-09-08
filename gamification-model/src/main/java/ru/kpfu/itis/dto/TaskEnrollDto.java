@@ -1,16 +1,18 @@
 package ru.kpfu.itis.dto;
 
+import ru.kpfu.itis.dto.enums.Responses;
+
 /**
  * Created by ainurminibaev on 13.08.15.
  */
-public class TaskEnrollDto extends ErrorDto {
+public class TaskEnrollDto extends ResponseDto {
     private TaskEnrollStatus status;
 
-    public TaskEnrollDto(ru.kpfu.itis.dto.enums.Error error) {
+    public TaskEnrollDto(Responses error) {
         super(error);
     }
 
-    public TaskEnrollDto(ru.kpfu.itis.dto.enums.Error error, TaskEnrollStatus status) {
+    public TaskEnrollDto(Responses error, TaskEnrollStatus status) {
         super(error);
         this.status = status;
     }

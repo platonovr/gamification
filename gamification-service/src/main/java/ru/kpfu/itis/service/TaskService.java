@@ -79,5 +79,5 @@ public interface TaskService {
     @Transactional
     BadgeDto findBadgeById(Long id, BadgeMapper badgeMapper);
 
-    ErrorDto isTaskAvailableForUser(Long taskId);
+    ResponseDto isTaskAvailableForUser(Long taskId);
 }

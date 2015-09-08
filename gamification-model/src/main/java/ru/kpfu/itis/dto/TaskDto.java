@@ -12,7 +12,7 @@ import java.util.List;
  * Created by timur on 17.06.15.
  */
 @ApiModel("Challenge")
-public class TaskDto extends ErrorDto {
+public class TaskDto extends ResponseDto {
 
     private Long id;
 

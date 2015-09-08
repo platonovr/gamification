@@ -34,9 +34,9 @@ public abstract class AbstractActivityDaoImpl extends AbstractGenericDao impleme
             if (lastActivityId != null) {
                 criteria = criteria.add(Restrictions.lt("id", lastActivityId));
             }
-            criteria = criteria.addOrder(Order.desc("changeTime"));
+            criteria = criteria.addOrder(Order.desc("id"));
             return (List<Activity>) criteria
-                    .setMaxResults(15)
+                    .setMaxResults(3)
                     .list();
         });
     }

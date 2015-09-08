@@ -39,17 +39,30 @@ angular.module('gamificationApp').controller('ChallengesController',
         });
 
         $scope.showChangeBlock = function (challenge, performer) {
-            if ($scope.checkConfirmed(challenge, performer.id)) {
-                return false;
-            }
+            //if ($scope.checkConfirmed(challenge, performer.id)) {
+            //    return false;
+            //}
             $scope.mark_dialog.challenge = challenge;
             $scope.mark_dialog.performer = performer;
+            if (challenge.status_map[performer.id]) {
+                $scope.mark_dialog.mark = challenge.status_map[performer.id].mark;
+            } else {
+                $scope.mark_dialog.mark = 0;
+            }
             addMarkDialogBox.dialog("open");
             return false;
         };
+
+        $scope.getMark = function (challenge, performer) {
+            if (challenge.status_map[performer.id]) {
+                return "(" + challenge.status_map[performer.id].mark + ")";
+            } else {
+                return "";
+            }
+        };
         $scope.checkConfirmed = function (challenge, performer_id) {
             if (challenge.status_map && challenge.status_map[performer_id]) {
-                return challenge.status_map[performer_id] == 'COMPLETED';
+                return challenge.status_map[performer_id].status == 'COMPLETED';
             }
             return false;
         };
@@ -62,7 +75,8 @@ angular.module('gamificationApp').controller('ChallengesController',
             var mark = dialog_model.mark;
             TaskService.check(challenge, performer, mark).success(function (data) {
                 addMarkDialogBox.dialog("close");
-                challenge.status_map[performer.id] = 'COMPLETED';
+                challenge.status_map[performer.id].status = 'COMPLETED';
+                challenge.status_map[performer.id].mark = mark;
             });
         };
 

@@ -6,8 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.kpfu.itis.dto.AccountProfileDto;
-import ru.kpfu.itis.dto.ErrorDto;
-import ru.kpfu.itis.dto.enums.Error;
+import ru.kpfu.itis.dto.ResponseDto;
+import ru.kpfu.itis.dto.enums.Responses;
 import ru.kpfu.itis.security.SecurityService;
 import ru.kpfu.itis.service.AccountService;
 import ru.kpfu.itis.util.Constant;
@@ -32,7 +32,7 @@ public class AccountController {
     public ResponseEntity<? super AccountProfileDto> getProfile(@PathVariable Long id) {
         AccountProfileDto userProfile = accountService.getUserProfile(id);
         if (userProfile == null) {
-            return new ResponseEntity<>(new ErrorDto(Error.USER_NOT_FOUND), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ResponseDto(Responses.USER_NOT_FOUND), HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(userProfile, HttpStatus.OK);
     }
