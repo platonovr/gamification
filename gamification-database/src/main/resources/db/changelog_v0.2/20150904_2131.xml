@@ -7,7 +7,7 @@
                    logicalFilePath="20150904_2131.xml">
 
 
-    <changeSet id="insert_data" author="rfatkhullin">
+    <changeSet id="insert_data" author="rfatkhullin" runOnChange="true">
         <loadUpdateData tableName="SUBJECT" primaryKey="SUBJECT_ID" file="db/changelog_v0.2/csv/subject.csv"/>
         <loadUpdateData tableName="BADGE" primaryKey="BADGE_ID" file="db/changelog_v0.2/csv/badge.csv"/>
         <loadUpdateData tableName="ACCOUNT_BADGE" primaryKey="ACCOUNT_BADGE_ID" file="db/changelog_v0.2/csv/account_badge.csv"/>

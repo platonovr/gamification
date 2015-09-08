@@ -83,7 +83,7 @@ public class TaskController {
                                              @RequestParam(required = false) Integer limit,
                                              @RequestParam(required = false) String query
     ) {
-        return taskService.getCreatedTasks(securityService.getCurrentUserId(), offset, limit, query);
+        return taskService.getCreatedTasks(offset, limit, query);
     }
 
     @ApiOperation(value = "create challenge")

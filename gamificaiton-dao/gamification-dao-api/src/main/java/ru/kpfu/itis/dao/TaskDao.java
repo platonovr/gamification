@@ -23,7 +23,7 @@ public interface TaskDao {
 
     List<Task> getTasksByUser(Long userId, Integer offset, Integer limit, TaskStatus.TaskStatusType status);
 
-    List<Task> getCreatedTasks(Long userId, Integer offset, Integer limit, String query);
+    List<Task> getCreatedTasks(Account user, Integer offset, Integer limit, String query);
 
     boolean isTaskAvailableForUser(Account user, Long taskId);
 }
