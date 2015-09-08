@@ -106,7 +106,7 @@ public abstract class AbstractTaskDaoImpl extends AbstractGenericDao implements 
                     "left join fetch att.account attc " +
                     "left join fetch attc.accountInfo " +
                     "where 1=1");
-            if (isAdmin) {
+            if (!isAdmin) {
                 queryBuilder.append(" and t.author.id=:userId ");
             }
             if (StringUtils.isNotEmpty(queryString)) {
@@ -119,7 +119,7 @@ public abstract class AbstractTaskDaoImpl extends AbstractGenericDao implements 
             if (StringUtils.isNotEmpty(queryString)) {
                 query = query.setParameter("query", "%" + queryString.toLowerCase() + "%");
             }
-            if (isAdmin) {
+            if (!isAdmin) {
                 query = query.setParameter("userId", user.getId());
             }
             if (offset != null) query.setFirstResult(offset);

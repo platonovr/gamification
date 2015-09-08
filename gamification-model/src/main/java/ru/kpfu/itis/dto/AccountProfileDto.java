@@ -8,7 +8,7 @@ import java.util.List;
  * Created by Rigen on 22.06.15.
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class AccountProfileDto extends ErrorDto {
+public class AccountProfileDto extends ResponseDto {
 
     private Long id;
 

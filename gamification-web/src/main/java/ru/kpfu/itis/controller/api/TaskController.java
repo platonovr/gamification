@@ -1,9 +1,6 @@
 package ru.kpfu.itis.controller.api;
 
-import com.wordnik.swagger.annotations.Api;
-import com.wordnik.swagger.annotations.ApiImplicitParam;
-import com.wordnik.swagger.annotations.ApiImplicitParams;
-import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -11,12 +8,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.kpfu.itis.dto.*;
-import ru.kpfu.itis.dto.enums.Error;
+import ru.kpfu.itis.dto.enums.Responses;
 import ru.kpfu.itis.model.Account;
 import ru.kpfu.itis.model.Task;
 import ru.kpfu.itis.model.TaskStatus;
 import ru.kpfu.itis.security.SecurityService;
-import ru.kpfu.itis.service.ActivityService;
 import ru.kpfu.itis.service.FileService;
 import ru.kpfu.itis.service.TaskService;
 import ru.kpfu.itis.util.Constant;
@@ -44,23 +40,14 @@ public class TaskController {
     @Autowired
     private TaskValidator taskValidator;
 
-
     @Autowired
     private SecurityService securityService;
-
-    @Autowired
-    private ActivityService activityService;
-
-//    @InitBinder("taskDto")
-//    private void initBinder(WebDataBinder binder) {
-//        binder.setValidator(taskValidator);
-//    }
 
     @ApiOperation("get task's information")
     @ApiImplicitParams(value = {@ApiImplicitParam(name = "token", value = "token", required = true, dataType = "string", paramType = "query")})
     @RequestMapping(value = "/{taskId:[1-9]+[0-9]*}", method = RequestMethod.GET)
     public ResponseEntity<? super TaskInfoDto> getTaskById(@PathVariable Long taskId) {
-        ErrorDto taskAvailabilityError = taskService.isTaskAvailableForUser(taskId);
+        ResponseDto taskAvailabilityError = taskService.isTaskAvailableForUser(taskId);
         if (taskAvailabilityError != null) {
             return new ResponseEntity<>(taskAvailabilityError, FORBIDDEN);
         }
@@ -102,7 +89,7 @@ public class TaskController {
     public ResponseEntity uploadAttachment(@RequestPart MultipartFile file,
                                            @PathVariable Long taskId) {
         if (file.isEmpty())
-            return new ResponseEntity<>(new ErrorDto(Error.EMPTY_FILE), NO_CONTENT);
+            return new ResponseEntity<>(new ResponseDto(Responses.EMPTY_FILE), NO_CONTENT);
         else
             try {
                 String attachmentDir = fileService.uploadTaskAttachment(file, taskId);
@@ -141,7 +128,7 @@ public class TaskController {
     @ApiImplicitParams(value = {@ApiImplicitParam(name = "token", value = "token", required = true, dataType = "string", paramType = "query")})
     @RequestMapping(value = "/{taskId:[1-9]+[0-9]*}/enroll", method = RequestMethod.POST)
     public ResponseEntity enroll(@PathVariable Long taskId) {
-        ErrorDto taskAvailabilityError = taskService.isTaskAvailableForUser(taskId);
+        ResponseDto taskAvailabilityError = taskService.isTaskAvailableForUser(taskId);
         if (taskAvailabilityError != null) {
             return new ResponseEntity<>(taskAvailabilityError, FORBIDDEN);
         }

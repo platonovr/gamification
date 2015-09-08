@@ -64,7 +64,7 @@ public class TaskInfoMapper implements Mapper<Task, TaskInfoDto> {
                                     performers.add(accountInfoMapper.toDto(accountInfo));
                                 }
                                 if (isAdmin) {
-                                    taskInfoDto.getStatusMap().put(account.getId(), taskStatus.getType().name());
+                                    taskInfoDto.getStatusMap().put(account.getId(), new TaskInfoDto.StatusMark(taskStatus.getType().name(), accountTask.getMark()));
                                 }
                             }
                         }

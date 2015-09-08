@@ -15,7 +15,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import ru.kpfu.itis.dao.*;
 import ru.kpfu.itis.dto.*;
-import ru.kpfu.itis.dto.enums.Error;
+import ru.kpfu.itis.dto.enums.Responses;
 import ru.kpfu.itis.mapper.BadgeMapper;
 import ru.kpfu.itis.mapper.TaskInfoMapper;
 import ru.kpfu.itis.mapper.TaskMapper;
@@ -34,6 +34,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpStatus.*;
+import static ru.kpfu.itis.model.TaskStatus.TaskStatusType.*;
 
 /**
  * Created by timur on 17.06.15.
@@ -242,7 +243,7 @@ public class TaskServiceImpl implements TaskService {
         Validate.notNull(account);
         Task neededTask = taskDao.findById(taskId);
         if (Objects.isNull(neededTask)) {
-            return new ResponseEntity<>(new ErrorDto(Error.TASK_NOT_FOUND), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ResponseDto(Responses.TASK_NOT_FOUND), HttpStatus.NOT_FOUND);
         }
 
         AccountTask accountTask = accountTaskDao.findByTaskAndAccount(taskId, account.getId());
@@ -253,14 +254,19 @@ public class TaskServiceImpl implements TaskService {
             simpleDao.save(activity);
             return new ResponseEntity<>(new TaskEnrollDto(TaskEnrollDto.TaskEnrollStatus.SUCCESS), HttpStatus.OK);
         } else {
-            if (TaskStatus.TaskStatusType.CANCELED.equals(accountTask.getTaskStatus().getType()) && Boolean.TRUE.equals(accountTask.getAvailability())) {
-                TaskStatus newStatus = createNewStatus(accountTask);
+            TaskStatus taskStatus = accountTask.getTaskStatus();
+            if ((ASSIGNED.equals(taskStatus.getType()) || CANCELED.equals(taskStatus.getType())) && Boolean.TRUE.equals(accountTask.getAvailability())) {
+                TaskStatus newStatus = createNewStatus(accountTask, INPROGRESS);
                 accountTask.setNewStatus(newStatus);
-                accountTask.setAttemptsCount(accountTask.getAttemptsCount() + 1);
+                if (accountTask.getAttemptsCount() != null) {
+                    accountTask.setAttemptsCount(accountTask.getAttemptsCount() + 1);
+                } else {
+                    accountTask.setAttemptsCount(0);
+                }
                 simpleDao.save(accountTask);
-                return new ResponseEntity<>(HttpStatus.OK);
+                return new ResponseEntity<>(new ResponseDto(Responses.ENROLLED), HttpStatus.OK);
             } else {
-                return new ResponseEntity<>(new ErrorDto(Error.TASK_ALREADY_TAKEN), HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(new ResponseDto(Responses.TASK_ALREADY_TAKEN), HttpStatus.BAD_REQUEST);
             }
         }
     }
@@ -269,12 +275,12 @@ public class TaskServiceImpl implements TaskService {
     @Transactional
     public ResponseEntity checkTask(Long taskId, Long accountId, Integer mark) {
         if (mark < 0 || Objects.isNull(mark)) {
-            return new ResponseEntity<>(new ErrorDto(Error.NOT_VALID_DATA), BAD_REQUEST);
+            return new ResponseEntity<>(new ResponseDto(Responses.NOT_VALID_DATA), BAD_REQUEST);
         }
         AccountTask accountTask = accountTaskDao.findByTaskAndAccount(taskId, accountId);
         if (Objects.nonNull(accountTask)) {
             Hibernate.initialize(accountTask.getTaskHistory());
-            setNewStatus(accountTask, TaskStatus.TaskStatusType.COMPLETED);
+            setNewStatus(accountTask, COMPLETED);
             accountTask.setMark(mark);
             simpleDao.save(accountTask);
             Task task = accountTask.getTask();
@@ -313,7 +319,7 @@ public class TaskServiceImpl implements TaskService {
             ratingService.recalculateRating(accountInfo);
             return new ResponseEntity<>(OK);
         } else {
-            return new ResponseEntity<>(new ErrorDto(Error.TASK_NOT_FOUND), NOT_FOUND);
+            return new ResponseEntity<>(new ResponseDto(Responses.TASK_NOT_FOUND), NOT_FOUND);
         }
 
     }
@@ -352,14 +358,14 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public ErrorDto isTaskAvailableForUser(Long taskId) {
+    public ResponseDto isTaskAvailableForUser(Long taskId) {
         Account currentUser = simpleDao.findById(Account.class, securityService.getCurrentUserId());
         Task task = simpleDao.findById(Task.class, taskId);
         if (currentUser == null || task == null) {
-            return new ErrorDto(Error.TASK_NOT_AVAILABLE);
+            return new ResponseDto(Responses.TASK_NOT_AVAILABLE);
         }
         if (!taskDao.isTaskAvailableForUser(currentUser, taskId)) {
-            return new ErrorDto(Error.TASK_NOT_AVAILABLE);
+            return new ResponseDto(Responses.TASK_NOT_AVAILABLE);
         }
         return null;
     }
@@ -367,8 +373,7 @@ public class TaskServiceImpl implements TaskService {
 
     public AccountTask createAccountTask(Account account, Task task) {
         AccountTask accountTask = new AccountTask();
-        TaskStatus taskStatus = createNewStatus(accountTask);
-        accountTask.setCreateTime(new Date());
+        TaskStatus taskStatus = createNewStatus(accountTask, INPROGRESS);
         accountTask.setAccount(account);
         accountTask.setTask(task);
         accountTask.setAttemptsCount(1);
@@ -377,11 +382,10 @@ public class TaskServiceImpl implements TaskService {
         return accountTask;
     }
 
-    public TaskStatus createNewStatus(AccountTask accountTask) {
+    public TaskStatus createNewStatus(AccountTask accountTask, TaskStatus.TaskStatusType statusType) {
         TaskStatus taskStatus = new TaskStatus();
         taskStatus.setAccountTask(accountTask);
-        taskStatus.setCreateTime(new Date());
-        taskStatus.setType(TaskStatus.TaskStatusType.ASSIGNED);
+        taskStatus.setType(statusType);
         return taskStatus;
     }
 
@@ -392,7 +396,6 @@ public class TaskServiceImpl implements TaskService {
         }
         taskStatus.setAccountTask(accountTask);
         taskStatus.setType(statusType);
-        //TODO update time
         accountTask.setNewStatus(taskStatus);
     }
 
@@ -415,16 +418,9 @@ public class TaskServiceImpl implements TaskService {
         accountTask.setAvailability(true);
         accountTask.setAccount(account);
 
-        TaskStatus taskStatus = getNewTaskStatus(TaskStatus.TaskStatusType.ASSIGNED);
+        TaskStatus taskStatus = createNewStatus(accountTask, ASSIGNED);
 
         accountTask.setNewStatus(taskStatus);
         task.addAccountTask(accountTask);
-    }
-
-    private TaskStatus getNewTaskStatus(TaskStatus.TaskStatusType statusType) {
-        TaskStatus taskStatus = new TaskStatus();
-        taskStatus.setType(statusType);
-        taskStatus.setCreateTime(new Date());
-        return taskStatus;
     }
 }
