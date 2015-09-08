@@ -50,10 +50,9 @@ public interface TaskService {
      */
     void stub();
     /**
-     * @param userId admin or teacher id
      * @param query
      */
-    List<TaskInfoDto> getCreatedTasks(Long userId, Integer offset, Integer limit, String query);
+    List<TaskInfoDto> getCreatedTasks(Integer offset, Integer limit, String query);
 
     /**
      * User takes task to do

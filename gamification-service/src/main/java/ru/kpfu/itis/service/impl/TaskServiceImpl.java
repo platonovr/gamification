@@ -230,8 +230,9 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     @Transactional
-    public List<TaskInfoDto> getCreatedTasks(Long userId, Integer offset, Integer limit, String query) {
-        List<Task> createdTasks = taskDao.getCreatedTasks(userId, offset, limit, query);
+    public List<TaskInfoDto> getCreatedTasks(Integer offset, Integer limit, String query) {
+        Account currentUser = securityService.getCurrentUser();
+        List<Task> createdTasks = taskDao.getCreatedTasks(currentUser, offset, limit, query);
         return createdTasks.stream().map(adminTaskInfoMapper::toDto).collect(Collectors.toList());
     }
 

@@ -6,6 +6,7 @@ import org.springframework.orm.hibernate4.HibernateCallback;
 import ru.kpfu.itis.dao.TaskDao;
 import ru.kpfu.itis.dao.base.AbstractGenericDao;
 import ru.kpfu.itis.model.*;
+import ru.kpfu.itis.model.enums.Role;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -96,24 +97,30 @@ public abstract class AbstractTaskDaoImpl extends AbstractGenericDao implements 
     }
 
     @Override
-    public List<Task> getCreatedTasks(Long userId, Integer offset, Integer limit, final String queryString) {
+    public List<Task> getCreatedTasks(Account user, Integer offset, Integer limit, final String queryString) {
+        boolean isAdmin = user != null && user.getRole() == Role.ADMIN;
         return getHibernateTemplate().<List<Task>>execute(session -> {
             StringBuilder queryBuilder = new StringBuilder("from Task t " +
                     "left join fetch t.academicGroups " +
                     "left join fetch t.taskAccounts att " +
                     "left join fetch att.account attc " +
                     "left join fetch attc.accountInfo " +
-                    "where t.author.id=:userId");
+                    "where 1=1");
+            if (isAdmin) {
+                queryBuilder.append(" and t.author.id=:userId ");
+            }
             if (StringUtils.isNotEmpty(queryString)) {
                 queryBuilder.append(" and lower(t.name) LIKE :query");
             }
             queryBuilder.append(" order by t.createTime desc");
             Query query = session
                     .createQuery(queryBuilder.toString())
-                    .setParameter("userId", userId)
                     .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
             if (StringUtils.isNotEmpty(queryString)) {
                 query = query.setParameter("query", "%" + queryString.toLowerCase() + "%");
+            }
+            if (isAdmin) {
+                query = query.setParameter("userId", user.getId());
             }
             if (offset != null) query.setFirstResult(offset);
             if (limit != null) query.setMaxResults(limit);
