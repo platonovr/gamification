@@ -1,5 +1,6 @@
 package ru.kpfu.itis.service;
 
+import org.springframework.transaction.annotation.Transactional;
 import ru.kpfu.itis.model.Account;
 import ru.kpfu.itis.model.AccountBadge;
 import ru.kpfu.itis.model.Badge;
@@ -14,6 +15,9 @@ public interface AccountBadgeService {
     List<AccountBadge> findAllBadgesByAccount(Account account);
 
     AccountBadge findByBadgeAndAccount(Badge badge, Account account);
+
+    @Transactional
+    AccountBadge createAccountBadge(Badge badge, Account currentUser);
 
     void saveOrUpdate(AccountBadge accountBadge);
 }

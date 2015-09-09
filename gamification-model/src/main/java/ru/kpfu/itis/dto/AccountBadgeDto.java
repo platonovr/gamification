@@ -1,7 +1,6 @@
 package ru.kpfu.itis.dto;
 
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.wordnik.swagger.annotations.ApiModel;
 import ru.kpfu.itis.dto.serializer.CustomDoubleSerializer;
@@ -16,13 +15,13 @@ import java.util.Date;
 @ApiModel("AccountBadge")
 public class AccountBadgeDto {
 
-    private Long id;
-
-    @JsonProperty(value = "account_id")
-    private Long accountId;
-
-    @JsonProperty(value = "badge_id")
-    private Long badgeId;
+//    private Long id;
+//
+//    @JsonProperty(value = "account_id")
+//    private Long accountId;
+//
+//    @JsonProperty(value = "badge_id")
+//    private Long badgeId;
 
     @JsonSerialize(using = CustomDoubleSerializer.class)
     private Double theory = 0.0;
@@ -38,11 +37,12 @@ public class AccountBadgeDto {
     private BadgeAchievementStatus type = BadgeAchievementStatus.PERFORM;
 
     public Long getId() {
-        return id;
+//        return id;
+        return null;
     }
 
     public void setId(Long id) {
-        this.id = id;
+//        this.id = id;
     }
 
     public Date getDate() {
@@ -78,19 +78,21 @@ public class AccountBadgeDto {
     }
 
     public Long getAccountId() {
-        return accountId;
+//        return accountId;
+        return null;
     }
 
     public void setAccountId(Long accountId) {
-        this.accountId = accountId;
-    }
-
-    public Long getBadgeId() {
-        return badgeId;
+//        this.accountId = accountId;
     }
 
     public void setBadgeId(Long badgeId) {
-        this.badgeId = badgeId;
+//        this.badgeId = badgeId;
+    }
+
+    public Long getBadgeId() {
+//        return badgeId;
+        return null;
     }
 
     public BadgeAchievementStatus getType() {

@@ -26,9 +26,7 @@ import ru.kpfu.itis.model.enums.BadgeAchievementStatus;
 import ru.kpfu.itis.model.enums.EntityType;
 import ru.kpfu.itis.model.enums.StudyTaskType;
 import ru.kpfu.itis.security.SecurityService;
-import ru.kpfu.itis.service.ActivityService;
-import ru.kpfu.itis.service.RatingService;
-import ru.kpfu.itis.service.TaskService;
+import ru.kpfu.itis.service.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -87,6 +85,9 @@ public class TaskServiceImpl implements TaskService {
 
     @Autowired
     private ActivityService activityService;
+
+    @Autowired
+    AccountBadgeService accountBadgeService;
 
     @Autowired
     private RatingDao ratingDao;
@@ -290,11 +291,7 @@ public class TaskServiceImpl implements TaskService {
             if (task.getBadge() != null) {
                 AccountBadge accountBadge = accountBadgeDao.findByBadgeAndAccount(task.getBadge(), account);
                 if (Objects.isNull(accountBadge)) {
-                    //TODO throw exception create account badge ON enroll
-                    AccountBadge notExistedAccountBadge = new AccountBadge();
-                    notExistedAccountBadge.setAccount(accountTask.getAccount());
-                    notExistedAccountBadge.setBadge(task.getBadge());
-                    accountBadge = notExistedAccountBadge;
+                    accountBadge = accountBadgeService.createAccountBadge(task.getBadge(), account);
                 }
                 if (StudyTaskType.PRACTICE.equals(task.getStudyType())) {
                     accountBadge.setPractice(accountBadge.getPractice() + mark);
@@ -348,11 +345,7 @@ public class TaskServiceImpl implements TaskService {
         Account currentUser = simpleDao.findById(Account.class, securityService.getCurrentUserId());
         AccountBadge accountBadge = accountBadgeDao.findByBadgeAndAccount(badge, currentUser);
         if (accountBadge == null) {
-            AccountBadge notExistedAccountBadge = new AccountBadge();
-            notExistedAccountBadge.setAccount(currentUser);
-            notExistedAccountBadge.setBadge(badge);
-            accountBadge = notExistedAccountBadge;
-            simpleDao.save(notExistedAccountBadge);
+            accountBadge = accountBadgeService.createAccountBadge(badge, currentUser);
         }
         return badgeMapper.toDto(accountBadge);
     }
@@ -372,6 +365,8 @@ public class TaskServiceImpl implements TaskService {
 
 
     public AccountTask createAccountTask(Account account, Task task) {
+        //TODO refactor
+        //code dublicate
         AccountTask accountTask = new AccountTask();
         TaskStatus taskStatus = createNewStatus(accountTask, INPROGRESS);
         accountTask.setAccount(account);
