@@ -9,6 +9,7 @@ import ru.kpfu.itis.dto.BadgeDto;
 import ru.kpfu.itis.model.AccountBadge;
 import ru.kpfu.itis.model.Badge;
 import ru.kpfu.itis.model.Subject;
+import ru.kpfu.itis.model.enums.BadgeCategory;
 import ru.kpfu.itis.security.SecurityService;
 import ru.kpfu.itis.service.AccountBadgeService;
 
@@ -71,6 +72,7 @@ public class BadgeMapper implements Mapper<Badge, BadgeDto> {
                     badge.getName(), badge.getImage(),
                     badge.getType().name(), badge.getDescription());
         }
+        badgeDto.setIsRare(BadgeCategory.SPECIAL.equals(badge.getType()));
         if (includeTasks) {
             Hibernate.initialize(badge.getTasks());
             badgeDto.setChallenges(badge.getTasks()
