@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 public class AccountProfileMapper {
 
     @Autowired
-    @Qualifier("badgeMapper")
+    @Qualifier("simpleBadgeMapper")
     BadgeMapper badgeMapper;
 
     public AccountProfileDto map(Account account, AccountInfo accountInfo,

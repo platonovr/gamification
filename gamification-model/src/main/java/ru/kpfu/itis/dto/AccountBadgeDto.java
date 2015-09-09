@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.wordnik.swagger.annotations.ApiModel;
 import ru.kpfu.itis.dto.serializer.CustomDoubleSerializer;
+import ru.kpfu.itis.model.enums.BadgeAchievementStatus;
 
 import java.util.Date;
 
@@ -33,6 +34,8 @@ public class AccountBadgeDto {
     private Double progress = 0.0;
 
     private Date date;
+
+    private BadgeAchievementStatus type = BadgeAchievementStatus.PERFORM;
 
     public Long getId() {
         return id;
@@ -88,5 +91,13 @@ public class AccountBadgeDto {
 
     public void setBadgeId(Long badgeId) {
         this.badgeId = badgeId;
+    }
+
+    public BadgeAchievementStatus getType() {
+        return type;
+    }
+
+    public void setType(BadgeAchievementStatus type) {
+        this.type = type;
     }
 }

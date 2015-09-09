@@ -1,6 +1,7 @@
 package ru.kpfu.itis.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
@@ -22,6 +23,7 @@ public class AccountProfileDto extends ResponseDto {
 
     private Double rating;
 
+    @JsonProperty("rating_position")
     private Integer ratingPosition;
 
     public List<BadgeDto> getBadges() {

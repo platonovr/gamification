@@ -25,6 +25,7 @@ public class AccountBadgeMapper implements Mapper<AccountBadge, AccountBadgeDto>
             dto.setBadgeId(accountBadge.getBadge().getId());
             dto.setId(accountBadge.getId());
             dto.setDate(accountBadge.getChangeTime());
+            dto.setType(accountBadge.getAchevementStatus());
             return dto;
         } else {
             return null;
