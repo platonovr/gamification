@@ -1,6 +1,7 @@
 package ru.kpfu.itis.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.wordnik.swagger.annotations.ApiModel;
 
 import java.util.List;
@@ -22,6 +23,9 @@ public class BadgeDto {
     private String category;
 
     private String description;
+
+    @JsonProperty("is_rare")
+    private Boolean isRare = Boolean.FALSE;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<TaskDto> challenges;
@@ -110,5 +114,13 @@ public class BadgeDto {
 
     public void setSubject(SubjectDto subject) {
         this.subject = subject;
+    }
+
+    public Boolean getIsRare() {
+        return isRare;
+    }
+
+    public void setIsRare(Boolean isRare) {
+        this.isRare = isRare;
     }
 }
