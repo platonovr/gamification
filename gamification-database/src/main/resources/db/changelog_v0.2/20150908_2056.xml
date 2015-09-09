@@ -7,8 +7,25 @@
                    logicalFilePath="20150908_2056.xml">
 
     <changeSet id="20150908_2056" author="rfatkhullin" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <dbms type="h2"/>
+            </not>
+        </preConditions>
         <sql>
-            ALTER SEQUENCE badge_badge_id_seq RESTART WITH 100;
+            ALTER SEQUENCE IF EXISTS account_account_id_seq RESTART WITH 500;
+            ALTER SEQUENCE IF EXISTS account_info_account_info_id_seq RESTART WITH 500;
+            ALTER SEQUENCE IF EXISTS task_category_task_category_id_seq RESTART WITH 500;
+            ALTER SEQUENCE IF EXISTS task_task_id_seq RESTART WITH 500;
+            ALTER SEQUENCE IF EXISTS account_task_account_task_id_seq RESTART WITH 500;
+            ALTER SEQUENCE IF EXISTS task_status_task_status_id_seq RESTART WITH 500;
+            ALTER SEQUENCE IF EXISTS badge_badge_id_seq RESTART WITH 500;
+            ALTER SEQUENCE IF EXISTS account_badge_account_badge_id_seq RESTART WITH 500;
+            ALTER SEQUENCE IF EXISTS academic_group_group_id_seq RESTART WITH 500;
+            ALTER SEQUENCE IF EXISTS activity_activity_id_seq RESTART WITH 500;
+            ALTER SEQUENCE IF EXISTS faculty_faculty_id_seq RESTART WITH 500;
+            ALTER SEQUENCE IF EXISTS subject_subject_id_seq RESTART WITH 500;
+            ALTER SEQUENCE IF EXISTS study_course_study_course_id_seq RESTART WITH 500;
         </sql>
     </changeSet>
 
