@@ -39,6 +39,16 @@ public class AccountBadgeServiceImpl implements AccountBadgeService {
         return accountBadgeDao.findByBadgeAndAccount(badge, account);
     }
 
+    @Override
+    @Transactional
+    public AccountBadge createAccountBadge(Badge badge, Account currentUser) {
+        AccountBadge notExistedAccountBadge = new AccountBadge();
+        notExistedAccountBadge.setAccount(currentUser);
+        notExistedAccountBadge.setBadge(badge);
+        simpleDao.save(notExistedAccountBadge);
+        return notExistedAccountBadge;
+    }
+
     @Transactional
     @Override
     public void saveOrUpdate(AccountBadge accountBadge) {

@@ -3,11 +3,13 @@ package ru.kpfu.itis.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.kpfu.itis.BadgeConstants;
 import ru.kpfu.itis.dao.AccountDao;
 import ru.kpfu.itis.dao.SimpleDao;
 import ru.kpfu.itis.dto.AccountProfileDto;
 import ru.kpfu.itis.mapper.AccountProfileMapper;
 import ru.kpfu.itis.model.*;
+import ru.kpfu.itis.model.enums.BadgeAchievementStatus;
 import ru.kpfu.itis.model.enums.Role;
 import ru.kpfu.itis.service.*;
 import ru.kpfu.jbl.auth.domain.AuthUser;
@@ -64,6 +66,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    @Transactional
     public AuthUser findUserByLogin(String s) {
         Account account = accountDao.findByLogin(s);
         if (account == null) {
@@ -75,7 +78,21 @@ public class AccountServiceImpl implements AccountService {
         if (account == null) {
             return null;
         }
+        assignAuthBadge(account);
         return new SimpleAuthUser(account);
+    }
+
+    private void assignAuthBadge(Account account) {
+        Badge authBadge = simpleDao.findById(Badge.class, BadgeConstants.AUTH_BADGE_ID);
+        if (authBadge == null) {
+            return;
+        }
+        AccountBadge accountBadge = accountBadgeService.findByBadgeAndAccount(authBadge, account);
+        if (accountBadge == null) {
+            accountBadge = accountBadgeService.createAccountBadge(authBadge, account);
+        }
+        accountBadge.setAchevementStatus(BadgeAchievementStatus.COMPLETE);
+        simpleDao.save(accountBadge);
     }
 
     /**
