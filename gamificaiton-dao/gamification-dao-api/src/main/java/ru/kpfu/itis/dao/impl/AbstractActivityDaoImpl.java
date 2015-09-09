@@ -36,7 +36,7 @@ public abstract class AbstractActivityDaoImpl extends AbstractGenericDao impleme
             }
             criteria = criteria.addOrder(Order.desc("id"));
             return (List<Activity>) criteria
-                    .setMaxResults(3)
+                    .setMaxResults(15)
                     .list();
         });
     }
