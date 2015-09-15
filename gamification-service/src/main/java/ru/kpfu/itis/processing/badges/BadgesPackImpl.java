@@ -3,9 +3,7 @@ package ru.kpfu.itis.processing.badges;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.kpfu.itis.BadgeConstants;
-import ru.kpfu.itis.processing.badges.impl.AuthBadgeChecker;
-import ru.kpfu.itis.processing.badges.impl.Badge10TaskEndChecker;
-import ru.kpfu.itis.processing.badges.impl.Badge5TaskEndChecker;
+import ru.kpfu.itis.processing.badges.impl.*;
 
 import javax.annotation.PostConstruct;
 import java.util.HashMap;
@@ -28,6 +26,12 @@ public class BadgesPackImpl implements BadgesPack {
     @Autowired
     Badge5TaskEndChecker badge5TaskEndChecker;
 
+    @Autowired
+    FirstNonStudyTaskChecker firstNonStudyTaskChecker;
+
+    @Autowired
+    FirstStudyTaskChecker firstStudyTaskChecker;
+
 
     @PostConstruct
     public void postConstruct() {
@@ -35,6 +39,8 @@ public class BadgesPackImpl implements BadgesPack {
         badgeMap.put(BadgeConstants.AUTH_BADGE_ID, authBadgeChecker);
         badgeMap.put(BadgeConstants.BADGE_10_TASK_END, badge10TaskEndChecker);
         badgeMap.put(BadgeConstants.BADGE_5_TASK_END, badge5TaskEndChecker);
+        badgeMap.put(BadgeConstants.FIRST_NONSTUDY_BADGE, firstNonStudyTaskChecker);
+        badgeMap.put(BadgeConstants.FIRST_STUDY_BADGE, firstStudyTaskChecker);
     }
 
 

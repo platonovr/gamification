@@ -33,8 +33,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpStatus.*;
-import static ru.kpfu.itis.BadgeConstants.BADGE_10_TASK_END;
-import static ru.kpfu.itis.BadgeConstants.BADGE_5_TASK_END;
+import static ru.kpfu.itis.BadgeConstants.*;
 import static ru.kpfu.itis.model.TaskStatus.TaskStatusType.*;
 
 /**
@@ -322,6 +321,8 @@ public class TaskServiceImpl implements TaskService {
             List<AbstractBadgeChecker> badgeCheckers = new BadgesListBuilder(badgePack)
                     .get(BADGE_5_TASK_END)
                     .get(BADGE_10_TASK_END)
+                    .get(FIRST_NONSTUDY_BADGE)
+                    .get(FIRST_STUDY_BADGE)
                     .build();
             accountBadgeService.applyBadges(badgeCheckers, account);
             return new ResponseEntity<>(OK);
