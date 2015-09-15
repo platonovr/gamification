@@ -20,11 +20,12 @@ import ru.kpfu.itis.mapper.BadgeMapper;
 import ru.kpfu.itis.mapper.TaskInfoMapper;
 import ru.kpfu.itis.mapper.TaskMapper;
 import ru.kpfu.itis.model.*;
+import ru.kpfu.itis.model.TaskStatus;
 import ru.kpfu.itis.model.classifier.TaskCategory;
-import ru.kpfu.itis.model.enums.ActivityType;
-import ru.kpfu.itis.model.enums.BadgeAchievementStatus;
-import ru.kpfu.itis.model.enums.EntityType;
-import ru.kpfu.itis.model.enums.StudyTaskType;
+import ru.kpfu.itis.model.enums.*;
+import ru.kpfu.itis.processing.badges.AbstractBadgeChecker;
+import ru.kpfu.itis.processing.badges.BadgesListBuilder;
+import ru.kpfu.itis.processing.badges.BadgesPack;
 import ru.kpfu.itis.security.SecurityService;
 import ru.kpfu.itis.service.*;
 
@@ -32,6 +33,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpStatus.*;
+import static ru.kpfu.itis.BadgeConstants.BADGE_10_TASK_END;
+import static ru.kpfu.itis.BadgeConstants.BADGE_5_TASK_END;
 import static ru.kpfu.itis.model.TaskStatus.TaskStatusType.*;
 
 /**
@@ -91,6 +94,8 @@ public class TaskServiceImpl implements TaskService {
 
     @Autowired
     private RatingDao ratingDao;
+    @Autowired
+    private BadgesPack badgePack;
 
     @Override
     @Transactional
@@ -314,6 +319,11 @@ public class TaskServiceImpl implements TaskService {
                 ratingService.createUserRating(accountInfo, Double.valueOf(mark));
             }
             ratingService.recalculateRating(accountInfo);
+            List<AbstractBadgeChecker> badgeCheckers = new BadgesListBuilder(badgePack)
+                    .get(BADGE_5_TASK_END)
+                    .get(BADGE_10_TASK_END)
+                    .build();
+            accountBadgeService.applyBadges(badgeCheckers, account);
             return new ResponseEntity<>(OK);
         } else {
             return new ResponseEntity<>(new ResponseDto(Responses.TASK_NOT_FOUND), NOT_FOUND);

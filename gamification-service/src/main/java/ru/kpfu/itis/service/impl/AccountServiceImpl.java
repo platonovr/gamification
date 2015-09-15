@@ -3,14 +3,16 @@ package ru.kpfu.itis.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.kpfu.itis.BadgeConstants;
 import ru.kpfu.itis.dao.AccountDao;
 import ru.kpfu.itis.dao.SimpleDao;
 import ru.kpfu.itis.dto.AccountProfileDto;
 import ru.kpfu.itis.mapper.AccountProfileMapper;
 import ru.kpfu.itis.model.*;
-import ru.kpfu.itis.model.enums.BadgeAchievementStatus;
 import ru.kpfu.itis.model.enums.Role;
+import ru.kpfu.itis.processing.badges.AbstractBadgeChecker;
+import ru.kpfu.itis.processing.badges.BadgesListBuilder;
+import ru.kpfu.itis.processing.badges.BadgesPack;
+import ru.kpfu.itis.security.SecurityService;
 import ru.kpfu.itis.service.*;
 import ru.kpfu.jbl.auth.domain.AuthUser;
 import ru.kpfu.jbl.auth.provider.encoders.PasswordEncoder;
@@ -20,6 +22,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import static java.util.Optional.ofNullable;
+import static ru.kpfu.itis.BadgeConstants.AUTH_BADGE_ID;
 
 /**
  * Created by Rigen on 22.06.15.
@@ -39,13 +42,21 @@ public class AccountServiceImpl implements AccountService {
 
     @Autowired
     private AccountInfoService accountInfoService;
+
     @Autowired
     private AccountBadgeService accountBadgeService;
+
     @Autowired
     private RatingService ratingService;
 
     @Autowired
     private AccountProfileMapper accountProfileMapper;
+
+    @Autowired
+    private SecurityService securityService;
+
+    @Autowired
+    private BadgesPack badgesPack;
 
     @Transactional
     @Override
@@ -78,21 +89,7 @@ public class AccountServiceImpl implements AccountService {
         if (account == null) {
             return null;
         }
-        assignAuthBadge(account);
         return new SimpleAuthUser(account);
-    }
-
-    private void assignAuthBadge(Account account) {
-        Badge authBadge = simpleDao.findById(Badge.class, BadgeConstants.AUTH_BADGE_ID);
-        if (authBadge == null) {
-            return;
-        }
-        AccountBadge accountBadge = accountBadgeService.findByBadgeAndAccount(authBadge, account);
-        if (accountBadge == null) {
-            accountBadge = accountBadgeService.createAccountBadge(authBadge, account);
-        }
-        accountBadge.setAchevementStatus(BadgeAchievementStatus.COMPLETE);
-        simpleDao.save(accountBadge);
     }
 
     /**
@@ -169,5 +166,13 @@ public class AccountServiceImpl implements AccountService {
             account = simpleDao.findById(Account.class, id);
         }
         return account;
+    }
+
+    @Override
+    public void afterLoginSuccess() {
+        List<AbstractBadgeChecker> badgeCheckers = new BadgesListBuilder(badgesPack)
+                .get(AUTH_BADGE_ID)
+                .build();
+        accountBadgeService.applyBadges(badgeCheckers, securityService.getCurrentUser());
     }
 }

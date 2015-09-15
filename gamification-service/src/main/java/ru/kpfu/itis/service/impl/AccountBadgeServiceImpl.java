@@ -9,6 +9,7 @@ import ru.kpfu.itis.dao.SimpleDao;
 import ru.kpfu.itis.model.Account;
 import ru.kpfu.itis.model.AccountBadge;
 import ru.kpfu.itis.model.Badge;
+import ru.kpfu.itis.processing.badges.AbstractBadgeChecker;
 import ru.kpfu.itis.service.AccountBadgeService;
 
 import java.util.List;
@@ -53,5 +54,13 @@ public class AccountBadgeServiceImpl implements AccountBadgeService {
     @Override
     public void saveOrUpdate(AccountBadge accountBadge) {
         simpleDao.saveOrUpdate(accountBadge);
+    }
+
+    @Override
+    @Transactional
+    public void applyBadges(List<AbstractBadgeChecker> badgeCheckers, Account account) {
+        for (AbstractBadgeChecker badgeChecker : badgeCheckers) {
+            badgeChecker.assignBadgeFor(account);
+        }
     }
 }

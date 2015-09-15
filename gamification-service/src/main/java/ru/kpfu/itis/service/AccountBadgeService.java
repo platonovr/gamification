@@ -4,6 +4,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.kpfu.itis.model.Account;
 import ru.kpfu.itis.model.AccountBadge;
 import ru.kpfu.itis.model.Badge;
+import ru.kpfu.itis.processing.badges.AbstractBadgeChecker;
 
 import java.util.List;
 
@@ -20,4 +21,6 @@ public interface AccountBadgeService {
     AccountBadge createAccountBadge(Badge badge, Account currentUser);
 
     void saveOrUpdate(AccountBadge accountBadge);
+
+    void applyBadges(List<AbstractBadgeChecker> badgeCheckers, Account account);
 }

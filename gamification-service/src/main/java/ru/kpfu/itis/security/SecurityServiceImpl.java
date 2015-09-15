@@ -1,6 +1,7 @@
 package ru.kpfu.itis.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import ru.kpfu.itis.dao.SimpleDao;
 import ru.kpfu.itis.model.Account;
@@ -28,6 +29,9 @@ public class SecurityServiceImpl implements SecurityService {
             return null;
         }
         SimpleAuthUser currentUser = securityContextHolderService.getCurrentUser();
+        if (currentUser == null) {
+            currentUser = (SimpleAuthUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        }
         return ofNullable(simpleDao.findById(Account.class, currentUser.getId()))
                 .orElse(null);
     }

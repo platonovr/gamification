@@ -6,4 +6,6 @@ package ru.kpfu.itis;
 public interface BadgeConstants {
 
     Long AUTH_BADGE_ID = 500l;
+    Long BADGE_5_TASK_END = 503l;
+    Long BADGE_10_TASK_END = 504l;
 }
