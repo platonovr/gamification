@@ -3,6 +3,7 @@ package ru.kpfu.itis.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.kpfu.itis.dao.AcademicGroupDao;
 import ru.kpfu.itis.dao.AccountDao;
 import ru.kpfu.itis.dao.SimpleDao;
 import ru.kpfu.itis.dto.AccountProfileDto;
@@ -35,6 +36,9 @@ public class AccountServiceImpl implements AccountService {
 
     @Autowired
     private SimpleDao simpleDao;
+
+    @Autowired
+    AcademicGroupDao academicGroupDao;
 
     //only with web module
     @Autowired(required = false)
@@ -155,17 +159,33 @@ public class AccountServiceImpl implements AccountService {
         }
         Account account = ofNullable(simpleDao.findById(Account.class, userResponse.getId())).orElse(accountDao.findByLogin(userResponse.getLogin()));
         if (account == null) {
-            //TODO proper save user
             account = new Account();
             account.setLogin(userResponse.getLogin());
             account.setRole(Role.valueOf(userResponse.getRole()));
             account.setPassword("");
             AccountInfo accountInfo = new AccountInfo();
-            accountInfo.setFirstName(userResponse.getName());
+            AcademicGroup academicGroup = academicGroupDao.findByGroupNumber(userResponse.getAcademicGroupName());
+            if (academicGroup != null) {
+                accountInfo.setGroup(academicGroup);
+            }
+            if (userResponse.getEntranceYear() != null) {
+                accountInfo.setEntranceYear(userResponse.getEntranceYear().intValue());
+            }
+            String name = userResponse.getName();
+            String[] fio = name.split(" ");
+            accountInfo.setFirstName(fio[0]);
+            if (fio.length > 1) {
+                accountInfo.setLastName(fio[1]);
+            }
+            if (fio.length > 2) {
+                accountInfo.setMiddleName(fio[2]);
+            }
             Serializable id = simpleDao.save(account);
             account = simpleDao.findById(Account.class, id);
+            accountInfo.setAccount(account);
+            simpleDao.save(accountInfo);
         }
-        return account;
+        return new SimpleAuthUser(account);
     }
 
     @Override

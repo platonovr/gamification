@@ -20,15 +20,10 @@ public abstract class AbstractAccountDaoImpl extends AbstractGenericDao implemen
 
     @Override
     public Account findByLogin(String login) {
-        return getHibernateTemplate().execute(new HibernateCallback<Account>() {
-            @Override
-            public Account doInHibernate(Session session) throws HibernateException {
-                return (Account) session.createQuery("from Account a" +
-                        " where a.login = :login")
-                        .setParameter("login", login)
-                        .uniqueResult();
-            }
-        });
+        return getHibernateTemplate().execute(session -> (Account) session.createQuery("from Account a" +
+                " where a.login = :login")
+                .setParameter("login", login)
+                .uniqueResult());
     }
 
     @Override
