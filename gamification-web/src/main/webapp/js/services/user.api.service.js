@@ -11,7 +11,8 @@ function UserApiService($http, ApiService, CONSTANTS) {
     return {
         loginUser: loginUser,
         register: register,
-        getUser: getUser
+        getUser: getUser,
+        getCurrentUserInfo: getCurrentUserInfo
     };
 
     function loginUser(param) {
@@ -24,5 +25,9 @@ function UserApiService($http, ApiService, CONSTANTS) {
 
     function getUser(token) {
         return $http.get(CONSTANTS.API_URI_PREFIX + '/user/current', {params: {token: token}})
+    }
+
+    function getCurrentUserInfo(token) {
+        return $http.get(CONSTANTS.API_URI_PREFIX + '/user/currentUserInfo', {params: {token: token}})
     }
 }

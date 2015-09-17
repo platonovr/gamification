@@ -1,7 +1,4 @@
 /**
- * Created by ElessarST on 14.04.2015.
- */
-/**
  * Created by vladislav on 10.04.2015.
  */
 angular.module('gamificationApp')

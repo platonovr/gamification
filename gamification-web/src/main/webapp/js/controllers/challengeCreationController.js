@@ -1,10 +1,14 @@
 angular.module('gamificationApp').controller('ChallengeCreationController',
-    ['$scope', '$location', '$sce', 'CONSTANTS', 'TaskService', '$filter',
-        function ($scope, $location, $sce, CONSTANTS, TaskService, $filter) {
+    ['$scope', '$location', '$sce', 'CONSTANTS', 'TaskService', '$filter', 'UserApiService', 'AuthInfo',
+        function ($scope, $location, $sce, CONSTANTS, TaskService, $filter, UserApiService, AuthInfo) {
 
             $scope.trustAsHtml = function (value) {
                 return $sce.trustAsHtml(value);
             };
+
+            UserApiService.getCurrentUserInfo(AuthInfo.getToken()).success(function (data) {
+                $scope.currentUserRole = data.role;
+            });
 
 
             $scope.newTask = {
