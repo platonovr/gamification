@@ -26,6 +26,7 @@ public class AccountInfoDto {
     private String group;
 
     @JsonInclude(value = JsonInclude.Include.NON_NULL)
+    @JsonProperty("time_back")
     private String timeBack;
 
     public AccountInfoDto() {
