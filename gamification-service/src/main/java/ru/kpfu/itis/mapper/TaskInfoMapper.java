@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import ru.kpfu.itis.dto.AccountInfoDto;
 import ru.kpfu.itis.dto.TaskInfoDto;
 import ru.kpfu.itis.model.*;
+import ru.kpfu.itis.util.Utils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -61,7 +62,9 @@ public class TaskInfoMapper implements Mapper<Task, TaskInfoDto> {
                             if (account != null) {
                                 AccountInfo accountInfo = account.getAccountInfo();
                                 if (accountInfo != null) {
-                                    performers.add(accountInfoMapper.toDto(accountInfo));
+                                    AccountInfoDto accountInfoDto = accountInfoMapper.toDto(accountInfo);
+                                    accountInfoDto.setTimeBack(Utils.timeToString(accountTask.getChangeTime()));
+                                    performers.add(accountInfoDto);
                                 }
                                 if (isAdmin) {
                                     taskInfoDto.getStatusMap().put(account.getId(), new TaskInfoDto.StatusMark(taskStatus.getType().name(), accountTask.getMark()));
