@@ -2,6 +2,7 @@ package ru.kpfu.itis.service;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -17,4 +18,6 @@ public interface FileService {
     String uploadTaskAttachment(MultipartFile file, Long taskId) throws IOException;
 
     List<String> getTaskAttachmentsNames(Long taskId);
+
+    File[] getTaskFiles(Long taskId);
 }
