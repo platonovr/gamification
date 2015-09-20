@@ -25,6 +25,9 @@ public class AccountInfoDto {
 
     private String group;
 
+    @JsonInclude(value = JsonInclude.Include.NON_NULL)
+    private String timeBack;
+
     public AccountInfoDto() {
     }
 
@@ -81,5 +84,13 @@ public class AccountInfoDto {
 
     public void setGroup(String group) {
         this.group = group;
+    }
+
+    public String getTimeBack() {
+        return timeBack;
+    }
+
+    public void setTimeBack(String timeBack) {
+        this.timeBack = timeBack;
     }
 }

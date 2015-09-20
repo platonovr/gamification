@@ -287,6 +287,7 @@ public class TaskServiceImpl implements TaskService {
             Hibernate.initialize(accountTask.getTaskHistory());
             setNewStatus(accountTask, COMPLETED);
             accountTask.setMark(mark);
+            accountTask.setChangeTime(new Date());
             simpleDao.save(accountTask);
             Task task = accountTask.getTask();
             Account account = accountTask.getAccount();
