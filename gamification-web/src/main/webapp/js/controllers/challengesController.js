@@ -11,6 +11,12 @@ angular.module('gamificationApp').controller('ChallengesController',
         $scope.queryString = null;
         $scope.autoLoadingDisabled = false;
         $scope.isLoading = false;
+        $scope.students = [];
+
+
+        $scope.trustAsHtml = function (value) {
+            return $sce.trustAsHtml(value);
+        };
 
         $scope.loadMore = function () {
             if (!$scope.isLoading) {
@@ -49,6 +55,21 @@ angular.module('gamificationApp').controller('ChallengesController',
             } else {
                 $scope.mark_dialog.mark = 0;
             }
+            addMarkDialogBox.dialog("open");
+            return false;
+        };
+
+        $scope.showNewPerformerChangeBlock = function (challenge) {
+            $scope.mark_dialog.challenge = challenge;
+            $scope.mark_dialog.performer = null;
+            $scope.mark_dialog.mark = 0;
+            var groups = [];
+            for (var i = 0; i < challenge.groups.length; i++) {
+                groups[i] = challenge.groups[i].id;
+            }
+            TaskService.getStudentsByGroups(groups).success(function (data) {
+                $scope.students = data;
+            });
             addMarkDialogBox.dialog("open");
             return false;
         };

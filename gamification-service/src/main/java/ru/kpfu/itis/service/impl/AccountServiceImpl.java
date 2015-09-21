@@ -82,6 +82,12 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     @Transactional
+    public List<Account> getStudentsByGroups(Long[] ids) {
+        return accountDao.getAccountsByRoleAndGroups(Role.STUDENT, ids);
+    }
+
+    @Override
+    @Transactional
     public AuthUser findUserByLogin(String s) {
         Account account = accountDao.findByLogin(s);
         if (account == null) {

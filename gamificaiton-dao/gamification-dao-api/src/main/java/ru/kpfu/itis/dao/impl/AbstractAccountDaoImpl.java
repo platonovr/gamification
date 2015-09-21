@@ -3,10 +3,12 @@ package ru.kpfu.itis.dao.impl;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.orm.hibernate4.HibernateCallback;
 import ru.kpfu.itis.dao.AccountDao;
 import ru.kpfu.itis.dao.base.AbstractGenericDao;
 import ru.kpfu.itis.model.Account;
+import ru.kpfu.itis.model.AccountBadge;
 import ru.kpfu.itis.model.enums.Role;
 
 import java.util.List;
@@ -45,5 +47,15 @@ public abstract class AbstractAccountDaoImpl extends AbstractGenericDao implemen
                     }
                 }
         );
+    }
+
+    @Override
+    public List<Account> getAccountsByRoleAndGroups(Role type, Long[] ids) {
+        return getHibernateTemplate().execute((aSession) ->
+                (List<Account>) aSession.createCriteria(Account.class)
+                        .add(Restrictions.eq("role", type))
+                        .createAlias("accountInfo", "info")
+                        .add(Restrictions.in("info.group.id", ids))
+                        .add(Restrictions.isNull("finishTime")).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY).list());
     }
 }
