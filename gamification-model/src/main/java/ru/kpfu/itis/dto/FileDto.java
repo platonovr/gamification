@@ -11,6 +11,8 @@ public class FileDto {
 
     private byte[] data;
 
+    private String URL;
+
     public String getName() {
         return name;
     }
@@ -33,5 +35,13 @@ public class FileDto {
 
     public void setData(byte[] data) {
         this.data = data;
+    }
+
+    public String getURL() {
+        return URL;
+    }
+
+    public void setURL(String URL) {
+        this.URL = URL;
     }
 }

@@ -59,7 +59,7 @@ public class TaskController {
         if (taskAvailabilityError != null) {
             return new ResponseEntity<>(taskAvailabilityError, FORBIDDEN);
         }
-        return new ResponseEntity<>(taskService.findById(taskId), OK);
+        return new ResponseEntity<>(taskService.getTask(taskId), OK);
     }
 
     @ApiOperation("get student's tasks")

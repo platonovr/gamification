@@ -1,5 +1,6 @@
 package ru.kpfu.itis.service.impl;
 
+import liquibase.util.file.FilenameUtils;
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.time.DateUtils;
 import org.hibernate.Hibernate;
@@ -20,15 +21,18 @@ import ru.kpfu.itis.mapper.BadgeMapper;
 import ru.kpfu.itis.mapper.TaskInfoMapper;
 import ru.kpfu.itis.mapper.TaskMapper;
 import ru.kpfu.itis.model.*;
-import ru.kpfu.itis.model.TaskStatus;
 import ru.kpfu.itis.model.classifier.TaskCategory;
-import ru.kpfu.itis.model.enums.*;
+import ru.kpfu.itis.model.enums.ActivityType;
+import ru.kpfu.itis.model.enums.BadgeAchievementStatus;
+import ru.kpfu.itis.model.enums.EntityType;
+import ru.kpfu.itis.model.enums.StudyTaskType;
 import ru.kpfu.itis.processing.badges.AbstractBadgeChecker;
 import ru.kpfu.itis.processing.badges.BadgesListBuilder;
 import ru.kpfu.itis.processing.badges.BadgesPack;
 import ru.kpfu.itis.security.SecurityService;
 import ru.kpfu.itis.service.*;
 
+import java.io.File;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -95,6 +99,11 @@ public class TaskServiceImpl implements TaskService {
     private RatingDao ratingDao;
     @Autowired
     private BadgesPack badgePack;
+
+
+    @Autowired
+    private FileService fileService;
+
 
     @Override
     @Transactional
@@ -213,6 +222,24 @@ public class TaskServiceImpl implements TaskService {
     public TaskInfoDto findById(Long taskId) {
         Task task = taskDao.findById(taskId);
         return studentTaskInfoMapper.toDto(task);
+    }
+
+    @Override
+    @Transactional
+    public TaskInfoDto getTask(Long taskId) {
+        Task task = taskDao.findById(taskId);
+        TaskInfoDto dto = studentTaskInfoMapper.toDto(task);
+        File[] taskFiles = fileService.getTaskFiles(taskId);
+        if (Objects.nonNull(taskFiles) && taskFiles.length > 0) {
+            for (File taskFile : taskFiles) {
+                FileDto fileDto = new FileDto();
+                fileDto.setExtension(FilenameUtils.getExtension(taskFile.getName()));
+                fileDto.setURL(taskFile.getAbsolutePath() + taskFile.getName());
+                dto.getFiles().add(fileDto);
+            }
+
+        }
+        return dto;
     }
 
     @Override

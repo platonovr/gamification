@@ -34,6 +34,8 @@ public interface TaskService {
 
     TaskInfoDto findById(Long taskId);
 
+    TaskInfoDto getTask(Long taskId);
+
     /**
      * Get available tasks (if status null) or tasks with specified status
      *
