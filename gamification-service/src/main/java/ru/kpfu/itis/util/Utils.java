@@ -11,10 +11,10 @@ import java.util.*;
  */
 public class Utils {
     public static final long YEAR = 31536000000l;
-    public static final long MONTH = YEAR / 12;
-    public static final long DAY = 24 * 60 * 60 * 100l;
-    public static final long HOUR = 60 * 60 * 100l;
-    public static final long MINUTE = 60 * 100l;
+    public static final long MONTH = 2629743830l;
+    public static final long DAY = 24 * 60 * 60 * 1000l;
+    public static final long HOUR = 60 * 60 * 1000l;
+    public static final long MINUTE = 60 * 1000l;
 
     /**
      * https://github.com/brebvix/yii2-date/blob/master/DateWidget.php
@@ -41,7 +41,7 @@ public class Utils {
         String result;
         if (last == 1 && numeric != 11) {
             result = strings.get(0);
-        } else if ((last == 2 || last == 3 || last == 4) && (numeric != 12 && numeric != 12 && numeric != 14)) {
+        } else if ((last == 2 || last == 3 || last == 4) && (numeric != 11 && numeric != 12 && numeric != 14)) {
             result = strings.get(1);
         } else {
             result = strings.get(2);
@@ -50,7 +50,7 @@ public class Utils {
     }
 
     public static void main(String[] args) throws ParseException {
-        System.out.println(timeToString(new SimpleDateFormat("dd/MM/yyyy").parse("12/12/2000")));
+        System.out.println(timeToString(new SimpleDateFormat("dd/MM/yyyy").parse("12/07/2015")));
     }
 
 }
