@@ -1,6 +1,6 @@
 package ru.kpfu.itis.service.impl;
 
-import liquibase.util.file.FilenameUtils;
+import com.google.common.base.Joiner;
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.time.DateUtils;
 import org.hibernate.Hibernate;
@@ -18,6 +18,7 @@ import ru.kpfu.itis.dao.*;
 import ru.kpfu.itis.dto.*;
 import ru.kpfu.itis.dto.enums.Responses;
 import ru.kpfu.itis.mapper.BadgeMapper;
+import ru.kpfu.itis.mapper.FileFileDtoMapper;
 import ru.kpfu.itis.mapper.TaskInfoMapper;
 import ru.kpfu.itis.mapper.TaskMapper;
 import ru.kpfu.itis.model.*;
@@ -48,6 +49,10 @@ public class TaskServiceImpl implements TaskService {
 
 
     private static final Logger LOG = LoggerFactory.getLogger(TaskService.class);
+
+    private String base = "game.jblab-kzn.ru";
+
+    private String attachmentsPrefix = "attachments";
 
     @Autowired
     private TaskDao taskDao;
@@ -232,9 +237,10 @@ public class TaskServiceImpl implements TaskService {
         File[] taskFiles = fileService.getTaskFiles(taskId);
         if (Objects.nonNull(taskFiles) && taskFiles.length > 0) {
             for (File taskFile : taskFiles) {
-                FileDto fileDto = new FileDto();
-                fileDto.setExtension(FilenameUtils.getExtension(taskFile.getName()));
-                fileDto.setURL(taskFile.getAbsolutePath() + taskFile.getName());
+                FileFileDtoMapper fileDtoMapper = new FileFileDtoMapper();
+                FileDto fileDto = fileDtoMapper.apply(taskFile);
+                fileDto.setName(fileDto.getName());
+                fileDto.setURL(Joiner.on("/").join(base, attachmentsPrefix, taskId, fileDto.getURL()));
                 dto.getFiles().add(fileDto);
             }
 
