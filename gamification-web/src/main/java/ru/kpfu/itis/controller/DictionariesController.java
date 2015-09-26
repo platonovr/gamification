@@ -49,7 +49,7 @@ public class DictionariesController {
 
     @RequestMapping(value = "/students/{groups}", method = RequestMethod.GET)
     @ResponseBody
-    public List<AccountDto> getStudentsByGroups(@PathVariable Long[] groups) {
+    public List<AccountDto> getStudentsByGroups(@PathVariable String[] groups) {
         List<Account> students = accountService.getStudentsByGroups(groups);
         return students.stream().map(new AccountDtoMapper()).collect(Collectors.toList());
     }

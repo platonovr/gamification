@@ -65,11 +65,17 @@ angular.module('gamificationApp').controller('ChallengesController',
             $scope.mark_dialog.mark = 0;
             var groups = [];
             for (var i = 0; i < challenge.groups.length; i++) {
-                groups[i] = challenge.groups[i].id;
+                groups[i] = challenge.groups[i];
             }
-            TaskService.getStudentsByGroups(groups).success(function (data) {
-                $scope.students = data;
-            });
+            if (groups.length != 0) {
+                TaskService.getStudentsByGroups(groups).success(function (data) {
+                    $scope.students = data;
+                });
+            } else {
+                TaskService.getPerformers().success(function (data) {
+                    $scope.students = data;
+                });
+            }
             addMarkDialogBox.dialog("open");
             return false;
         };

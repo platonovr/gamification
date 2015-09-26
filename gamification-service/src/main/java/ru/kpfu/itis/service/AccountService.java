@@ -17,7 +17,7 @@ public interface AccountService extends UserServiceAuth {
 
     List<Account> getStudents();
 
-    List<Account> getStudentsByGroups(Long[] ids);
+    List<Account> getStudentsByGroups(String[] groups);
 
     Account createAnonymousUser(String login);
 

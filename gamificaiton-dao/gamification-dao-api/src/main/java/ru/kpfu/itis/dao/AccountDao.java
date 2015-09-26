@@ -14,5 +14,5 @@ public interface AccountDao {
 
     List<Account> getAccountsByRole(Role type);
 
-    List<Account> getAccountsByRoleAndGroups(Role type, Long[] ids);
+    List<Account> getAccountsByRoleAndGroups(Role type, String[] groups);
 }

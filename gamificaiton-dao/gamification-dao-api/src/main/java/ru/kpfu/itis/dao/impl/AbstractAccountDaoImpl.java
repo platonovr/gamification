@@ -50,12 +50,13 @@ public abstract class AbstractAccountDaoImpl extends AbstractGenericDao implemen
     }
 
     @Override
-    public List<Account> getAccountsByRoleAndGroups(Role type, Long[] ids) {
+    public List<Account> getAccountsByRoleAndGroups(Role type, String[] groups) {
         return getHibernateTemplate().execute((aSession) ->
                 (List<Account>) aSession.createCriteria(Account.class)
                         .add(Restrictions.eq("role", type))
                         .createAlias("accountInfo", "info")
-                        .add(Restrictions.in("info.group.id", ids))
+                        .createAlias("info.group", "group")
+                        .add(Restrictions.in("group.name", groups))
                         .add(Restrictions.isNull("finishTime")).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY).list());
     }
 }
