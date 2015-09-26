@@ -57,7 +57,7 @@ public class TaskInfoMapper implements Mapper<Task, TaskInfoDto> {
                 for (AccountTask accountTask : taskAccounts) {
                     TaskStatus taskStatus = accountTask.getTaskStatus();
                     if (taskStatus != null) {
-                        if (taskStatus.getType().equals(TaskStatus.TaskStatusType.INPROGRESS) || isAdmin) {
+                        if (taskStatus.getType().equals(TaskStatus.TaskStatusType.COMPLETED) || isAdmin) {
                             Account account = accountTask.getAccount();
                             if (account != null) {
                                 AccountInfo accountInfo = account.getAccountInfo();
