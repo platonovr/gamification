@@ -1,11 +1,12 @@
 angular.module('gamificationApp').controller('ChallengesController',
-    ['$scope', '$window', 'CONSTANTS', 'TaskService', function ($scope, $window, CONSTANTS, TaskService) {
+    ['$scope', '$sce', '$window', 'CONSTANTS', 'TaskService', function ($scope, $sce, $window, CONSTANTS, TaskService) {
         var maxResult = 10;
         $scope.challenges = [];
         $scope.showedBlocks = [];
         $scope.mark_dialog = {
             challenge: null,
             performer: null,
+            temp_performer: null,
             mark: 0
         };
         $scope.queryString = null;
@@ -50,6 +51,7 @@ angular.module('gamificationApp').controller('ChallengesController',
             //}
             $scope.mark_dialog.challenge = challenge;
             $scope.mark_dialog.performer = performer;
+            dialog_model.temp_performer = null;
             if (challenge.status_map[performer.id]) {
                 $scope.mark_dialog.mark = challenge.status_map[performer.id].mark;
             } else {
@@ -62,14 +64,16 @@ angular.module('gamificationApp').controller('ChallengesController',
         $scope.showNewPerformerChangeBlock = function (challenge) {
             $scope.mark_dialog.challenge = challenge;
             $scope.mark_dialog.performer = null;
+            $scope.mark_dialog.temp_performer = null;
             $scope.mark_dialog.mark = 0;
             var groups = [];
             for (var i = 0; i < challenge.groups.length; i++) {
                 groups[i] = challenge.groups[i];
             }
+
             if (groups.length != 0) {
                 TaskService.getStudentsByGroups(groups).success(function (data) {
-                    $scope.students = data;
+                    $scope.students = removeArray(data, challenge.users);
                 });
             } else {
                 TaskService.getPerformers().success(function (data) {
@@ -94,16 +98,61 @@ angular.module('gamificationApp').controller('ChallengesController',
             return false;
         };
 
+        function removeArray(firstArray, secondArray) {
+            var firstArrayCopy = firstArray.slice();
+            var indexOffset = 0;
+            for (var i = 0; i < firstArray.length; i++) {
+                for (var j = 0; j < secondArray.length; j++) {
+                    if (firstArray[i].id == secondArray[j].id) {
+                        firstArrayCopy.splice(i - indexOffset, 1);
+                        indexOffset++;
+                    }
+                }
+            }
+            return firstArrayCopy;
+        }
+
 
         $scope.checkTask = function () {
             var dialog_model = $scope.mark_dialog;
+            if (dialog_model.performer == null) {
+                dialog_model.performer = dialog_model.temp_performer;
+            }
             var challenge = dialog_model.challenge;
             var performer = dialog_model.performer;
             var mark = dialog_model.mark;
             TaskService.check(challenge, performer, mark).success(function (data) {
                 addMarkDialogBox.dialog("close");
+                if (challenge.status_map == null || challenge.status_map == undefined) {
+                    challenge.status_map = [];
+                }
+                if (challenge.status_map[performer.id] == null || challenge.status_map[performer.id] == undefined) {
+                    challenge.status_map[performer.id] = {
+                        status: null,
+                        mark: null
+                    }
+                }
                 challenge.status_map[performer.id].status = 'COMPLETED';
                 challenge.status_map[performer.id].mark = mark;
+                $scope.challenges.forEach(function (item, i, arr) {
+                    if (item.id == challenge.id) {
+                        var isExist = false;
+                        for (var i = 0; i < item.users; i++) {
+                            if (item.users[i].id = performer.id) {
+                                isExist = true;
+                            }
+                        }
+                        if (!isExist) {
+                            item.users.push({
+                                first_name: performer.firstName,
+                                group: performer.fullNameWithGroup.split("\n").pop(),
+                                id: performer.id,
+                                last_name: performer.lastName,
+                                time_back: null
+                            });
+                        }
+                    }
+                });
             });
         };
 

@@ -53,7 +53,7 @@
                             <div>
                                 <a href ng-click="showNewPerformerChangeBlock(challenge)">
                                     <span class="icon-tick ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
-                                          role="button"><span class="ui-button-text"></span></span>
+                                          role="button">+</span>
                                 </a>
                             </div>
                         </dd>
@@ -67,17 +67,19 @@
 <div id="dialog-message" title="Прийти на лекцию">
     <p>
         <span class="grey_label">Исполнитель:</span>
-        <span ng-if="mark_dialog.performer != null" class="nowrap">{{mark_dialog.performer.first_name}} {{mark_modal.performer.last_name}}, {{mark_dialog.performer.group}}</span>
+        <span ng-if="mark_dialog.performer != null && mark_dialog.performer.first_name != null" class="nowrap">
+            {{mark_dialog.performer.first_name}} {{mark_modal.performer.last_name}}, {{mark_dialog.performer.group}}
+        </span>
 
         <div ng-if="mark_dialog.performer == null">
             <ui-select theme="select2"
-                       ng-model="mark_dialog.performer"
+                       ng-model="mark_dialog.temp_performer"
                        style="margin-bottom: 5px;min-width: 250px;"
                        required>
-                <ui-select-match placeholder="Фамилия">{{$select.selected.lastName}}
+                <ui-select-match placeholder="Введите имя">{{$select.selected.fullNameWithGroup}}
                 </ui-select-match>
                 <ui-select-choices repeat="student in students | filter : $select.search">
-                    <div ng-bind-html="trustAsHtml((student.lastName | highlight: $select.search))"></div>
+                    <div ng-bind-html="trustAsHtml((student.fullNameWithGroup | highlight: $select.search))"></div>
                 </ui-select-choices>
             </ui-select>
         </div>
