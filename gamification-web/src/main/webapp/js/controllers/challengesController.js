@@ -51,7 +51,7 @@ angular.module('gamificationApp').controller('ChallengesController',
             //}
             $scope.mark_dialog.challenge = challenge;
             $scope.mark_dialog.performer = performer;
-            dialog_model.temp_performer = null;
+            $scope.mark_dialog.temp_performer = null;
             if (challenge.status_map[performer.id]) {
                 $scope.mark_dialog.mark = challenge.status_map[performer.id].mark;
             } else {
@@ -85,7 +85,7 @@ angular.module('gamificationApp').controller('ChallengesController',
         };
 
         $scope.getMark = function (challenge, performer) {
-            if (challenge.status_map[performer.id]) {
+            if (challenge.status_map[performer.id] && challenge.status_map[performer.id].mark != null) {
                 return "(" + challenge.status_map[performer.id].mark + ")";
             } else {
                 return "";
