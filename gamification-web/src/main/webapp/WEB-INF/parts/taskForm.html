@@ -38,7 +38,7 @@
                 </ui-select>
             </div>
 
-            <div class="field">
+            <div class="field" ng-if="currentUserRole==='ADMIN'">
                 <label>Преподаватель</label>
                 <ui-select theme="select2"
                            ng-model="newTask.creator"
@@ -48,6 +48,19 @@
                     </ui-select-match>
                     <ui-select-choices repeat="teacher in teachers | filter : $select.search">
                         <div ng-bind-html="trustAsHtml((teacher.lastName | highlight: $select.search))"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div class="field">
+                <label>Бейдж</label>
+                <ui-select theme="select2"
+                           ng-model="newTask.badge"
+                           style="margin-bottom: 5px;min-width: 300px;"
+                           required>
+                    <ui-select-match placeholder="Введите название">{{$select.selected.name}}
+                    </ui-select-match>
+                    <ui-select-choices repeat="badge in badges | filter : $select.search">
+                        <div ng-bind-html="trustAsHtml((badge.name | highlight: $select.search))"></div>
                     </ui-select-choices>
                 </ui-select>
             </div>
@@ -74,7 +87,7 @@
                            style="margin-bottom: 5px;margin-left: 100px;width: 80%;">
                     <ui-select-match placeholder="Введите имя">{{$item.fullNameWithGroup}}
                     </ui-select-match>
-                    <ui-select-choices repeat="performer in performers">
+                    <ui-select-choices repeat="performer in performers | filter:$select.search">
                         <div ng-bind-html="trustAsHtml((performer.fullNameWithGroup | highlight: $select.search))"></div>
                     </ui-select-choices>
                 </ui-select>
@@ -122,6 +135,7 @@
                 <span class="icon-tick"></span>
             </button>
             <label style="color: lawngreen" ng-if="created">Создан</label>
+            <label style="color: red" ng-if="errors && errors.length != 0">{{errors[0]}}</label>
         </form>
     </div>
 </div>

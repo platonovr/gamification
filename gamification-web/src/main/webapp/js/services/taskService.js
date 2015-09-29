@@ -36,6 +36,14 @@ angular.module('gamificationApp').service('TaskService', ['$http', 'CONSTANTS', 
         return $http.get(CONSTANTS.API_URI_PREFIX + CONSTANTS.DICTIONARIES + '/teachers');
     };
 
+    this.getBadges = function () {
+        return $http.get(CONSTANTS.API_URI_PREFIX + '/badge', {
+            params: {
+                token: AuthInfo.getToken()
+            }
+        });
+    };
+
     this.getPerformers = function () {
         return $http.get(CONSTANTS.API_URI_PREFIX + CONSTANTS.DICTIONARIES + '/students');
     };

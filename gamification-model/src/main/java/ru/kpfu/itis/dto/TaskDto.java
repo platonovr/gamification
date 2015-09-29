@@ -3,6 +3,7 @@ package ru.kpfu.itis.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
+import ru.kpfu.itis.dto.enums.Responses;
 
 import java.util.Date;
 import java.util.LinkedList;
@@ -64,6 +65,9 @@ public class TaskDto extends ResponseDto {
     public TaskDto() {
     }
 
+    public TaskDto(Responses error) {
+        super(error);
+    }
 
     public TaskDto(Long id, String name, String description, SubjectDto subject,
                    Integer maxPerformers, String status, String category, AccountDto creator,

@@ -20,19 +20,14 @@ import ru.kpfu.itis.mapper.BadgeMapper;
 import ru.kpfu.itis.mapper.TaskInfoMapper;
 import ru.kpfu.itis.mapper.TaskMapper;
 import ru.kpfu.itis.model.*;
+import ru.kpfu.itis.model.TaskStatus;
 import ru.kpfu.itis.model.classifier.TaskCategory;
-import ru.kpfu.itis.model.enums.ActivityType;
-import ru.kpfu.itis.model.enums.BadgeAchievementStatus;
-import ru.kpfu.itis.model.enums.EntityType;
-import ru.kpfu.itis.model.enums.StudyTaskType;
+import ru.kpfu.itis.model.enums.*;
 import ru.kpfu.itis.processing.badges.AbstractBadgeChecker;
 import ru.kpfu.itis.processing.badges.BadgesListBuilder;
 import ru.kpfu.itis.processing.badges.BadgesPack;
 import ru.kpfu.itis.security.SecurityService;
-import ru.kpfu.itis.service.AccountBadgeService;
-import ru.kpfu.itis.service.ActivityService;
-import ru.kpfu.itis.service.RatingService;
-import ru.kpfu.itis.service.TaskService;
+import ru.kpfu.itis.service.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -50,6 +45,10 @@ public class TaskServiceImpl implements TaskService {
 
 
     private static final Logger LOG = LoggerFactory.getLogger(TaskService.class);
+
+    private String base = "game.jblab-kzn.ru";
+
+
 
     @Autowired
     private TaskDao taskDao;
@@ -102,6 +101,10 @@ public class TaskServiceImpl implements TaskService {
     @Autowired
     private BadgesPack badgePack;
 
+    @Autowired
+    private FileService fileService;
+
+
     @Override
     @Transactional
     public Task submitTask(Task task) {
@@ -110,14 +113,27 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     @Transactional
-    public Task save(Account account, TaskEditorDto taskDto) {
+    public TaskDto save(Account account, TaskEditorDto taskDto) {
         if (taskDto.getId() < 0) {
             Task task = new Task();
             if (StringUtils.isEmpty(taskDto.getName())) {
-                throw new IllegalStateException("Name of task not presented");
+                return new TaskDto(Responses.EMPTY_NAME);
             }
             if (Objects.nonNull(taskDao.findByName(taskDto.getName()))) {
-                throw new IllegalStateException("Задание с таким именем уже существует");
+                return new TaskDto(Responses.TASK_ALREADY_EXISTS);
+            }
+            if (taskDto.getBadge() != null) {
+                Badge badge = simpleDao.findById(Badge.class, taskDto.getBadge().getId());
+                if (badge == null) {
+                    return new TaskDto(Responses.NOT_RIGHT_BADGE);
+                }
+                Integer notAvailableMarks = badge.getTasks().stream().mapToInt(Task::getMaxMark).sum();
+                if (badge.getMaxMark() - notAvailableMarks < taskDto.getMaxMark()) {
+                    return new TaskDto(Responses.NOT_ENOUGH_POINTS);
+                }
+                if (badge.getSubject() != null && badge.getMaxMark() / 2 - notAvailableMarks < taskDto.getMaxMark()) {
+                    return new TaskDto(Responses.NOT_ENOUGH_POINTS);
+                }
             }
             task.setName(taskDto.getName());
             task.setCreateTime(new Date());
@@ -135,15 +151,21 @@ public class TaskServiceImpl implements TaskService {
 
             task.setAuthor(creator != null ? creator : account);
 
+            if (taskDto.getSubject() == null || taskDto.getSubject().getId() == null) {
+                return new TaskDto(Responses.SUBJECT_NOT_FOUND);
+            }
             Subject taskSubject = simpleDao.findById(Subject.class, taskDto.getSubject().getId());
             if (Objects.isNull(taskSubject)) {
-                throw new IllegalStateException("Subject not founded");
+                return new TaskDto(Responses.SUBJECT_NOT_FOUND);
             }
             task.setSubject(taskSubject);
 
+            if (taskDto.getCategory() == null || taskDto.getCategory().getId() == null) {
+                return new TaskDto(Responses.CATEGORY_NOT_FOUND);
+            }
             TaskCategory category = simpleDao.findById(TaskCategory.class, taskDto.getCategory().getId());
             if (Objects.isNull(category)) {
-                throw new IllegalStateException("Category of task not presented");
+                return new TaskDto(Responses.CATEGORY_NOT_FOUND);
             }
             task.setCategory(category);
 
@@ -164,7 +186,10 @@ public class TaskServiceImpl implements TaskService {
             extractPermformers(performers, task);
 
 
-            return taskDao.submitTask(task);
+            task = taskDao.submitTask(task);
+            TaskDto taskSavedDto = new TaskDto();
+            taskSavedDto.setId(task.getId());
+            return taskSavedDto;
 
         }
         return null;
@@ -219,6 +244,15 @@ public class TaskServiceImpl implements TaskService {
     public TaskInfoDto findById(Long taskId) {
         Task task = taskDao.findById(taskId);
         return studentTaskInfoMapper.toDto(task);
+    }
+
+    @Override
+    @Transactional
+    public TaskInfoDto getTask(Long taskId) {
+        Task task = taskDao.findById(taskId);
+        TaskInfoDto dto = studentTaskInfoMapper.toDto(task);
+
+        return dto;
     }
 
     @Override

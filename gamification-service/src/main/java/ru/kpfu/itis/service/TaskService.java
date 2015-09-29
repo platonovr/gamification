@@ -18,7 +18,7 @@ public interface TaskService {
 
     Task submitTask(Task task);
 
-    Task save(Account account, TaskEditorDto taskDto);
+    TaskDto save(Account account, TaskEditorDto taskDto);
 
     Task findByName(String name);
 
@@ -33,6 +33,8 @@ public interface TaskService {
     List<Task> getTasksByUser(Long userId);
 
     TaskInfoDto findById(Long taskId);
+
+    TaskInfoDto getTask(Long taskId);
 
     /**
      * Get available tasks (if status null) or tasks with specified status

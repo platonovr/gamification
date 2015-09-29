@@ -59,4 +59,11 @@ public class FileServiceImpl implements FileService {
         return Collections.unmodifiableList(attachmentsNames);
     }
 
+    @Override
+    public File[] getTaskFiles(Long taskId) {
+        File[] attachments = null;
+        attachments = new File(getFilesDirectory() + attachmentsPrefix + separator + taskId).listFiles();
+        return attachments;
+    }
+
 }

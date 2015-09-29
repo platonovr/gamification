@@ -19,6 +19,8 @@ public class AccountProfileDto extends ResponseDto {
 
     private String lastName;
 
+    private String role;
+
     private List<BadgeDto> badges;
 
     private Double rating;
@@ -80,5 +82,13 @@ public class AccountProfileDto extends ResponseDto {
 
     public void setRatingPosition(Integer ratingPosition) {
         this.ratingPosition = ratingPosition;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }
