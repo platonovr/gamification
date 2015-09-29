@@ -1,5 +1,6 @@
 package ru.kpfu.itis.service.impl;
 
+import com.google.common.base.Joiner;
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.time.DateUtils;
 import org.hibernate.Hibernate;
@@ -17,6 +18,7 @@ import ru.kpfu.itis.dao.*;
 import ru.kpfu.itis.dto.*;
 import ru.kpfu.itis.dto.enums.Responses;
 import ru.kpfu.itis.mapper.BadgeMapper;
+import ru.kpfu.itis.mapper.FileFileDtoMapper;
 import ru.kpfu.itis.mapper.TaskInfoMapper;
 import ru.kpfu.itis.mapper.TaskMapper;
 import ru.kpfu.itis.model.*;
@@ -34,6 +36,7 @@ import ru.kpfu.itis.service.ActivityService;
 import ru.kpfu.itis.service.RatingService;
 import ru.kpfu.itis.service.TaskService;
 
+import java.io.File;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -50,6 +53,10 @@ public class TaskServiceImpl implements TaskService {
 
 
     private static final Logger LOG = LoggerFactory.getLogger(TaskService.class);
+
+    private String base = "game.jblab-kzn.ru";
+
+    private String attachmentsPrefix = "attachments";
 
     @Autowired
     private TaskDao taskDao;
@@ -101,6 +108,11 @@ public class TaskServiceImpl implements TaskService {
     private RatingDao ratingDao;
     @Autowired
     private BadgesPack badgePack;
+
+
+    @Autowired
+    private FileService fileService;
+
 
     @Override
     @Transactional
@@ -241,6 +253,25 @@ public class TaskServiceImpl implements TaskService {
     public TaskInfoDto findById(Long taskId) {
         Task task = taskDao.findById(taskId);
         return studentTaskInfoMapper.toDto(task);
+    }
+
+    @Override
+    @Transactional
+    public TaskInfoDto getTask(Long taskId) {
+        Task task = taskDao.findById(taskId);
+        TaskInfoDto dto = studentTaskInfoMapper.toDto(task);
+        File[] taskFiles = fileService.getTaskFiles(taskId);
+        if (Objects.nonNull(taskFiles) && taskFiles.length > 0) {
+            for (File taskFile : taskFiles) {
+                FileFileDtoMapper fileDtoMapper = new FileFileDtoMapper();
+                FileDto fileDto = fileDtoMapper.apply(taskFile);
+                fileDto.setName(fileDto.getName());
+                fileDto.setURL(Joiner.on("/").join(base, attachmentsPrefix, taskId, fileDto.getURL()));
+                dto.getFiles().add(fileDto);
+            }
+
+        }
+        return dto;
     }
 
     @Override

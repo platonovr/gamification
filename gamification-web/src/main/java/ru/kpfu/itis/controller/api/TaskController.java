@@ -1,6 +1,11 @@
 package ru.kpfu.itis.controller.api;
 
-import com.wordnik.swagger.annotations.*;
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiImplicitParam;
+import com.wordnik.swagger.annotations.ApiImplicitParams;
+import com.wordnik.swagger.annotations.ApiOperation;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,8 +22,11 @@ import ru.kpfu.itis.service.TaskService;
 import ru.kpfu.itis.util.Constant;
 import ru.kpfu.itis.validator.TaskValidator;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static org.springframework.http.HttpStatus.*;
 
@@ -50,7 +58,7 @@ public class TaskController {
         if (taskAvailabilityError != null) {
             return new ResponseEntity<>(taskAvailabilityError, FORBIDDEN);
         }
-        return new ResponseEntity<>(taskService.findById(taskId), OK);
+        return new ResponseEntity<>(taskService.getTask(taskId), OK);
     }
 
     @ApiOperation("get student's tasks")
@@ -115,6 +123,27 @@ public class TaskController {
     @RequestMapping(value = "/{taskId:[1-9]+[0-9]*}/attachments", method = RequestMethod.GET)
     public List<String> getTaskAttachmentsNames(@PathVariable Long taskId) {
         return fileService.getTaskAttachmentsNames(taskId);
+    }
+
+    @ApiOperation("get challenge file attachments")
+    @ApiImplicitParams(value = {@ApiImplicitParam(name = "token", value = "token", required = true, dataType = "string", paramType = "query")})
+    @RequestMapping(value = "/{taskId:[1-9]+[0-9]*}/files", method = RequestMethod.GET)
+    public List<FileDto> getTaskFiles(@PathVariable Long taskId) throws IOException {
+        List<FileDto> files = new ArrayList<>();
+        File[] filesObj = fileService.getTaskFiles(taskId);
+        if (Objects.isNull(filesObj) || filesObj.length < 1) {
+            return files;
+        } else {
+            for (File file : filesObj) {
+                FileDto fileDto = new FileDto();
+                fileDto.setName(file.getName());
+                fileDto.setExtension(FilenameUtils.getExtension(file.getName()));
+                fileDto.setData(FileUtils.readFileToByteArray(file));
+                files.add(fileDto);
+            }
+            return files;
+        }
+
     }
 
     @ApiOperation("get available task categories")

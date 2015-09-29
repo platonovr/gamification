@@ -38,7 +38,7 @@
                 </ui-select>
             </div>
 
-            <div class="field">
+            <div class="field" ng-if="currentUserRole==='ADMIN'">
                 <label>Преподаватель</label>
                 <ui-select theme="select2"
                            ng-model="newTask.creator"
@@ -87,7 +87,7 @@
                            style="margin-bottom: 5px;margin-left: 100px;width: 80%;">
                     <ui-select-match placeholder="Введите имя">{{$item.fullNameWithGroup}}
                     </ui-select-match>
-                    <ui-select-choices repeat="performer in performers">
+                    <ui-select-choices repeat="performer in performers | filter:$select.search">
                         <div ng-bind-html="trustAsHtml((performer.fullNameWithGroup | highlight: $select.search))"></div>
                     </ui-select-choices>
                 </ui-select>
