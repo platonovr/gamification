@@ -104,14 +104,27 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     @Transactional
-    public Task save(Account account, TaskEditorDto taskDto) {
+    public TaskDto save(Account account, TaskEditorDto taskDto) {
         if (taskDto.getId() < 0) {
             Task task = new Task();
             if (StringUtils.isEmpty(taskDto.getName())) {
-                throw new IllegalStateException("Name of task not presented");
+                return new TaskDto(Responses.EMPTY_NAME);
             }
             if (Objects.nonNull(taskDao.findByName(taskDto.getName()))) {
-                throw new IllegalStateException("Задание с таким именем уже существует");
+                return new TaskDto(Responses.TASK_ALREADY_EXISTS);
+            }
+            if (taskDto.getBadge() != null) {
+                Badge badge = simpleDao.findById(Badge.class, taskDto.getBadge().getId());
+                if (badge == null) {
+                    return new TaskDto(Responses.NOT_RIGHT_BADGE);
+                }
+                Integer notAvailableMarks = badge.getTasks().stream().mapToInt(Task::getMaxMark).sum();
+                if (badge.getMaxMark() - notAvailableMarks < taskDto.getMaxMark()) {
+                    return new TaskDto(Responses.NOT_ENOUGH_POINTS);
+                }
+                if (badge.getSubject() != null && badge.getMaxMark() / 2 - notAvailableMarks < taskDto.getMaxMark()) {
+                    return new TaskDto(Responses.NOT_ENOUGH_POINTS);
+                }
             }
             task.setName(taskDto.getName());
             task.setCreateTime(new Date());
@@ -129,15 +142,21 @@ public class TaskServiceImpl implements TaskService {
 
             task.setAuthor(creator != null ? creator : account);
 
+            if (taskDto.getSubject() == null || taskDto.getSubject().getId() == null) {
+                return new TaskDto(Responses.SUBJECT_NOT_FOUND);
+            }
             Subject taskSubject = simpleDao.findById(Subject.class, taskDto.getSubject().getId());
             if (Objects.isNull(taskSubject)) {
-                throw new IllegalStateException("Subject not founded");
+                return new TaskDto(Responses.SUBJECT_NOT_FOUND);
             }
             task.setSubject(taskSubject);
 
+            if (taskDto.getCategory() == null || taskDto.getCategory().getId() == null) {
+                return new TaskDto(Responses.CATEGORY_NOT_FOUND);
+            }
             TaskCategory category = simpleDao.findById(TaskCategory.class, taskDto.getCategory().getId());
             if (Objects.isNull(category)) {
-                throw new IllegalStateException("Category of task not presented");
+                return new TaskDto(Responses.CATEGORY_NOT_FOUND);
             }
             task.setCategory(category);
 
@@ -158,7 +177,10 @@ public class TaskServiceImpl implements TaskService {
             extractPermformers(performers, task);
 
 
-            return taskDao.submitTask(task);
+            task = taskDao.submitTask(task);
+            TaskDto taskSavedDto = new TaskDto();
+            taskSavedDto.setId(task.getId());
+            return taskSavedDto;
 
         }
         return null;

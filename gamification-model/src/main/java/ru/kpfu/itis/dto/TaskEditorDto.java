@@ -32,6 +32,8 @@ public class TaskEditorDto {
 
     private List<AccountDto> performers = new ArrayList<>();
 
+    private BadgeDto badge;
+
     public Long getId() {
         return id;
     }
@@ -118,5 +120,13 @@ public class TaskEditorDto {
 
     public void setMaxMark(Integer maxMark) {
         this.maxMark = maxMark;
+    }
+
+    public BadgeDto getBadge() {
+        return badge;
+    }
+
+    public void setBadge(BadgeDto badge) {
+        this.badge = badge;
     }
 }

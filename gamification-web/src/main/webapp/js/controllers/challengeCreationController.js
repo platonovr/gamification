@@ -12,6 +12,7 @@ angular.module('gamificationApp').controller('ChallengeCreationController',
                 name: undefined,
                 subject: undefined,
                 creator: undefined,
+                badge: undefined,
                 date_from: new Date(),
                 date_to: new Date(),
                 category: undefined,
@@ -28,11 +29,15 @@ angular.module('gamificationApp').controller('ChallengeCreationController',
             $scope.students = [];
             $scope.coursesAndGroups = [];
             $scope.performers = [];
+            $scope.badges = [];
             TaskService.getCategories().success(function (data) {
                 $scope.categories = data
             });
             TaskService.getTeachers().success(function (data) {
                 $scope.teachers = data;
+            });
+            TaskService.getBadges().success(function (data) {
+                $scope.badges = data.items;
             });
             TaskService.getDisciplines().success(function (data) {
                 $scope.disciplines = data;
@@ -50,6 +55,7 @@ angular.module('gamificationApp').controller('ChallengeCreationController',
             $scope.createTask = function () {
                 TaskService.createTask($scope.newTask).success(function (data) {
                     $scope.created = true;
+                    $scope.errors = [];
                     $scope.attachments.forEach(function (attachment) {
                         const fileName = attachment.name;
                         TaskService.uploadAttachment(data.id, attachment).progress(function (evt) {
@@ -65,7 +71,7 @@ angular.module('gamificationApp').controller('ChallengeCreationController',
 
                 }).error(function (data) {
                     console.error('task creation error: ' + JSON.stringify(data));
-                    $scope.errors = data.errors;
+                    $scope.errors = [data.msg];
                 })
             }
         }
