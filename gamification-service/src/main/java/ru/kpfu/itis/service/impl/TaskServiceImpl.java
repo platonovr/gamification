@@ -20,19 +20,25 @@ import ru.kpfu.itis.mapper.BadgeMapper;
 import ru.kpfu.itis.mapper.TaskInfoMapper;
 import ru.kpfu.itis.mapper.TaskMapper;
 import ru.kpfu.itis.model.*;
-import ru.kpfu.itis.model.TaskStatus;
 import ru.kpfu.itis.model.classifier.TaskCategory;
-import ru.kpfu.itis.model.enums.*;
+import ru.kpfu.itis.model.enums.ActivityType;
+import ru.kpfu.itis.model.enums.BadgeAchievementStatus;
+import ru.kpfu.itis.model.enums.EntityType;
+import ru.kpfu.itis.model.enums.StudyTaskType;
 import ru.kpfu.itis.processing.badges.AbstractBadgeChecker;
 import ru.kpfu.itis.processing.badges.BadgesListBuilder;
 import ru.kpfu.itis.processing.badges.BadgesPack;
 import ru.kpfu.itis.security.SecurityService;
-import ru.kpfu.itis.service.*;
+import ru.kpfu.itis.service.AccountBadgeService;
+import ru.kpfu.itis.service.ActivityService;
+import ru.kpfu.itis.service.RatingService;
+import ru.kpfu.itis.service.TaskService;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.OK;
 import static ru.kpfu.itis.BadgeConstants.*;
 import static ru.kpfu.itis.model.TaskStatus.TaskStatusType.*;
 
@@ -305,53 +311,60 @@ public class TaskServiceImpl implements TaskService {
             return new ResponseEntity<>(new ResponseDto(Responses.NOT_VALID_DATA), BAD_REQUEST);
         }
         AccountTask accountTask = accountTaskDao.findByTaskAndAccount(taskId, accountId);
-        if (Objects.nonNull(accountTask)) {
-            Hibernate.initialize(accountTask.getTaskHistory());
-            setNewStatus(accountTask, COMPLETED);
-            accountTask.setMark(mark);
-            accountTask.setChangeTime(new Date());
-            simpleDao.save(accountTask);
-            Task task = accountTask.getTask();
-            Account account = accountTask.getAccount();
-            Activity activity = new Activity(EntityType.TASK, ActivityType.TASK_COMPLETE, account, task.getId());
-            activityService.save(activity);
-            if (task.getBadge() != null) {
-                AccountBadge accountBadge = accountBadgeDao.findByBadgeAndAccount(task.getBadge(), account);
-                if (Objects.isNull(accountBadge)) {
-                    accountBadge = accountBadgeService.createAccountBadge(task.getBadge(), account);
-                }
-                if (StudyTaskType.PRACTICE.equals(task.getStudyType())) {
-                    accountBadge.setPractice(accountBadge.getPractice() + mark);
-                } else if (StudyTaskType.THEORY.equals(task.getStudyType())) {
-                    accountBadge.setTheory(accountBadge.getTheory() + mark);
-                }
-                accountBadge.computeProgress();
-                if (accountBadge.getAchevementStatus() == BadgeAchievementStatus.COMPLETE) {
-                    activity = new Activity(EntityType.BADGE, ActivityType.BADGE_COMPLETE, account, task.getBadge().getId());
-                    simpleDao.save(activity);
-                }
-                simpleDao.saveOrUpdate(accountBadge);
-            }
-            AccountInfo accountInfo = account.getAccountInfo();
-            Rating rating = ratingDao.getUserRating(accountInfo.getId());
-            if (Objects.nonNull(rating)) {
-                rating.setPoint(rating.getPoint() + mark);
-                ratingDao.save(rating);
-            } else {
-                ratingService.createUserRating(accountInfo, Double.valueOf(mark));
-            }
-            ratingService.recalculateRating(accountInfo);
-            List<AbstractBadgeChecker> badgeCheckers = new BadgesListBuilder(badgePack)
-                    .get(BADGE_5_TASK_END)
-                    .get(BADGE_10_TASK_END)
-                    .get(FIRST_NONSTUDY_BADGE)
-                    .get(FIRST_STUDY_BADGE)
-                    .build();
-            accountBadgeService.applyBadges(badgeCheckers, account);
-            return new ResponseEntity<>(OK);
+        Account account;
+        Task task;
+        if (Objects.isNull(accountTask)) {
+            accountTask = new AccountTask();
+            account = simpleDao.findById(Account.class, accountId);
+            task = simpleDao.findById(Task.class, taskId);
+            accountTask.setAccount(account);
+            accountTask.setTask(task);
+            accountTask.setAvailability(false);
         } else {
-            return new ResponseEntity<>(new ResponseDto(Responses.TASK_NOT_FOUND), NOT_FOUND);
+            account = accountTask.getAccount();
+            task = accountTask.getTask();
         }
+        Hibernate.initialize(accountTask.getTaskHistory());
+        setNewStatus(accountTask, COMPLETED);
+        accountTask.setMark(mark);
+        accountTask.setChangeTime(new Date());
+        simpleDao.save(accountTask);
+        Activity activity = new Activity(EntityType.TASK, ActivityType.TASK_COMPLETE, account, task.getId());
+        activityService.save(activity);
+        if (task.getBadge() != null) {
+            AccountBadge accountBadge = accountBadgeDao.findByBadgeAndAccount(task.getBadge(), account);
+            if (Objects.isNull(accountBadge)) {
+                accountBadge = accountBadgeService.createAccountBadge(task.getBadge(), account);
+            }
+            if (StudyTaskType.PRACTICE.equals(task.getStudyType())) {
+                accountBadge.setPractice(accountBadge.getPractice() + mark);
+            } else if (StudyTaskType.THEORY.equals(task.getStudyType())) {
+                accountBadge.setTheory(accountBadge.getTheory() + mark);
+            }
+            accountBadge.computeProgress();
+            if (accountBadge.getAchevementStatus() == BadgeAchievementStatus.COMPLETE) {
+                activity = new Activity(EntityType.BADGE, ActivityType.BADGE_COMPLETE, account, task.getBadge().getId());
+                simpleDao.save(activity);
+            }
+            simpleDao.saveOrUpdate(accountBadge);
+        }
+        AccountInfo accountInfo = account.getAccountInfo();
+        Rating rating = ratingDao.getUserRating(accountInfo.getId());
+        if (Objects.nonNull(rating)) {
+            rating.setPoint(rating.getPoint() + mark);
+            ratingDao.save(rating);
+        } else {
+            ratingService.createUserRating(accountInfo, Double.valueOf(mark));
+        }
+        ratingService.recalculateRating(accountInfo);
+        List<AbstractBadgeChecker> badgeCheckers = new BadgesListBuilder(badgePack)
+                .get(BADGE_5_TASK_END)
+                .get(BADGE_10_TASK_END)
+                .get(FIRST_NONSTUDY_BADGE)
+                .get(FIRST_STUDY_BADGE)
+                .build();
+        accountBadgeService.applyBadges(badgeCheckers, account);
+        return new ResponseEntity<>(OK);
 
     }
 

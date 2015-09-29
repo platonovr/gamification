@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="
+                       http://www.liquibase.org/xml/ns/dbchangelog
+                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd"
+                   logicalFilePath="20150926_1942.xml">
+
+
+    <changeSet id="change_sequence_start" author="rfatkhullin" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <dbms type="h2"/>
+            </not>
+        </preConditions>
+        <sql>ALTER SEQUENCE account_task_account_task_id_seq RESTART WITH 10</sql>
+    </changeSet>
+</databaseChangeLog>

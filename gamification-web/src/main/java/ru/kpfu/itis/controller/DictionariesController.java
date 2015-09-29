@@ -2,6 +2,7 @@ package ru.kpfu.itis.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -42,8 +43,15 @@ public class DictionariesController {
     @RequestMapping(value = "/students", method = RequestMethod.GET)
     @ResponseBody
     public List<AccountDto> getStudents() {
-        List<Account> teachers = accountService.getStudents();
-        return teachers.stream().map(new AccountDtoMapper()).collect(Collectors.toList());
+        List<Account> students = accountService.getStudents();
+        return students.stream().map(new AccountDtoMapper()).collect(Collectors.toList());
+    }
+
+    @RequestMapping(value = "/students/{groups}", method = RequestMethod.GET)
+    @ResponseBody
+    public List<AccountDto> getStudentsByGroups(@PathVariable String[] groups) {
+        List<Account> students = accountService.getStudentsByGroups(groups);
+        return students.stream().map(new AccountDtoMapper()).collect(Collectors.toList());
     }
 
     @RequestMapping(value = "/disciplines", method = RequestMethod.GET)

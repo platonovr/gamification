@@ -48,6 +48,10 @@ angular.module('gamificationApp').service('TaskService', ['$http', 'CONSTANTS', 
         return $http.get(CONSTANTS.API_URI_PREFIX + CONSTANTS.DICTIONARIES + '/students');
     };
 
+    this.getStudentsByGroups = function (data) {
+        return $http.get(CONSTANTS.API_URI_PREFIX + CONSTANTS.DICTIONARIES + '/students/' + data);
+    };
+
     this.getCategories = function () {
         return $http.get(CONSTANTS.API_URI_PREFIX + CONSTANTS.TASK_URI + '/categories', {
             params: {

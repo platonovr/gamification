@@ -13,4 +13,6 @@ public interface AccountDao {
     Account findByLogin(String login);
 
     List<Account> getAccountsByRole(Role type);
+
+    List<Account> getAccountsByRoleAndGroups(Role type, String[] groups);
 }
