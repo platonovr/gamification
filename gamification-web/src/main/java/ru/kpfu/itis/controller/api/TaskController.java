@@ -10,7 +10,6 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.kpfu.itis.dto.*;
 import ru.kpfu.itis.dto.enums.Responses;
 import ru.kpfu.itis.model.Account;
-import ru.kpfu.itis.model.Task;
 import ru.kpfu.itis.model.TaskStatus;
 import ru.kpfu.itis.security.SecurityService;
 import ru.kpfu.itis.service.FileService;
@@ -77,10 +76,11 @@ public class TaskController {
     @ApiImplicitParams(value = {@ApiImplicitParam(name = "token", value = "token", required = true, dataType = "string", paramType = "query")})
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<TaskDto> createTask(@RequestBody TaskEditorDto newTask) {
-        Task task = taskService.save(securityService.getCurrentUser(), newTask);
-        TaskDto taskDto = new TaskDto();
-        taskDto.setId(task.getId());
-        return new ResponseEntity<>(taskDto, HttpStatus.CREATED);
+        TaskDto task = taskService.save(securityService.getCurrentUser(), newTask);
+        if (task.isError()) {
+           return new ResponseEntity<>(task, HttpStatus.METHOD_NOT_ALLOWED);
+        }
+        return new ResponseEntity<>(task, HttpStatus.CREATED);
     }
 
     @ApiOperation("upload challenge's attachment")

@@ -30,4 +30,8 @@ public class ResponseDto {
     public Integer getCode() {
         return code;
     }
+
+    public boolean isError() {
+        return msg != null || code != null;
+    }
 }
