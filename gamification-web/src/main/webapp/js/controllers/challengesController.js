@@ -67,8 +67,10 @@ angular.module('gamificationApp').controller('ChallengesController',
             $scope.mark_dialog.temp_performer = null;
             $scope.mark_dialog.mark = 0;
             var groups = [];
-            for (var i = 0; i < challenge.groups.length; i++) {
-                groups[i] = challenge.groups[i];
+            if (challenge.groups != null && challenge.groups != undefined) {
+                for (var i = 0; i < challenge.groups.length; i++) {
+                    groups[i] = challenge.groups[i];
+                }
             }
 
             if (groups.length != 0) {
@@ -77,7 +79,7 @@ angular.module('gamificationApp').controller('ChallengesController',
                 });
             } else {
                 TaskService.getPerformers().success(function (data) {
-                    $scope.students = data;
+                    $scope.students = removeArray(data, challenge.users);
                 });
             }
             addMarkDialogBox.dialog("open");
@@ -99,6 +101,9 @@ angular.module('gamificationApp').controller('ChallengesController',
         };
 
         function removeArray(firstArray, secondArray) {
+            if (secondArray == null || secondArray == undefined || secondArray.length == 0) {
+                return firstArray;
+            }
             var firstArrayCopy = firstArray.slice();
             var indexOffset = 0;
             for (var i = 0; i < firstArray.length; i++) {
