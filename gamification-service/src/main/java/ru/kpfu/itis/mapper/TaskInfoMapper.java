@@ -1,15 +1,16 @@
 package ru.kpfu.itis.mapper;
 
+import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.kpfu.itis.dto.AccountInfoDto;
 import ru.kpfu.itis.dto.TaskInfoDto;
 import ru.kpfu.itis.model.*;
+import ru.kpfu.itis.service.FileService;
 import ru.kpfu.itis.util.Utils;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
+import java.io.File;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -23,6 +24,12 @@ public class TaskInfoMapper implements Mapper<Task, TaskInfoDto> {
 
     @Autowired
     private AccountInfoMapper accountInfoMapper;
+
+    @Autowired
+    private FileDtoMapper fileDtoMapper;
+
+    @Autowired
+    private FileService fileService;
 
     private boolean isAdmin;
 
@@ -73,6 +80,13 @@ public class TaskInfoMapper implements Mapper<Task, TaskInfoDto> {
                         }
                     }
                 }
+            }
+            if (!isAdmin) {
+                ArrayList<File> taskFiles = Lists.newArrayList(fileService.getTaskFiles(task.getId()));
+                taskInfoDto.setFiles(taskFiles
+                        .stream()
+                        .map(it -> fileDtoMapper.toDto(it, task))
+                        .collect(Collectors.toList()));
             }
             return taskInfoDto;
         }
