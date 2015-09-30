@@ -13,6 +13,6 @@
                 <dbms type="h2"/>
             </not>
         </preConditions>
-        <sql>ALTER SEQUENCE account_task_account_task_id_seq RESTART WITH 10</sql>
+        <sql>ALTER SEQUENCE account_task_account_task_id_seq RESTART WITH 580</sql>
     </changeSet>
 </databaseChangeLog>
