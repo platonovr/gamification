@@ -94,6 +94,7 @@ public class AccountServiceImpl implements AccountService {
             if (s != null && s.startsWith("anonymous")) {
                 account = createAnonymousUser(s);
                 simpleDao.save(account);
+                simpleDao.save(account.getAccountInfo());
             }
         }
         if (account == null) {
