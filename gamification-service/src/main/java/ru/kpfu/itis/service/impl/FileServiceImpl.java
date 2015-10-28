@@ -1,5 +1,6 @@
 package ru.kpfu.itis.service.impl;
 
+import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
@@ -12,9 +13,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 import static java.io.File.separator;
 
@@ -60,10 +59,13 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public File[] getTaskFiles(Long taskId) {
+    public List<File> getTaskFiles(Long taskId) {
         File[] attachments = null;
         attachments = new File(getFilesDirectory() + attachmentsPrefix + separator + taskId).listFiles();
-        return attachments;
+        if (attachments == null) {
+            return new ArrayList<>();
+        }
+        return Lists.newArrayList(attachments);
     }
 
 }

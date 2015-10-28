@@ -19,5 +19,5 @@ public interface FileService {
 
     List<String> getTaskAttachmentsNames(Long taskId);
 
-    File[] getTaskFiles(Long taskId);
+    List<File> getTaskFiles(Long taskId);
 }

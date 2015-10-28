@@ -82,7 +82,7 @@ public class TaskInfoMapper implements Mapper<Task, TaskInfoDto> {
                 }
             }
             if (!isAdmin) {
-                ArrayList<File> taskFiles = Lists.newArrayList(fileService.getTaskFiles(task.getId()));
+                List<File> taskFiles = fileService.getTaskFiles(task.getId());
                 taskInfoDto.setFiles(taskFiles
                         .stream()
                         .map(it -> fileDtoMapper.toDto(it, task))

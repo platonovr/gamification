@@ -86,7 +86,7 @@ public class TaskController {
     public ResponseEntity<TaskDto> createTask(@RequestBody TaskEditorDto newTask) {
         TaskDto task = taskService.save(securityService.getCurrentUser(), newTask);
         if (task.isError()) {
-           return new ResponseEntity<>(task, HttpStatus.METHOD_NOT_ALLOWED);
+            return new ResponseEntity<>(task, HttpStatus.METHOD_NOT_ALLOWED);
         }
         return new ResponseEntity<>(task, HttpStatus.CREATED);
     }
@@ -130,8 +130,8 @@ public class TaskController {
     @RequestMapping(value = "/{taskId:[1-9]+[0-9]*}/files", method = RequestMethod.GET)
     public List<FileDto> getTaskFiles(@PathVariable Long taskId) throws IOException {
         List<FileDto> files = new ArrayList<>();
-        File[] filesObj = fileService.getTaskFiles(taskId);
-        if (Objects.isNull(filesObj) || filesObj.length < 1) {
+        List<File> filesObj = fileService.getTaskFiles(taskId);
+        if (Objects.isNull(filesObj) || filesObj.size() < 1) {
             return files;
         } else {
             for (File file : filesObj) {
