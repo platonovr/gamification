@@ -1,7 +1,11 @@
 package ru.kpfu.itis.dao.impl;
 
 import org.hibernate.Criteria;
+import org.hibernate.HibernateException;
+import org.hibernate.Query;
+import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.orm.hibernate4.HibernateCallback;
 import ru.kpfu.itis.dao.AccountBadgeDao;
 import ru.kpfu.itis.dao.base.AbstractGenericDao;
 import ru.kpfu.itis.model.Account;
@@ -34,6 +38,27 @@ public abstract class AbstractAccountBadgeDaoImpl extends AbstractGenericDao imp
                 criteria = criteria.add(Restrictions.eq("badge.id", badge.getId()));
             }
             return (AccountBadge) criteria.uniqueResult();
+        });
+    }
+
+    @Override
+    public List<Badge> fetchBadgesBySubject(List<Long> subjectIds) {
+        return getHibernateTemplate().execute(new HibernateCallback<List<Badge>>() {
+            @Override
+            public List<Badge> doInHibernate(Session session) throws HibernateException {
+                String queryText = " from Badge b ";
+                if (subjectIds != null && subjectIds.size() > 0) {
+                    queryText += " where b.subject.id in (:subjectIds) ";
+                }
+                Query query = session.createQuery(queryText);
+                if (subjectIds != null && subjectIds.size() > 0) {
+                    query.setParameterList("subjectIds", subjectIds);
+
+                }
+                return query.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
+                        .setReadOnly(true)
+                        .list();
+            }
         });
     }
 }

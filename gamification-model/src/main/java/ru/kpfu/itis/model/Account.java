@@ -37,6 +37,23 @@ public class Account extends BaseLongIdEntity implements AuthUser {
     @Cascade(CascadeType.SAVE_UPDATE)
     private List<AccountTask> accountTasks = new ArrayList<>();
 
+
+    /*
+        List of subjects,which teacher has got
+     */
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "ACCOUNT_SUBJECT",
+            joinColumns = @JoinColumn(name = "ACCOUNT_ID", nullable = false),
+            inverseJoinColumns = @JoinColumn(name = "SUBJECT_ID", nullable = false))
+    private Set<Subject> subjects = new HashSet<>();
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "TEACHER_ACADEMIC_GROUP",
+            joinColumns = @JoinColumn(name = "ACCOUNT_ID", nullable = false),
+            inverseJoinColumns = @JoinColumn(name = "ACADEMIC_GROUP_ID", nullable = false))
+    private Set<AcademicGroup> academicGroups = new HashSet<>();
+
+
     @OneToMany(mappedBy = "author")
     private Set<Task> tasks = new HashSet<>();
 
@@ -100,5 +117,21 @@ public class Account extends BaseLongIdEntity implements AuthUser {
 
     public void setTasks(Set<Task> tasks) {
         this.tasks = tasks;
+    }
+
+    public Set<Subject> getSubjects() {
+        return subjects;
+    }
+
+    public void setSubjects(Set<Subject> subjects) {
+        this.subjects = subjects;
+    }
+
+    public Set<AcademicGroup> getAcademicGroups() {
+        return academicGroups;
+    }
+
+    public void setAcademicGroups(Set<AcademicGroup> academicGroups) {
+        this.academicGroups = academicGroups;
     }
 }

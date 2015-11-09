@@ -49,7 +49,6 @@ public class TaskServiceImpl implements TaskService {
     private String base = "game.jblab-kzn.ru";
 
 
-
     @Autowired
     private TaskDao taskDao;
 
@@ -67,6 +66,9 @@ public class TaskServiceImpl implements TaskService {
 
     @Autowired
     private SimpleDao simpleDao;
+
+    @Autowired
+    private AccountService accountService;
 
     @Autowired
     private TaskMapper taskMapper;
@@ -98,6 +100,7 @@ public class TaskServiceImpl implements TaskService {
 
     @Autowired
     private RatingDao ratingDao;
+
     @Autowired
     private BadgesPack badgePack;
 
@@ -382,8 +385,10 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     @Transactional
-    public List<BadgeDto> getAllBadges() {
-        List<Badge> badges = simpleDao.fetchAll(Badge.class);
+    public List<BadgeDto> getAllBadges(Account account) {
+        account = accountService.getAccountWithDependencies(account.getId());
+        List<Long> subjectIds = account.getSubjects().stream().map(Subject::getId).collect(Collectors.toList());
+        List<Badge> badges = accountBadgeDao.fetchBadgesBySubject(subjectIds);
         return badges
                 .stream()
                 .map(it -> findBadgeById(it.getId(), simpleBadgeMapper))

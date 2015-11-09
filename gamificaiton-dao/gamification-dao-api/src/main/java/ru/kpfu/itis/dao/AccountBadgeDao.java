@@ -14,4 +14,6 @@ public interface AccountBadgeDao {
     List<AccountBadge> findAllBadgesByAccount(Account account);
 
     AccountBadge findByBadgeAndAccount(Badge badge, Account account);
+
+    List<Badge> fetchBadgesBySubject(List<Long> subjectIds);
 }
