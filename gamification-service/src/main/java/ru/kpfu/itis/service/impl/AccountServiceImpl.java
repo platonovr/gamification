@@ -20,7 +20,9 @@ import ru.kpfu.jbl.auth.provider.encoders.PasswordEncoder;
 import ru.kpfu.jbl.auth.response.UserResponse;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.util.Optional.ofNullable;
 import static ru.kpfu.itis.BadgeConstants.AUTH_BADGE_ID;
@@ -70,14 +72,22 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     @Transactional
-    public List<Account> getTeachers() {
-        return accountDao.getAccountsByRole(Role.TEACHER);
+    public Account getAccountWithDependencies(Long id) {
+        return accountDao.getAccountWithDependencies(id);
     }
 
     @Override
     @Transactional
-    public List<Account> getStudents() {
-        return accountDao.getAccountsByRole(Role.STUDENT);
+    public List<Account> getTeachers() {
+        return accountDao.getAccountsByRole(Role.TEACHER,null);
+    }
+
+    @Override
+    @Transactional
+    public List<Account> getStudents(Long teacherId) {
+        Account account = accountDao.getAccountWithDependencies(teacherId);
+        List<Long> groupIds = account.getAcademicGroups().stream().map(AcademicGroup::getId).collect(Collectors.toList());
+        return accountDao.getAccountsByRole(Role.STUDENT,groupIds);
     }
 
     @Override
@@ -156,6 +166,30 @@ public class AccountServiceImpl implements AccountService {
             rating = ratingService.getUserRating(accountInfo.getId());
         }
         return accountProfileMapper.map(account, accountInfo, badges, rating);
+    }
+
+    @Override
+    @Transactional
+    public List<Subject> getSubjects(Account account) {
+        account = accountDao.getAccountWithDependencies(account.getId());
+        List<Long> subjectIds = account.getSubjects().stream().map(Subject::getId).collect(Collectors.toList());
+        return accountDao.getSubjects(subjectIds);
+    }
+
+    @Override
+    @Transactional
+    public List<AcademicGroup> getAcademicGroups(Account account) {
+        account = accountDao.getAccountWithDependencies(account.getId());
+        List<Long> groupIds = account.getAcademicGroups().stream().map(AcademicGroup::getId).collect(Collectors.toList());
+        return accountDao.getAcademicGroups(groupIds);
+    }
+
+    @Override
+    @Transactional
+    public List<StudyCourse> getStudyCourses(Account account) {
+        account = accountDao.getAccountWithDependencies(account.getId());
+        List<Long> groupIds = account.getAcademicGroups().stream().map(AcademicGroup::getId).collect(Collectors.toList());
+        return accountDao.getStudyCourses(groupIds);
     }
 
     @Override

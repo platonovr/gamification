@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.kpfu.itis.dto.BadgeDto;
 import ru.kpfu.itis.dto.ItemsDto;
+import ru.kpfu.itis.security.SecurityService;
 import ru.kpfu.itis.service.TaskService;
 import ru.kpfu.itis.util.Constant;
 
@@ -19,13 +20,16 @@ import ru.kpfu.itis.util.Constant;
 public class BadgeController {
 
     @Autowired
-    TaskService taskService;
+    private TaskService taskService;
+
+    @Autowired
+    private SecurityService securityService;
 
     @ApiOperation("get available badges")
     @ApiImplicitParams(value = {@ApiImplicitParam(name = "token", value = "token", required = true, dataType = "string", paramType = "query")})
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<ItemsDto<BadgeDto>> allBadges() {
-        return new ResponseEntity<>(new ItemsDto<>(taskService.getAllBadges()), HttpStatus.OK);
+        return new ResponseEntity<>(new ItemsDto<>(taskService.getAllBadges(securityService.getCurrentUser())), HttpStatus.OK);
     }
 
     @ApiOperation("get badge")

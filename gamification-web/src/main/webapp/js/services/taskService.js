@@ -45,7 +45,11 @@ angular.module('gamificationApp').service('TaskService', ['$http', 'CONSTANTS', 
     };
 
     this.getPerformers = function () {
-        return $http.get(CONSTANTS.API_URI_PREFIX + CONSTANTS.DICTIONARIES + '/students');
+        return $http.get(CONSTANTS.API_URI_PREFIX + CONSTANTS.DICTIONARIES + '/students', {
+            params: {
+                token: AuthInfo.getToken()
+            }
+        });
     };
 
     this.getStudentsByGroups = function (data) {
@@ -61,11 +65,19 @@ angular.module('gamificationApp').service('TaskService', ['$http', 'CONSTANTS', 
     };
 
     this.getCoursesAndGroups = function () {
-        return $http.get(CONSTANTS.API_URI_PREFIX + CONSTANTS.DICTIONARIES + '/getCoursesAndGroups');
+        return $http.get(CONSTANTS.API_URI_PREFIX + CONSTANTS.DICTIONARIES + '/getCoursesAndGroups', {
+            params: {
+                token: AuthInfo.getToken()
+            }
+        });
     };
 
     this.getDisciplines = function () {
-        return $http.get(CONSTANTS.API_URI_PREFIX + CONSTANTS.DICTIONARIES + '/disciplines');
+        return $http.get(CONSTANTS.API_URI_PREFIX + CONSTANTS.DICTIONARIES + '/disciplines', {
+            params: {
+                token: AuthInfo.getToken()
+            }
+        });
     };
     this.check = function (challenge, performer, mark) {
         var params = {
