@@ -74,7 +74,7 @@ public interface TaskService {
     ResponseEntity checkTask(Long taskId, Long accountId, Integer mark);
 
 
-    List<BadgeDto> getAllBadges();
+    List<BadgeDto> getAllBadges(Account account);
 
     BadgeDto findBadgeById(Long id);
 

@@ -1,5 +1,7 @@
 package ru.kpfu.itis.controller;
 
+import com.wordnik.swagger.annotations.ApiImplicitParam;
+import com.wordnik.swagger.annotations.ApiImplicitParams;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,6 +15,7 @@ import ru.kpfu.itis.mapper.AccountDtoMapper;
 import ru.kpfu.itis.mapper.SubjectDtoMapper;
 import ru.kpfu.itis.model.*;
 import ru.kpfu.itis.processing.SimpleService;
+import ru.kpfu.itis.security.SecurityService;
 import ru.kpfu.itis.service.AccountService;
 import ru.kpfu.itis.util.Constant;
 
@@ -33,6 +36,9 @@ public class DictionariesController {
     @Autowired
     private SimpleService simpleService;
 
+    @Autowired
+    private SecurityService securityService;
+
     @RequestMapping(value = "/teachers", method = RequestMethod.GET)
     @ResponseBody
     public List<AccountDto> getTeachers() {
@@ -41,9 +47,10 @@ public class DictionariesController {
     }
 
     @RequestMapping(value = "/students", method = RequestMethod.GET)
+    @ApiImplicitParams(value = {@ApiImplicitParam(name = "token", value = "token", required = true, dataType = "string", paramType = "query")})
     @ResponseBody
     public List<AccountDto> getStudents() {
-        List<Account> students = accountService.getStudents();
+        List<Account> students = accountService.getStudents(securityService.getCurrentUserId());
         return students.stream().map(new AccountDtoMapper()).collect(Collectors.toList());
     }
 
@@ -55,17 +62,19 @@ public class DictionariesController {
     }
 
     @RequestMapping(value = "/disciplines", method = RequestMethod.GET)
+    @ApiImplicitParams(value = {@ApiImplicitParam(name = "token", value = "token", required = true, dataType = "string", paramType = "query")})
     @ResponseBody
     public List<SubjectDto> getDisciplines() {
-        List<Subject> subjects = simpleService.fetchAll(Subject.class);
+        List<Subject> subjects = accountService.getSubjects(securityService.getCurrentUser());
         return subjects.stream().map(new SubjectDtoMapper()).collect(Collectors.toList());
     }
 
     @RequestMapping(value = "/getCoursesAndGroups", method = RequestMethod.GET)
+    @ApiImplicitParams(value = {@ApiImplicitParam(name = "token", value = "token", required = true, dataType = "string", paramType = "query")})
     @ResponseBody
     public List<CourseOrGroupDto> getCoursesAndGroups() {
-        List<AcademicGroup> academicGroups = simpleService.fetchAll(AcademicGroup.class);
-        List<StudyCourse> studyCourses = simpleService.fetchAll(StudyCourse.class);
+        List<AcademicGroup> academicGroups = accountService.getAcademicGroups(securityService.getCurrentUser());
+        List<StudyCourse> studyCourses = accountService.getStudyCourses(securityService.getCurrentUser());
         return prepareResultList(academicGroups, studyCourses);
     }
 

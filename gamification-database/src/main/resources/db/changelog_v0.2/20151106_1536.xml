@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="
+                       http://www.liquibase.org/xml/ns/dbchangelog
+                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd"
+                   logicalFilePath="20151106_1536.xml">
+
+    <changeSet id="subject_teacher_connection" author="rplatonov">
+        <preConditions>
+            <not>
+                <tableExists tableName="ACCOUNT_SUBJECT"/>
+            </not>
+        </preConditions>
+        <createTable tableName="ACCOUNT_SUBJECT">
+            <column name="ACCOUNT_ID" type="integer">
+                <constraints primaryKey="true"
+                             foreignKeyName="AccountSubject_Account"
+                             references="ACCOUNT(ACCOUNT_ID)"/>
+            </column>
+            <column name="SUBJECT_ID" type="integer">
+                <constraints primaryKey="true"
+                             foreignKeyName="AccountSubject_Subject"
+                             references="SUBJECT(SUBJECT_ID)"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="teacher_academic_groups" author="rplatonov">
+        <preConditions>
+            <not>
+                <tableExists tableName="TEACHER_ACADEMIC_GROUP"/>
+            </not>
+        </preConditions>
+        <createTable tableName="TEACHER_ACADEMIC_GROUP">
+            <column name="ACCOUNT_ID" type="integer">
+                <constraints primaryKey="true"
+                             foreignKeyName="TeacherAcademicGroup_Account"
+                             references="ACCOUNT(ACCOUNT_ID)"/>
+            </column>
+            <column name="ACADEMIC_GROUP_ID" type="integer">
+                <constraints primaryKey="true"
+                             foreignKeyName="TeacherAcademicGroup_AcademicGroup"
+                             references="ACADEMIC_GROUP(GROUP_ID)"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+
+</databaseChangeLog>
