@@ -1,5 +1,6 @@
 package ru.kpfu.itis.service.impl;
 
+import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +21,6 @@ import ru.kpfu.jbl.auth.provider.encoders.PasswordEncoder;
 import ru.kpfu.jbl.auth.response.UserResponse;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -79,7 +79,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     @Transactional
     public List<Account> getTeachers() {
-        return accountDao.getAccountsByRole(Role.TEACHER,null);
+        return accountDao.getAccountsByRole(Role.TEACHER, null);
     }
 
     @Override
@@ -87,7 +87,7 @@ public class AccountServiceImpl implements AccountService {
     public List<Account> getStudents(Long teacherId) {
         Account account = accountDao.getAccountWithDependencies(teacherId);
         List<Long> groupIds = account.getAcademicGroups().stream().map(AcademicGroup::getId).collect(Collectors.toList());
-        return accountDao.getAccountsByRole(Role.STUDENT,groupIds);
+        return accountDao.getAccountsByRole(Role.STUDENT, groupIds);
     }
 
     @Override
@@ -207,6 +207,12 @@ public class AccountServiceImpl implements AccountService {
             AccountInfo accountInfo = new AccountInfo();
             AcademicGroup academicGroup = academicGroupDao.findByGroupNumber(userResponse.getAcademicGroupName());
             if (academicGroup != null) {
+                accountInfo.setGroup(academicGroup);
+            } else {
+                academicGroup = new AcademicGroup();
+                academicGroup.setFormationTime(new LocalDate());
+                academicGroup.setName(userResponse.getAcademicGroupName());
+                simpleDao.save(academicGroup);
                 accountInfo.setGroup(academicGroup);
             }
             if (userResponse.getEntranceYear() != null) {
