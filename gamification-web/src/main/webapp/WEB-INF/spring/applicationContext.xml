@@ -10,6 +10,7 @@
             <util:list>
                 <value>/WEB-INF/application.properties</value>
                 <value>classpath:config.properties</value>
+                <value>classpath:database.properties</value>
             </util:list>
         </property>
         <property name="systemPropertiesMode">

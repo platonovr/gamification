@@ -64,6 +64,11 @@
         </dependency>
 
         <dependency>
+            <groupId>ru.kpfu.itis</groupId>
+            <artifactId>gamification-database</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>jstl</artifactId>
             <version>1.2</version>
@@ -214,12 +219,6 @@
                     <artifactId>commons-logging</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
-
-        <dependency>
-            <groupId>ru.kpfu.itis</groupId>
-            <artifactId>gamification-database</artifactId>
-            <scope>test</scope>
         </dependency>
 
         <dependency>
