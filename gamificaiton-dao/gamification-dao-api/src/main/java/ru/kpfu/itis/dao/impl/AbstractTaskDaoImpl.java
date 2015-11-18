@@ -78,14 +78,17 @@ public abstract class AbstractTaskDaoImpl extends AbstractGenericDao implements 
                     "left join task.academicGroups tAcGroupes " +
                     "left join tAcGroupes.accountInfos tacAccInf " +
                     "left join task.taskAccounts ttacc " +
-                    "where current_date<=task.endDate and (:userId in tacAccInf.account.id " +
+                    "where task.finishTime is null and current_date<=task.endDate and (:userId in tacAccInf.account.id " +
                     "or :userId in (select tacc.id from ttacc.account tacc)) ";
 
             if (status != null) {
                 queryHql += " and ttacc.taskStatus.type=:status";
+            } else {
+                queryHql += "  and ttacc.taskStatus.type in (:progressStatuses) ";
             }
             queryHql += " order by task.createTime DESC";
             Query query = session.createQuery(queryHql);
+            query.setParameterList("progressStatuses", TaskStatus.TaskStatusType.INPROGRESS_STATUSES);
             query.setParameter("userId", userId).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
             if (status != null) {
                 query.setParameter("status", status);
