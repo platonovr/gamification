@@ -1,6 +1,8 @@
 package ru.kpfu.itis.model;
 
 import javax.persistence.*;
+import java.util.Arrays;
+import java.util.List;
 
 
 @Entity
@@ -33,6 +35,9 @@ public class TaskStatus extends BaseLongIdEntity {
         TaskStatusType(String caption) {
             this.caption = caption;
         }
+
+        public static final List<TaskStatusType> INPROGRESS_STATUSES = Arrays.asList(TaskStatusType.ASSIGNED, TaskStatusType.INPROGRESS);
+
 
         @Override
         public String getName() {
