@@ -9,9 +9,14 @@
 
     <tx:annotation-driven transaction-manager="hibernateTransactionManager"/>
 
-    <jee:jndi-lookup id="dataSource"
-                     jndi-name="jdbc/GAMIFICATION"
-                     expected-type="javax.sql.DataSource"/>
+
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
+          destroy-method="close">
+        <property name="driverClass" value="${jdbc.driver}"/>
+        <property name="jdbcUrl" value="${jdbc.url}"/>
+        <property name="user" value="${jdbc.user}"/>
+        <property name="password" value="${jdbc.password}"/>
+    </bean>
 
 
     <bean id="sessionFactory"
