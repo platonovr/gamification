@@ -26,22 +26,16 @@ public interface RatingService {
 
     RatingDto getUserRatingDto(AccountInfo accountInfo);
 
-    @Transactional
     void recalculateRating(AccountInfo accountInfo);
 
-    @Transactional
     List<Rating> search(Faculty faculty, Integer entranceYear,
                         String searchString, Integer offset, Integer limit);
 
-    @Transactional
     List<RatingDto> searchDto(AccountInfo accountInfo, String searchString, Integer offset, Integer limit);
 
-    @Transactional
     void update(Rating rating);
 
-    @Transactional
     void save(Rating rating);
 
-    @Transactional
     void createUserRating(AccountInfo accountInfo, Double mark);
 }

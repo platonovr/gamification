@@ -61,10 +61,15 @@ public abstract class AbstractRatingDaoImpl extends AbstractGenericDao implement
             Criteria criteria = aSession.createCriteria(Rating.class)
                     .createAlias("accountInfo", "account")
                     .createAlias("account.account", "user")
-                    .createAlias("account.group", "group")
-                    .add(Restrictions.eq("account.entranceYear", entranceYear))
-                    .add(Restrictions.eq("account.faculty", faculty))
-                    .add(Restrictions.eq("user.role", Role.STUDENT))
+                    .createAlias("account.group", "group");
+            if (entranceYear != null) {
+                criteria.add(Restrictions.eq("account.entranceYear", entranceYear));
+            }
+            if (faculty != null) {
+                criteria.add(Restrictions.eq("account.faculty", faculty));
+            }
+
+            criteria.add(Restrictions.eq("user.role", Role.STUDENT))
                     .add(Restrictions.isNotNull("account.group"));
 
 
