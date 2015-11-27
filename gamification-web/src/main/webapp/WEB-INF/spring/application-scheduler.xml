@@ -5,13 +5,13 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
 
-    <task:scheduler id="taskScheduler" pool-size="10"/>
+    <!--<task:scheduler id="taskScheduler" pool-size="10"/>-->
 
-    <task:scheduled-tasks scheduler="taskScheduler">
-        <task:scheduled ref="stubTask" method="run" fixed-delay="15000"/>
+    <!--<task:scheduled-tasks scheduler="taskScheduler">-->
+        <!--&lt;!&ndash;<task:scheduled ref="stubTask" method="run" fixed-delay="15000"/>&ndash;&gt;-->
 
-        <!--<task:scheduled ref="stubTask" method="run" fixed-delay="9223372036854775807"/>-->
-        <!--<task:scheduled ref="stubTask" method="run" cron="0 0 3 * * *"/>-->
-    </task:scheduled-tasks>
+        <!--&lt;!&ndash;<task:scheduled ref="stubTask" method="run" fixed-delay="9223372036854775807"/>&ndash;&gt;-->
+        <!--&lt;!&ndash;<task:scheduled ref="stubTask" method="run" cron="0 0 3 * * *"/>&ndash;&gt;-->
+    <!--</task:scheduled-tasks>-->
 
 </beans>
