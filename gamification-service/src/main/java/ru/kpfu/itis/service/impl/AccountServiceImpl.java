@@ -79,7 +79,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     @Transactional
     public List<Account> getTeachers() {
-        return accountDao.getAccountsByRole(Role.TEACHER,null);
+        return accountDao.getAccountsByRole(Role.TEACHER, null);
     }
 
     @Override
@@ -87,7 +87,7 @@ public class AccountServiceImpl implements AccountService {
     public List<Account> getStudents(Long teacherId) {
         Account account = accountDao.getAccountWithDependencies(teacherId);
         List<Long> groupIds = account.getAcademicGroups().stream().map(AcademicGroup::getId).collect(Collectors.toList());
-        return accountDao.getAccountsByRole(Role.STUDENT,groupIds);
+        return accountDao.getAccountsByRole(Role.STUDENT, groupIds);
     }
 
     @Override
@@ -223,7 +223,11 @@ public class AccountServiceImpl implements AccountService {
             Serializable id = simpleDao.save(account);
             account = simpleDao.findById(Account.class, id);
             accountInfo.setAccount(account);
-            simpleDao.save(accountInfo);
+            Long accountInfoId = (Long) simpleDao.save(accountInfo);
+            if (accountInfoId != null) {
+                accountInfo = simpleDao.findById(AccountInfo.class, accountInfoId);
+            }
+            ratingService.createUserRating(accountInfo, 0.0);
         }
         return new SimpleAuthUser(account);
     }

@@ -5,13 +5,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import ru.kpfu.itis.dao.SimpleDao;
 import ru.kpfu.itis.model.Account;
-import ru.kpfu.itis.model.AccountInfo;
-import ru.kpfu.itis.model.Rating;
 import ru.kpfu.itis.model.SimpleAuthUser;
-import ru.kpfu.itis.service.RatingService;
 import ru.kpfu.jbl.auth.service.SecurityContextHolderService;
-
-import java.io.Serializable;
 
 import static java.util.Optional.ofNullable;
 
@@ -28,9 +23,6 @@ public class SecurityServiceImpl implements SecurityService {
     @Autowired(required = false)
     SecurityContextHolderService<SimpleAuthUser> securityContextHolderService;
 
-    @Autowired
-    private RatingService ratingService;
-
     @Override
     public Account getCurrentUser() {
         if (securityContextHolderService == null) {
@@ -40,26 +32,7 @@ public class SecurityServiceImpl implements SecurityService {
         if (currentUser == null) {
             currentUser = (SimpleAuthUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         }
-        Account account = simpleDao.findById(Account.class, currentUser.getId());
-        Serializable accountInfoId = null;
-        boolean haveRating = false;
-        if (account != null) {
-            AccountInfo info = account.getAccountInfo();
-            if (info == null) {
-                AccountInfo accountInfo = new AccountInfo();
-                accountInfo.setAccount(account);
-                accountInfoId = (Long) simpleDao.save(accountInfo);
-            } else {
-                Rating existingRating = simpleDao.findById(Rating.class, info.getId());
-                haveRating = existingRating != null;
-            }
-            if (accountInfoId != null) {
-                info = simpleDao.findById(AccountInfo.class, accountInfoId);
-            }
-            if (!haveRating)
-                ratingService.createUserRating(info, 0.0);
-        }
-        return ofNullable(account)
+        return ofNullable(simpleDao.findById(Account.class, currentUser.getId()))
                 .orElse(null);
     }
 
