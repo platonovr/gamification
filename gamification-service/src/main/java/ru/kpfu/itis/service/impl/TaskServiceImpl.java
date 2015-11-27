@@ -386,9 +386,11 @@ public class TaskServiceImpl implements TaskService {
     @Override
     @Transactional
     public List<BadgeDto> getAllBadges(Account account) {
-        account = accountService.getAccountWithDependencies(account.getId());
-        List<Long> subjectIds = account.getSubjects().stream().map(Subject::getId).collect(Collectors.toList());
-        List<Badge> badges = accountBadgeDao.fetchBadgesBySubject(subjectIds);
+        //TODO
+//        account = accountService.getAccountWithDependencies(account.getId());
+//        List<Long> subjectIds = account.getSubjects().stream().map(Subject::getId).collect(Collectors.toList());
+//        List<Badge> badges = accountBadgeDao.fetchBadgesBySubject(subjectIds);
+        List<Badge> badges = simpleDao.fetchAll(Badge.class);
         return badges
                 .stream()
                 .map(it -> findBadgeById(it.getId(), simpleBadgeMapper))

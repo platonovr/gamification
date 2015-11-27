@@ -1,5 +1,6 @@
 package ru.kpfu.itis.service.impl;
 
+import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +21,6 @@ import ru.kpfu.jbl.auth.provider.encoders.PasswordEncoder;
 import ru.kpfu.jbl.auth.response.UserResponse;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -104,6 +104,7 @@ public class AccountServiceImpl implements AccountService {
             if (s != null && s.startsWith("anonymous")) {
                 account = createAnonymousUser(s);
                 simpleDao.save(account);
+                simpleDao.save(account.getAccountInfo());
             }
         }
         if (account == null) {
@@ -206,6 +207,12 @@ public class AccountServiceImpl implements AccountService {
             AccountInfo accountInfo = new AccountInfo();
             AcademicGroup academicGroup = academicGroupDao.findByGroupNumber(userResponse.getAcademicGroupName());
             if (academicGroup != null) {
+                accountInfo.setGroup(academicGroup);
+            } else {
+                academicGroup = new AcademicGroup();
+                academicGroup.setFormationTime(new LocalDate());
+                academicGroup.setName(userResponse.getAcademicGroupName());
+                simpleDao.save(academicGroup);
                 accountInfo.setGroup(academicGroup);
             }
             if (userResponse.getEntranceYear() != null) {

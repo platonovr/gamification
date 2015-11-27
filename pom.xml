@@ -447,11 +447,11 @@
             </activation>
             <modules>
                 <module>gamification-model</module>
-                <module>gamification-web</module>
                 <module>gamification-service</module>
                 <module>gamificaiton-dao/gamification-dao-api</module>
                 <module>gamificaiton-dao/gamification-dao-postgresql</module>
                 <module>gamification-database</module>
+                <module>gamification-web</module>
             </modules>
         </profile>
         <profile>
