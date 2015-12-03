@@ -461,6 +461,12 @@
             </properties>
         </profile>
         <profile>
+            <id>dev-test-server</id>
+            <properties>
+                <tomcat.home>/home/gamification-test/softwares/apache-tomcat-7.0.59/</tomcat.home>
+            </properties>
+        </profile>
+        <profile>
             <id>ainur-tomcat</id>
             <properties>
                 <tomcat.home>/Users/ainurminibaev/Documents/Develop/installation/apache-tomcat-7.0.50/</tomcat.home>
