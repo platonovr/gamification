@@ -18,6 +18,7 @@ public class RatingMapper implements Mapper<Rating, RatingDto> {
     public RatingDto toDto(Rating object) {
         if (object != null) {
             RatingDto dto = new RatingDto();
+            dto.setAccountId(object.getAccountInfo().getAccount().getId());
             dto.setAccountInfoId(object.getAccountInfo().getId());
             dto.setFirstName(object.getAccountInfo().getFirstName());
             dto.setLastName(object.getAccountInfo().getLastName());

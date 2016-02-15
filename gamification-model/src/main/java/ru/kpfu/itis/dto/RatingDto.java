@@ -1,5 +1,6 @@
 package ru.kpfu.itis.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.wordnik.swagger.annotations.ApiModel;
@@ -12,6 +13,9 @@ import com.wordnik.swagger.annotations.ApiModel;
 public class RatingDto {
 
     @JsonProperty(value = "id")
+    private Long accountId;
+
+    @JsonIgnore
     private Long accountInfoId;
     @JsonProperty(value = "first_name")
     private String firstName;
@@ -67,5 +71,13 @@ public class RatingDto {
 
     public void setPosition(Integer position) {
         this.position = position;
+    }
+
+    public Long getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(Long accountId) {
+        this.accountId = accountId;
     }
 }
