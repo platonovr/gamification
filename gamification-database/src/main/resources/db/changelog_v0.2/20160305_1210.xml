@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="
+                       http://www.liquibase.org/xml/ns/dbchangelog
+                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd"
+                   logicalFilePath="20160305_1210.xml">
+
+    <changeSet id="remove_old_badges_1" author="rplatonov">
+        <preConditions onError="MARK_RAN" onFail="MARK_RAN">
+            <sqlCheck expectedResult="1">
+                select count(*) from badge where description = 'Bla-bla-bla'
+            </sqlCheck>
+        </preConditions>
+        <delete tableName="ACCOUNT_BADGE">
+            <where>badge_id = (select badge_id from badge where description = 'Bla-bla-bla')</where>
+        </delete>
+        <delete tableName="BADGE">
+            <where>description = 'Bla-bla-bla'</where>
+        </delete>
+    </changeSet>
+
+    <changeSet id="remove_old_badges_2" author="rplatonov">
+        <preConditions onError="MARK_RAN" onFail="MARK_RAN">
+            <sqlCheck expectedResult="1">
+                select count(*) from badge where description = 'jk'
+            </sqlCheck>
+        </preConditions>
+        <delete tableName="ACCOUNT_BADGE">
+            <where>badge_id = (select badge_id from badge where description = 'jk')</where>
+        </delete>
+        <delete tableName="BADGE">
+            <where>description = 'jk'</where>
+        </delete>
+    </changeSet>
+
+    <changeSet id="remove_old_badges_3" author="rplatonov">
+        <preConditions onError="MARK_RAN" onFail="MARK_RAN">
+            <sqlCheck expectedResult="1">
+                select count(*) from badge where description = 'th'
+            </sqlCheck>
+        </preConditions>
+        <delete tableName="ACCOUNT_BADGE">
+            <where>badge_id = (select badge_id from badge where description = 'th')</where>
+        </delete>
+        <delete tableName="BADGE">
+            <where>description = 'th'</where>
+        </delete>
+    </changeSet>
+
+</databaseChangeLog>
