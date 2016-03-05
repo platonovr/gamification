@@ -79,10 +79,10 @@ public abstract class AbstractRatingDaoImpl extends AbstractGenericDao implement
                 Criterion criterion = null;
                 while (stringTokenizer.hasMoreTokens()) {
                     String token = stringTokenizer.nextToken();
-                    criterion = Restrictions.or(Restrictions.like("account.firstName", token, MatchMode.ANYWHERE),
-                            Restrictions.like("account.middleName", token, MatchMode.ANYWHERE),
-                            Restrictions.like("account.lastName", token, MatchMode.ANYWHERE),
-                            Restrictions.like("group.name", token, MatchMode.ANYWHERE));
+                    criterion = Restrictions.or(Restrictions.like("account.firstName", token, MatchMode.ANYWHERE).ignoreCase(),
+                            Restrictions.like("account.middleName", token, MatchMode.ANYWHERE).ignoreCase(),
+                            Restrictions.like("account.lastName", token, MatchMode.ANYWHERE).ignoreCase(),
+                            Restrictions.like("group.name", token, MatchMode.ANYWHERE).ignoreCase());
                     criterions.add(criterion);
                 }
 
