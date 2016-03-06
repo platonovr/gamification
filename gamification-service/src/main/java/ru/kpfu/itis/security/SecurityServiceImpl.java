@@ -29,9 +29,6 @@ public class SecurityServiceImpl implements SecurityService {
             return null;
         }
         SimpleAuthUser currentUser = securityContextHolderService.getCurrentUser();
-        if (currentUser == null) {
-            currentUser = (SimpleAuthUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        }
         return ofNullable(simpleDao.findById(Account.class, currentUser.getId()))
                 .orElse(null);
     }
