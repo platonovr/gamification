@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component;
 import ru.kpfu.itis.BadgeConstants;
 import ru.kpfu.itis.model.Account;
 import ru.kpfu.itis.model.Badge;
+import ru.kpfu.itis.model.enums.Role;
 import ru.kpfu.itis.processing.badges.AbstractBadgeChecker;
 
 /**
@@ -11,13 +12,13 @@ import ru.kpfu.itis.processing.badges.AbstractBadgeChecker;
  */
 @Component
 public class AuthBadgeChecker extends AbstractBadgeChecker {
-    @Override
-    public boolean isBadgeApplicable(Account account) {
-        return !(account != null && account.getRole() == null || account.getRole().equals("ANONYMOUS"));
-    }
+	@Override
+	public boolean isBadgeApplicable(Account account) {
+		return account != null && Role.ANONYMOUS.equals(account.getRole());
+	}
 
-    @Override
-    public Badge getBadge() {
-        return simpleDao.findById(Badge.class, BadgeConstants.AUTH_BADGE_ID);
-    }
+	@Override
+	public Badge getBadge() {
+		return simpleDao.findById(Badge.class, BadgeConstants.AUTH_BADGE_ID);
+	}
 }
