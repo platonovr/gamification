@@ -13,7 +13,7 @@ import ru.kpfu.itis.processing.badges.AbstractBadgeChecker;
 public class AuthBadgeChecker extends AbstractBadgeChecker {
     @Override
     public boolean isBadgeApplicable(Account account) {
-        return true;
+        return !(account != null && account.getRole() == null || account.getRole().equals("ANONYMOUS"));
     }
 
     @Override
