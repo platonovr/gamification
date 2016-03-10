@@ -5,6 +5,7 @@ import ru.kpfu.itis.model.Account;
 import ru.kpfu.itis.model.AccountBadge;
 import ru.kpfu.itis.model.Badge;
 import ru.kpfu.itis.processing.badges.AbstractBadgeChecker;
+import ru.kpfu.jbl.auth.domain.AuthUser;
 
 import java.util.List;
 
@@ -22,5 +23,5 @@ public interface AccountBadgeService {
 
     void saveOrUpdate(AccountBadge accountBadge);
 
-    void applyBadges(List<AbstractBadgeChecker> badgeCheckers, Account account);
+    void applyBadges(List<AbstractBadgeChecker> badgeCheckers, AuthUser user);
 }

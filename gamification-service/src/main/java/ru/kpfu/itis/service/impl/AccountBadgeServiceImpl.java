@@ -11,6 +11,7 @@ import ru.kpfu.itis.model.AccountBadge;
 import ru.kpfu.itis.model.Badge;
 import ru.kpfu.itis.processing.badges.AbstractBadgeChecker;
 import ru.kpfu.itis.service.AccountBadgeService;
+import ru.kpfu.jbl.auth.domain.AuthUser;
 
 import java.util.List;
 
@@ -58,7 +59,8 @@ public class AccountBadgeServiceImpl implements AccountBadgeService {
 
     @Override
     @Transactional
-    public void applyBadges(List<AbstractBadgeChecker> badgeCheckers, Account account) {
+    public void applyBadges(List<AbstractBadgeChecker> badgeCheckers, AuthUser user) {
+        Account account = simpleDao.findById(Account.class, user.getId());
         for (AbstractBadgeChecker badgeChecker : badgeCheckers) {
             badgeChecker.assignBadgeFor(account);
         }

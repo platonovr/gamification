@@ -240,10 +240,10 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void afterLoginSuccess() {
+    public void afterLoginSuccess(AuthUser authUser) {
         List<AbstractBadgeChecker> badgeCheckers = new BadgesListBuilder(badgesPack)
                 .get(AUTH_BADGE_ID)
                 .build();
-        accountBadgeService.applyBadges(badgeCheckers, securityService.getCurrentUser());
+        accountBadgeService.applyBadges(badgeCheckers, authUser);
     }
 }
